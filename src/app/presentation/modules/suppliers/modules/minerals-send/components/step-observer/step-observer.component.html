@@ -1,0 +1,183 @@
+<svi-search-step-header
+  [searchTitle]="'Buscar veedor por documento'"
+  [control]="documentControl"
+  [inputId]="'observerDocument'"
+  [inputLabel]="'Número de documento'"
+  [inputType]="'text'"
+  [disabled]="(loadingService.isLoading$(LOADING.sections.observerSearch) | async) ?? false"
+  [minLength]="5"
+  [hintText]="'Escribe el documento y presiona “Buscar”.'"
+  [createLabel]="'Crear veedor'"
+  [createIcon]="ICONS.ADD"
+  [createLoadingId]="LOADING.buttons.observerCreate"
+  (searchClick)="searchObserver.emit($event)"
+  (createClick)="openCreateObserver.emit()"
+>
+  <div slot="createHint" class="text-500 text-sm flex align-items-center gap-2">
+    <i class="pi pi-info-circle"></i>
+    Crea el veedor y luego podrás seleccionarlo.
+  </div>
+</svi-search-step-header>
+
+<article class="card shadow-2 flex flex-column mt-3 p-3 gap-3 relative">
+  <app-loading
+    [section]="LOADING.sections.observerSearch"
+    [options]="{ overlay: true, fullscreen: false, size: 'small' }"
+  ></app-loading>
+  <div class="flex flex-column gap-2">
+    <div class="flex align-items-center justify-content-between">
+      <div class="flex flex-column">
+        <span class="text-900 font-medium">Veedor</span>
+        @if (!observerSearchResult()) {
+          <span class="text-500 text-sm">Sin seleccionar</span>
+        }
+      </div>
+
+      @if (observerSearchResult()) {
+        <div class="hidden md:flex gap-2">
+          <svi-button
+            label="Editar documentos"
+            icon="{{ ICONS.PENCIL }}"
+            [size]="'small'"
+            severity="primary"
+            (onClick)="openEditDocumentsModal()"
+          ></svi-button>
+
+          <svi-button
+            label="Deseleccionar"
+            icon="{{ ICONS.CANCEL }}"
+            [size]="'small'"
+            severity="secondary"
+            (onClick)="clearObserverSelection()"
+            [loadingId]="LOADING.buttons.observerDeselect"
+          ></svi-button>
+        </div>
+      }
+    </div>
+
+    @if (observerSearchResult()) {
+      <div class="grid md:hidden">
+        <div class="col-6">
+          <svi-button
+            label="Editar documentos"
+            icon="{{ ICONS.PENCIL }}"
+            severity="primary"
+            [fullWidth]="true"
+            (onClick)="openEditDocumentsModal()"
+          ></svi-button>
+        </div>
+        <div class="col-6">
+          <svi-button
+            label="Deseleccionar"
+            icon="{{ ICONS.CANCEL }}"
+            severity="secondary"
+            [fullWidth]="true"
+            (onClick)="clearObserverSelection()"
+            [loadingId]="LOADING.buttons.observerDeselect"
+          ></svi-button>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (observerSearchResult(); as o) {
+    <div class="grid">
+      <div class="col-12 md:col-4">
+        <div class="flex flex-column gap-1">
+          <span class="text-500 text-sm">Nombre</span>
+          <span class="text-900 font-medium">{{ o.name }}</span>
+        </div>
+      </div>
+      <div class="col-12 md:col-4">
+        <div class="flex flex-column gap-1">
+          <span class="text-500 text-sm">Documento</span>
+          <span class="text-900 font-medium">{{ o.documentNumber }}</span>
+        </div>
+      </div>
+      <div class="col-12 md:col-4">
+        <div class="flex flex-column gap-1">
+          <span class="text-500 text-sm">Estado</span>
+          <p-tag [value]="o.isActive ? 'Activo' : 'Inactivo'" [severity]="o.isActive ? 'success' : 'danger'"></p-tag>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="col-12 md:col-4">
+        <div class="flex flex-column gap-1">
+          <span class="text-500 text-sm">Tipo de documento</span>
+          <span class="text-900 font-medium">{{ o.documentType.name }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="col-12 md:col-6">
+        <div class="flex flex-column gap-1">
+          <span class="text-500 text-sm">CC</span>
+          @if (o.documents.ccUrl) {
+            <svi-button
+              (onClick)="openObserverDocument('cc')"
+              type="button"
+              [fullWidth]="true"
+              [icon]="ICONS.DOCUMENT"
+              label="Ver documento"
+            ></svi-button>
+          } @else {
+            <svi-button
+              type="button"
+              [fullWidth]="true"
+              [icon]="ICONS.DOCUMENT"
+              label="Sin documento"
+              severity="secondary"
+              [disabled]="true"
+            ></svi-button>
+          }
+        </div>
+      </div>
+
+      <div class="col-12 md:col-6">
+        <div class="flex flex-column gap-1">
+          <span class="text-500 text-sm">ARL</span>
+          @if (o.documents.arlUrl) {
+            <svi-button
+              (onClick)="openObserverDocument('arl')"
+              type="button"
+              [fullWidth]="true"
+              [icon]="ICONS.DOCUMENT"
+              label="Ver documento"
+            ></svi-button>
+          } @else {
+            <svi-button
+              type="button"
+              [fullWidth]="true"
+              [icon]="ICONS.DOCUMENT"
+              label="Sin documento"
+              severity="secondary"
+              [disabled]="true"
+            ></svi-button>
+          }
+        </div>
+      </div>
+    </div>
+  } @else {
+    <p-message severity="info" text="Busca por documento para seleccionarlo, o crea un veedor nuevo."></p-message>
+  }
+</article>
+
+<svi-dialog
+  header="Documentos del veedor"
+  width="55rem"
+  position="top"
+  [visible]="documentModal()"
+  (visibleChange)="documentModal.set($event)"
+  (onHide)="closeObserverDocumentModal()"
+>
+  @if (observerSearchResult()) {
+    <svi-observer-detail
+      [observer]="observerSearchResult()!"
+      [document]="selectedDocument()"
+      (onClose)="closeObserverDocumentModal()"
+    ></svi-observer-detail>
+  }
+</svi-dialog>

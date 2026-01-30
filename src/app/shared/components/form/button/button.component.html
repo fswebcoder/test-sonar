@@ -1,0 +1,25 @@
+<p-button
+  [type]="type"
+  [label]="label || ''"
+  [icon]="icon"
+  [loading]="loading"
+  [disabled]="disabled"
+  [severity]="severity"
+  [rounded]="rounded"
+  [raised]="raised"
+  [outlined]="outlined"
+  [text]="text"
+  [size]="size"
+  [iconPos]="iconPos || 'left'"
+  [class]="buttonClass"
+  [styleClass]="buttonClass"
+  (click)="handleClick($event)"
+  [variant]="variant"
+>
+  @if (!loading) {
+    <ng-content></ng-content>
+  }
+  @if (badge) {
+    <span [class]="'p-badge ' + (badgeClass || '')" class="ml-2">{{ badge }}</span>
+  }
+</p-button>

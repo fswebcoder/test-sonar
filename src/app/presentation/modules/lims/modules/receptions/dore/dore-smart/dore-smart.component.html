@@ -1,0 +1,10 @@
+<svi-dore-dump 
+  [doreReceptionOrigins]="doreReceptionOriginsQueryData()"
+  [suppliers]="suppliersQueryData()"
+  [departments]="departments()"
+  [cities]="cities()"
+  [miningTitles]="miningTitles()"
+  (onSaveDore)="addRegister($event)"
+  (onGetMiningTitles)="getMiningTitles($event)"
+></svi-dore-dump>
+

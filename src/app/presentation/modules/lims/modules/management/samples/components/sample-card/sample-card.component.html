@@ -1,0 +1,59 @@
+<div class="sample-card">
+  <div class="sample-card__header">
+    <div class="sample-card__icon">
+      <i class="{{ ICONS.FLASK_VIAL }}"></i>
+    </div>
+    <div>
+      @if(hasPermissionToSeeSupplier) {
+      <h3 class="sample-card__title">{{ sample().supplierName }}</h3>
+      <small class="sample-card__subtitle">{{ sample().sampleCode }}</small>
+      } @else {
+      <h3 class="sample-card__title">{{ sample().sampleCode }}</h3>
+      }
+    </div>
+  </div>
+  <div class="sample-card__details">
+    <div>
+      <span class="sample-card__label">Peso recibido:</span>
+      <span class="sample-card__value">{{ getWeightReceived }} {{ EWeightUnits.GRAMS }}</span>
+    </div>
+    <div>
+      <span class="sample-card__label">Tipo de muestra:</span>
+      <span class="sample-card__value">{{ sample().sampleTypeName }}</span>
+    </div>
+  </div>
+
+  <div class="sample-card__analisis-list" tabindex="0">
+    @for (analisis of sample().requiredAnalyses; track analisis) {
+      <div
+        class="sample-card__analisis"
+        [ngClass]="{
+          realizado: analisis.done.value && analisis.done.label === AnalysisStatus.FINISHED,
+          pendiente: !analisis.done.value && analisis.done.label === AnalysisStatus.PENDING,
+          inAnalysis: analisis.done.label === AnalysisStatus.IN_PROGRESS
+        }"
+        [pTooltip]="analisis.done.label"
+      >
+        <i class="{{ ICONS.VIAL }}"></i>
+        <span class="sample-card__analisis-label">{{ analisis.analysisShortName }}</span>
+      </div>
+    }
+  </div>
+
+  <div class="flex justify-content-end gap-2 mt-2">
+    <svi-card-button
+      label="Ver detalles"
+      [icon]="ICONS.EYE"
+      [severity]="EActionSeverity.VIEW"
+      (clicked)="navigateToSampleDetail()"
+      [permission]="{ path, action: receptionActions.VER_DETALLE_MUESTRAS }"
+    ></svi-card-button>
+    <svi-card-button
+      label="Imprimir"
+      [icon]="ICONS.PRINT"
+      [severity]="EActionSeverity.ACTION"
+      (clicked)="onSelectPrint()"
+      [permission]="{ path, action: receptionActions.IMPRIMIR_ETIQUETAS_GESTION }"
+    ></svi-card-button>
+  </div>
+</div>

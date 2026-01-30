@@ -1,0 +1,135 @@
+<section>
+  <div class="card p-4">
+    <div class="flex flex-wrap gap-3 justify-between items-center">
+      <h3>{{ title() }}</h3>
+      <div class="flex align-items-center gap-2 flex-wrap justify-end">
+        @if (showCreateButton()) {
+          <svi-button
+            [label]="createButtonLabel()"
+            icon="{{ ICONS.ADD }}"
+            (onClick)="openOrderModal()"
+            [appPermission]="{ path: permissionsPath(), action: ScaleActions.CREAR_ORDEN_DE_PESAJE }"
+          ></svi-button>
+        }
+      </div>
+    </div>
+
+    <div class="flex flex-column gap-3 my-4">
+      <form [formGroup]="filterForm" class="flex justify-content-start align-items-center gap-3 flex-wrap">
+        <svi-float-input formControlName="search" label="Buscar" class="flex-1" />
+        <svi-multiselect
+          formControlName="statuses"
+          label="Estado"
+          [options]="statusOptions"
+          optionLabel="label"
+          optionValue="value"
+          [maxSelectedLabels]="2"
+          selectedItemsLabel="{0} estados"
+          class="w-15rem"
+        ></svi-multiselect>
+      </form>
+      <svi-tabs
+        [tabs]="orderTypeOptions"
+        [value]="activeOrderType()"
+        tabLabelKey="label"
+        tabValueKey="value"
+        [panelTemplate]="ordersContent"
+        [panelsClass]="'order-tabs__panels'"
+        (valueChange)="onOrderTypeTabChange($event)"
+      ></svi-tabs>
+    </div>
+
+    <ng-template #ordersContent let-tab>
+      <div class="flex align-items-end justify-content-end flex-wrap gap-3 my-3">
+        <svi-view-switcher
+          [value]="viewMode()"
+          [options]="viewOptions()"
+          [size]="'small'"
+          [showLabels]="false"
+          [showIcons]="true"
+          (valueChange)="onViewModeChange($event)"
+        ></svi-view-switcher>
+      </div>
+      <div>
+        @if (orderList().length === 0) {
+          <svi-empty-state
+            [title]="emptyStateTitle()"
+            [description]="emptyStateDescription()"
+            icon="{{ ICONS.TRUCK }}"
+          ></svi-empty-state>
+        } @else {
+          @if (viewMode() === 'cards') {
+            <div class="grid justify-content-center w-full my-4">
+              @for (order of orderList(); track order.id) {
+                <svi-order-scale-card
+                  [order]="order"
+                  class="sm:col-6 md:col-4 xl:col-3 col-12"
+                  [permissionPath]="permissionsPath()"
+                  [viewAction]="ScaleActions.VER_ORDENES_DE_PESAJE"
+                  [assignBatchAction]="ScaleActions.ASIGNAR_LOTE_A_REGISTRO_DE_PESO"
+                  (viewDetails)="handleViewDetails($event)"
+                  (assignBatch)="openAssignBatchModal($event)"
+                ></svi-order-scale-card>
+              }
+            </div>
+          } @else {
+            <svi-table [data]="orderList()" [columns]="columns" [actions]="tableActions" [showPaginator]="false"></svi-table>
+          }
+        }
+        <svi-paginator [totalRecords]="totalRecords"></svi-paginator>
+      </div>
+    </ng-template>
+  </div>
+</section>
+
+<svi-dialog
+  [header]="dialogHeader()"
+  width="52rem"
+  position="top"
+  [visible]="orderModal()"
+  (onHide)="closeOrderModal()"
+>
+  <svi-order-form
+    [drivers]="drivers()"
+    [vehicles]="vehicles()"
+    [materialTypes]="materialTypes()"
+    [storageZones]="storageZones()"
+    [mines]="mines()"
+    [batches]="batches()"
+    [suppliers]="suppliers()"
+    (onCancel)="closeOrderModal()"
+    (onCreate)="submitCreateOrder($event)"
+    (onSupplierChange)="supplierChanged($event)"
+    (onMineChange)="mineChanged($event)"
+  ></svi-order-form>
+</svi-dialog>
+
+<svi-dialog
+  [header]="detailDialogHeader()"
+  width="60rem"
+  position="top"
+  [visible]="detailModal()"
+  (onHide)="closeDetailModal()"
+>
+  @if (selectedOrder(); as order) {
+    <svi-order-scale-detail [order]="order" (closeRequested)="closeDetailModal()"></svi-order-scale-detail>
+  }
+</svi-dialog>
+
+<svi-dialog
+  [header]="assignBatchDialogHeader()"
+  width="40rem"
+  position="top"
+  [visible]="assignBatchModal()"
+  (onHide)="closeAssignBatchModal()"
+>
+  @if (selectedOrder(); as order) {
+    <svi-assign-batch-order-form
+      [orderId]="order.id"
+      [permissionsPath]="permissionsPath()"
+      [batches]="batches()"
+      (cancelRequested)="closeAssignBatchModal()"
+      (submitted)="handleAssignBatchSubmit($event)"
+    />
+  }
+</svi-dialog>

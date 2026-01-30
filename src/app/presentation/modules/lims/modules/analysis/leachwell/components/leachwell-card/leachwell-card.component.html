@@ -1,0 +1,52 @@
+@let isOverdue = (isOverdue$ | async)!;
+@let remainingTime = (remainingTime$ | async)!;
+@let progressPercentage = (progressPercentage$ | async)!;
+<svi-card [ngClass]="{ 'overdue-card': isOverdue }">
+  <div class="card p-2">
+    <ng-container ngProjectAs="card-header">
+      <div class="card-header">
+        <i class="fa-duotone fa-solid fa-stopwatch text-primary text-3xl"></i>
+        <div class="timer-badge text-white">
+          <p class="text-lg font-bold">{{ remainingTime }}</p>
+        </div>
+      </div>
+    </ng-container>
+    <div class="card-content">
+      <svi-leachwell-card-content
+        [progressPercentage]="progressPercentage"
+        [isOverdue]="isOverdue"
+        [duration]="leachwell().duration"
+        [sampleCode]="leachwell().sample.code"
+        [startDate]="startDate()"
+        [endDate]="endDate()"
+      ></svi-leachwell-card-content>
+    </div>
+
+    <ng-container ngProjectAs="card-footer ">
+      <div class="card-footer">
+        <div class="flex gap-2 py-2">
+          <svi-card-button
+            label="Terminar análisis"
+            [icon]="'fa-duotone fa-circle-check'"
+            [disabled]="!isOverdue"
+            [severity]="EActionSeverity.ACTION"
+            (clicked)="openConfirmDialog()"
+          ></svi-card-button>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</svi-card>
+
+<svi-confirm-dialog
+  #confirmDialog
+  header="Alerta de seguridad"
+  [draggable]="false"
+  [style]="{ width: '40rem' }"
+  [acceptLabel]="'Terminar análisis'"
+  [rejectLabel]="'Cancelar'"
+  [acceptButtonStyleClass]="'p-button-primary'"
+  [rejectButtonStyleClass]="'p-button-outlined'"
+  [acceptVisible]="true"
+  [rejectVisible]="true"
+></svi-confirm-dialog>

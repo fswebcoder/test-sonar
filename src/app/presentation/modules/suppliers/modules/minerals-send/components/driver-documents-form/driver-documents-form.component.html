@@ -1,0 +1,44 @@
+<form [formGroup]="form" (ngSubmit)="submit()" class="p-4">
+  <div class="mb-3">
+    <div class="text-900 font-medium">Conductor: {{ driver().name }}</div>
+    <div class="text-500 text-sm">Documento: {{ driver().documentNumber }}</div>
+  </div>
+
+  <div class="grid">
+    <div class="col-12 md:col-6">
+      <div class="flex flex-column gap-2">
+        <div class="flex align-items-center justify-content-between">
+          <span class="font-medium">Documento</span>
+          <span class="text-500 text-sm">{{ driver().documents.ccUrl ? 'Actual: cargado' : 'Actual: no cargado' }}</span>
+        </div>
+        <svi-file-input formControlName="cc" [multiple]="false" accept=".pdf,application/pdf,image/*"></svi-file-input>
+      </div>
+    </div>
+
+    <div class="col-12 md:col-6">
+      <div class="flex flex-column gap-2">
+        <div class="flex align-items-center justify-content-between">
+          <span class="font-medium">ARL</span>
+          <span class="text-500 text-sm">{{ driver().documents.arlUrl ? 'Actual: cargado' : 'Actual: no cargado' }}</span>
+        </div>
+        <svi-file-input formControlName="arl" [multiple]="false" accept=".pdf,application/pdf,image/*"></svi-file-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-content-end gap-3 mt-4 pt-3 border-top-1 surface-border">
+    <svi-button
+      type="button"
+      severity="secondary"
+      label="Cancelar"
+      (onClick)="dismiss.emit()"
+    ></svi-button>
+
+    <svi-button
+      type="submit"
+      label="Guardar documentos"
+      [disabled]="!canSubmit()"
+      [loadingId]="LOADING.buttons.driverDocumentsUpdate"
+    ></svi-button>
+  </div>
+</form>

@@ -1,0 +1,23 @@
+:host {
+  display: block;
+}
+
+.card-grid {
+  display: grid;
+  gap: var(--card-grid-gap, 1.5rem);
+  grid-template-columns: repeat(auto-fit, minmax(var(--card-grid-min-width, 20rem), var(--card-grid-max-width, 24rem)));
+  justify-content: center;
+  justify-items: stretch;
+  align-items: stretch;
+  margin: 2rem 0;
+}
+
+.card-grid--no-margin {
+  margin: 0;
+}
+
+.card-grid > * {
+  width: min(100%, var(--card-grid-max-width, 26rem));
+  height: 100%;
+  margin: 0 auto;
+}

@@ -1,0 +1,54 @@
+<div class="card shadow-2 flex flex-col  gap-2">
+    <div>
+        <div class="flex gap-3">
+            <p-avatar size="xlarge" shape="circle" class="icon-color">
+                <i class="fa-duotone fa-coins"></i>
+            </p-avatar>
+            <div class="gap-0">
+                <h5 class="m-0 text-sm" [pTooltip]="dore.supplier.name" tooltipPosition="top">
+                    {{ dore.supplier.name }}
+                </h5>
+                <p class="m-0 text-sm">
+                    <span>{{ dore.batchNumber }}</span>
+                </p>
+                <p class="m-0">
+                    <small>{{ dore.observation }}</small>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-content">
+        <div class="supplier-details">
+            <div class="details-container">
+                <div class="details-list">
+                    <p-panel [toggleable]="true" [collapsed]="true">
+                        <ng-template #header>
+                            <div class="flex items-center gap-2">
+                                <i class="fa-duotone fa-coin"></i>
+                                <span class="font-bold">Doré asociados a la recepción</span>
+                            </div>
+                        </ng-template>
+                        <ng-template #content>
+                            <svi-table [columns]="this.columns" [data]="dore.dore" [showPaginator]="false"
+                            [actions]="this.actions"></svi-table>
+                        </ng-template>
+                    </p-panel>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<svi-confirm-dialog
+  #confirmDialog
+  header="Confirmar eliminación"
+  [draggable]="false"
+  [style]="{ width: '40rem' }"
+  [acceptLabel]="'Eliminar'"
+  [rejectLabel]="'Cancelar'"
+  [acceptButtonStyleClass]="'p-button-danger'"
+  [rejectButtonStyleClass]="'p-button-outlined'"
+  [acceptVisible]="true"
+  [rejectVisible]="true"
+></svi-confirm-dialog>

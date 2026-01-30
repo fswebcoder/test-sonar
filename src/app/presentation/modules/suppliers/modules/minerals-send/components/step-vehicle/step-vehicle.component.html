@@ -1,0 +1,202 @@
+      <svi-search-step-header
+        [searchTitle]="'Buscar por placa'"
+        [control]="plateControl"
+        [inputId]="'plate'"
+        [inputLabel]="'Placa'"
+        [inputType]="'text'"
+        [inputUppercase]="true"
+        [useVehiclePlateDirective]="true"
+        [disabled]="(loadingService.isLoading$(LOADING.sections.vehicleSearch) | async) ?? false"
+        [minLength]="6"
+        [hintText]="'Escribe la placa y presiona “Buscar”.'"
+        [createLabel]="'Crear vehículo'"
+        [createIcon]="ICONS.ADD"
+        [createLoadingId]="LOADING.buttons.vehicleCreate"
+        (searchClick)="searchVehicle.emit($event)"
+        (createClick)="openCreateVehicle.emit()"
+      >
+        <div slot="createHint" class="text-500 text-sm flex align-items-center gap-2">
+          <i class="pi pi-info-circle"></i>
+          Crea el vehículo y luego podrás seleccionarlo.
+        </div>
+      </svi-search-step-header>
+
+      <article class="card shadow-2 flex flex-column mt-3 p-3 gap-3 relative">
+        <app-loading
+          [section]="LOADING.sections.vehicleSearch"
+          [options]="{ overlay: true, fullscreen: false, size: 'small' }"
+        ></app-loading>
+        <div class="flex flex-column gap-2">
+          <div class="flex align-items-center justify-content-between">
+            <div class="flex flex-column">
+              <span class="text-900 font-medium">Vehículo</span>
+              @if (!vehicleSearchResult()) {
+                <span class="text-500 text-sm">Sin seleccionar</span>
+              }
+            </div>
+
+            @if (vehicleSearchResult()) {
+              <div class="hidden md:flex gap-2">
+                <svi-button
+                  label="Editar documentos"
+                  icon="{{ ICONS.PENCIL }}"
+                  [size]="'small'"
+                  severity="primary"
+                  (onClick)="openEditDocumentsModal()"
+                ></svi-button>
+
+                <svi-button
+                  label="Deseleccionar"
+                  icon="{{ ICONS.CANCEL }}"
+                  [size]="'small'"
+                  severity="secondary"
+                  (onClick)="clearVehicleSelection()"
+                  [loadingId]="LOADING.buttons.vehicleDeselect"
+                ></svi-button>
+              </div>
+            }
+          </div>
+
+          @if (vehicleSearchResult()) {
+            <div class="grid md:hidden">
+              <div class="col-6">
+                <svi-button
+                  label="Editar documentos"
+                  icon="{{ ICONS.PENCIL }}"
+                  severity="primary"
+                  [fullWidth]="true"
+                  (onClick)="openEditDocumentsModal()"
+                ></svi-button>
+              </div>
+              <div class="col-6">
+                <svi-button
+                  label="Deseleccionar"
+                  icon="{{ ICONS.CANCEL }}"
+                  severity="secondary"
+                  [fullWidth]="true"
+                  (onClick)="clearVehicleSelection()"
+                  [loadingId]="LOADING.buttons.vehicleDeselect"
+                ></svi-button>
+              </div>
+            </div>
+          }
+        </div>
+
+        @if (vehicleSearchResult(); as v) {
+          <div class="grid">
+            <div class="col-12 md:col-4">
+              <div class="flex flex-column gap-1">
+                <span class="text-500 text-sm">Placa</span>
+                <span class="text-900 font-medium">{{ v.plate }}</span>
+              </div>
+            </div>
+
+            <div class="col-12 md:col-4">
+              <div class="flex flex-column gap-1">
+                <span class="text-500 text-sm">Tipo</span>
+                <span class="text-900 font-medium">{{ v.vehicleType.name }}</span>
+              </div>
+            </div>
+
+            <div class="col-12 md:col-4">
+              <div class="flex flex-column gap-1">
+                <span class="text-500 text-sm">Estado</span>
+                <p-tag
+                  [value]="v.isActive ? 'Activo' : 'Inactivo'"
+                  [severity]="v.isActive ? 'success' : 'danger'"
+                ></p-tag>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid">
+            <div class="col-12 md:col-4">
+              <div class="flex flex-column gap-1">
+                <span class="text-500 text-sm">SOAT</span>
+                @if (v.documents.soatUrl) {
+                  <svi-button
+                    [fullWidth]="true"
+                    [icon]="ICONS.DOCUMENT"
+                    (onClick)="openVehicleDocument('soat')"
+                    label="Ver documento"
+                  ></svi-button>
+                } @else {
+                  <svi-button
+                    type="button"
+                    [fullWidth]="true"
+                    [icon]="ICONS.DOCUMENT"
+                    label="Sin documento"
+                    severity="secondary"
+                    [disabled]="true"
+                  ></svi-button>
+                }
+              </div>
+            </div>
+
+            <div class="col-12 md:col-4">
+              <div class="flex flex-column gap-1">
+                <span class="text-500 text-sm">Tecnomecánica</span>
+                @if (v.documents.technomechanicalUrl) {
+                  <svi-button
+                    [fullWidth]="true"
+                    [icon]="ICONS.DOCUMENT"
+                    (onClick)="openVehicleDocument('technomechanical')"
+                    label="Ver documento"
+                  ></svi-button>
+                } @else {
+                  <svi-button
+                    type="button"
+                    [fullWidth]="true"
+                    [icon]="ICONS.DOCUMENT"
+                    label="Sin documento"
+                    severity="secondary"
+                    [disabled]="true"
+                  ></svi-button>
+                }
+              </div>
+            </div>
+
+            <div class="col-12 md:col-4">
+              <div class="flex flex-column gap-1">
+                <span class="text-500 text-sm">Tarjeta propiedad</span>
+                @if (v.documents.registrationUrl) {
+                  <svi-button
+                    [fullWidth]="true"
+                    [icon]="ICONS.DOCUMENT"
+                    (onClick)="openVehicleDocument('registration')"
+                    label="Ver documento"
+                  ></svi-button>
+                } @else {
+                  <svi-button
+                    type="button"
+                    [fullWidth]="true"
+                    [icon]="ICONS.DOCUMENT"
+                    label="Sin documento"
+                    severity="secondary"
+                    [disabled]="true"
+                  ></svi-button>
+                }
+              </div>
+            </div>
+          </div>
+        } @else {
+          <p-message severity="info" text="Busca por placa para seleccionarlo, o crea un vehículo nuevo."></p-message>
+        }
+      </article>
+
+      <svi-dialog
+        header="Documentos del vehículo"
+        width="55rem"
+        position="top"
+        [visible]="documentModal()"
+        (visibleChange)="documentModal.set($event)"
+        (onHide)="closeVehicleDocumentModal()"
+      >
+        @if (vehicleSearchResult()) {
+          <svi-vehicle-detail
+            [vehicle]="vehicleSearchResult()!"
+            [document]="selectedDocument()"
+            (onClose)="closeVehicleDocumentModal()"
+          ></svi-vehicle-detail>
+        }
+      </svi-dialog>

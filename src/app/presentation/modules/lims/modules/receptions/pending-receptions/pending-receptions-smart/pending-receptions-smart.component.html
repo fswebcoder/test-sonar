@@ -1,0 +1,10 @@
+<svi-pending-receptions-dump
+	[data]="pendingReceptionsQueryData()"
+	[weight]="weight()"
+	[allowManualWeight]="allowManualWeight()"
+	[isReadingWeight]="isReadingWeight()"
+	(requestReadWeight)="onRequestReadWeight()"
+	(modalOpened)="onModalOpened($event)"
+	(modalClosed)="onModalClosed()"
+	(completeReception)="onCompleteReception($event)"
+></svi-pending-receptions-dump>

@@ -1,0 +1,97 @@
+<div class="action-resource-container shadow-2">
+  <div class="flex align-items-center justify-content-between mb-3">
+    <h3 class="section-title mb-0">
+      <i class="{{ ICONS.KEY }}"></i>
+      Permisos y Acciones
+    </h3>
+
+    <div class="actions-counter">
+      <span> {{ getSelectedActionsCount() }} de {{ getUniqueActionsCount() }} acciones seleccionadas </span>
+      <div class="status-indicator" [class]="getSelectedActionsCount() > 0 ? 'active' : 'inactive'"></div>
+    </div>
+  </div>
+
+  <div class="filter-section">
+    <div class="filter-container my-2">
+      <div
+        class="gap-2 flex w-full flex-col justify-content-center sm:justify-content-start align-items-center sm:align-items-start"
+      >
+        <form [formGroup]="form">
+          <svi-float-input label="Buscar recursos" formControlName="filterText" />
+        </form>
+        @if (filterText()) {
+          <span class="mr-0"> Mostrando {{ getFilteredActionsCount() }} de {{ getTotalActionsCount() }} recursos </span>
+        }
+      </div>
+    </div>
+  </div>
+
+  @if (!isReadOnly()) {
+    <div class="action-buttons flex justify-content-center sm:justify-content-end">
+      <svi-button [outlined]="true" size="small" [disabled]="areAllActionsSelected()" (click)="selectAllActions()">
+        <i class="{{ ICONS.DOUBLE_CHECK }}"></i>
+        Seleccionar Todas
+      </svi-button>
+
+      <svi-button [outlined]="true" size="small" [disabled]="getSelectedActionsCount() === 0" (click)="clearActions()">
+        <i class="{{ ICONS.CANCEL }}"></i>
+        Limpiar Selección
+      </svi-button>
+    </div>
+  }
+
+  <div class="actions-grid">
+    <div class="applications-container">
+      @for (application of getActionsByResource(); track application.applicationId) {
+        <svi-collapsible-panel styleClass="application-panel mb-3">
+          <div slot="header" class="application-header-content">
+            <i class="{{ ICONS.LAYER_GROUP }} text-primary mr-2"></i>
+            <span class="application-name">{{ application.applicationName }}</span>
+            <span class="selection-counter ml-2">
+              ({{ application.selectedCount }}/{{ application.totalCount }} seleccionadas)
+            </span>
+          </div>
+
+          <div class="application-content">
+            <div class="parents-container">
+              @for (parent of application.parents; track parent.parentId) {
+                <svi-collapsible-panel styleClass="parent-panel mb-2">
+                  <div slot="header" class="parent-header-content">
+                    <i class="{{ ICONS.FOLDER }} text-primary mr-2"></i>
+                    <span class="parent-name">{{ parent.parentName }}</span>
+                    <span class="selection-counter ml-2">
+                      ({{ parent.selectedCount }}/{{ parent.totalCount }} seleccionadas)
+                    </span>
+                  </div>
+
+                  <div class="parent-content">
+                    <div class="resources-grid">
+                      @for (resource of parent.resources; track resource.resourceId) {
+                        <svi-action-resource-item
+                          [group]="resource"
+                          [selectedActionIds]="selectedActionIds()"
+                          [isSelfParent]="resource.resourceId === parent.parentId"
+                          (actionsChange)="onActionsChange($event)"
+                          [protectedActions]="protectedActions()"
+                          [isReadOnly]="isReadOnly()"
+                        />
+                      }
+                    </div>
+                  </div>
+                </svi-collapsible-panel>
+              }
+            </div>
+          </div>
+        </svi-collapsible-panel>
+      }
+    </div>
+  </div>
+
+  @if (getActionsByResource().length === 0 && filterText()) {
+    <div class="no-results">
+      <i class="{{ ICONS.SEARCH }}"></i>
+      <p>No se encontraron aplicaciones o recursos que coincidan con "{{ filterText() }}"</p>
+      <svi-button [text]="true" size="small" (click)="clearFilter()" label="Limpiar filtro"></svi-button>
+    </div>
+  }
+</div>

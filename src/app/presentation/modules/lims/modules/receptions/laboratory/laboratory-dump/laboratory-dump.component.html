@@ -1,0 +1,66 @@
+<section>
+  <div class="card">
+    <h3 class="card-title">Recepcion de laboratorio</h3>
+    <form [formGroup]="form" class="flex w-full flex-column gap-4">
+      <svi-smart-scan-input formControlName="sampleCode"></svi-smart-scan-input>
+      <div class="flex justify-content-end"></div>
+    </form>
+    @if (sample()) {
+      <article class="my-4 flex flex-col gap-2">
+        <div class="my-2 flex flex-wrap gap-2 items-center">
+          <p-tag
+            [value]="'Código: ' + (sample()?.sampleCode ?? '')"
+            severity="primary"
+            rounded
+            class="px-2 py-1 text-sm"
+          ></p-tag>
+          <p-tag
+            [value]="'Tipo: ' + (sample()?.sampleTypeName ?? '')"
+            severity="secondary"
+            rounded
+            class="px-2 py-1 text-sm"
+          ></p-tag>
+          <p-tag
+            [value]="'Peso: ' + formatWeight(sample()?.receivedWeight ?? 0) + ' ' + EWeightUnits.GRAMS"
+            severity="secondary"
+            rounded
+            class="px-2 py-1 text-sm"
+          ></p-tag>
+        </div>
+        @if (!hasRequiredAnalyses()) {
+          <svi-analysis-quantity-form
+            [analysisTypes]="analysisTypes()"
+            [defaultAnalyses]="defaultAnalyses() ?? []"
+            [availableAnalysisTypes]="analysisTypes()"
+            [parentForm]="form"
+          />
+        } @else {
+          <p class="text-sm text-color-secondary">
+            Esta muestra ya cuenta con análisis requeridos registrados.
+          </p>
+        }
+      </article>
+      <div class="w-full flex justify-content-end gap-2 mt-4">
+        <svi-button
+          label="Cancelar"
+          (click)="onCancel.emit()"
+          [icon]="ICONS.CANCEL"
+          severity="secondary"
+        ></svi-button>
+        <svi-button
+          [appPermission]="{ path, action: receptionAction.CREAR_RECEPCION_LABORATORIO }"
+          label="Guardar datos"
+          (click)="showConfirmSave()"
+          [icon]="ICONS.SAVE"
+          [disabled]="!form.valid"
+        ></svi-button>
+      </div>
+    } @else {
+      <div class="flex flex-column align-items-center justify-content-center gap-3">
+        <small class="text-center">Escanee el código de la muestra para asignar los análisis correspondientes</small>
+      </div>
+    }
+  </div>
+</section>
+
+<svi-confirm-dialog #confirmDialog/>

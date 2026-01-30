@@ -1,0 +1,35 @@
+<form class="duplicate-sample-form" [formGroup]="form" (ngSubmit)="handleSubmit()">
+  <div class="duplicate-sample-form__body">
+    <p class="text-sm text-700" *ngIf="sampleCode()">
+      Ingresa los datos para duplicar la muestra
+      <strong>{{ sampleCode() }}</strong>.
+    </p>
+
+    <svi-float-input
+      formControlName="receivedWeight"
+      label="Peso recibido"
+      [isWeightInput]="true"
+      [weightDecimals]="3"
+      suffix="g"
+    ></svi-float-input>
+
+    <svi-checkbox formControlName="moistureDetermination" [label]="'¿Determinación de humedad?'"></svi-checkbox>
+  </div>
+
+  <div class="duplicate-sample-form__actions">
+    <svi-button
+      type="button"
+      severity="secondary"
+      label="Cancelar"
+      (onClick)="handleCancel()"
+      [disabled]="loading()"
+    ></svi-button>
+    <svi-button
+      type="submit"
+      severity="primary"
+      label="Duplicar"
+      [loading]="loading()"
+      [disabled]="form.invalid || loading()"
+    ></svi-button>
+  </div>
+</form>

@@ -1,0 +1,53 @@
+<svi-scale-card
+  [icon]="ICONS.TRUCK"
+  [title]="title()"
+  [subtitle]="''"
+  [statusLabel]="''"
+  [statusType]="'active'"
+  [actionsClass]="'scale-card__actions--end'"
+>
+  <div card-body class="card-body">
+    <div class="order-card__meta">
+      <span class="order-card__material" [title]="subtitle()">{{ subtitle() }}</span>
+      <span class="order-card__status" [ngClass]="statusPillClass()">{{ statusText() }}</span>
+    </div>
+    <div class="card-body__summary">
+      <ul class="card-summary__grid">
+        <svi-order-scale-card-item [icon]="ICONS.TRUCK" [label]="vehiclePlate()" [tooltip]="'Vehículo'"></svi-order-scale-card-item>
+        <svi-order-scale-card-item [icon]="ICONS.INDUSTRY" [label]="supplierName()" [tooltip]="'Proveedor'"></svi-order-scale-card-item>
+        <svi-order-scale-card-item [icon]="ICONS.MOUNTAIN" [label]="mineName()" [tooltip]="'Mina'"></svi-order-scale-card-item>
+        <svi-order-scale-card-item [icon]="ICONS.LAYER_GROUP" [label]="batch()" [tooltip]="'Lote'"></svi-order-scale-card-item>
+      </ul>
+    </div>
+  </div>
+
+  <ng-container card-actions>
+    @if (showWeightButton()) {
+      <svi-card-button
+        label="Agregar peso"
+        [icon]="ICONS.ADD"
+        [severity]="EActionSeverity.ACTION"
+        (clicked)="handleAddWeight()"
+        [permission]="{ path: permissionPath(), action: weightAction()! }"
+      ></svi-card-button>
+    }
+
+    @if (showAssignBatchButton()) {
+      <svi-card-button
+        label="Asignar lote"
+        [icon]="ICONS.ADD"
+        [severity]="EActionSeverity.EDIT"
+        (clicked)="handleAssignBatch()"
+        [permission]="{ path: permissionPath(), action: assignBatchAction()! }"
+      ></svi-card-button>
+    }
+
+    <svi-card-button
+      label="Ver detalle"
+      [icon]="ICONS.EYE"
+      [severity]="EActionSeverity.VIEW"
+      (clicked)="handleViewDetails()"
+      [permission]="{ path: permissionPath(), action: viewAction() }"
+    ></svi-card-button>
+  </ng-container>
+</svi-scale-card>

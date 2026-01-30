@@ -1,0 +1,72 @@
+<app-loading [section]="LOADING.sections.movements" [options]="{ overlay: true, fullscreen: false, size: 'medium' }"></app-loading>
+
+@if (hasData()) {
+  <div class="flex align-items-center gap-2 mb-3">
+    <span class="text-sm" [class.font-bold]="!useToneladas()">kg</span>
+    <p-inputSwitch [ngModel]="useToneladas()" (ngModelChange)="useToneladas.set($event)" />
+    <span class="text-sm" [class.font-bold]="useToneladas()">ton</span>
+  </div>
+
+  <!-- KPIs Row -->
+  <div class="grid mb-2">
+    <div class="col-6 md:col-4 lg:col-2">
+      <svi-stat-card [value]="dashboard()!.summary.totalMovements" label="Movimientos" [icon]="ICONS.ROUTE" variant="primary" size="compact" />
+    </div>
+    <div class="col-6 md:col-4 lg:col-2">
+      <svi-stat-card [value]="formatWeight(dashboard()!.summary.totalWeightMoved)" label="Peso Movido" [icon]="ICONS.WEIGHT" variant="secondary" size="compact" />
+    </div>
+    <div class="col-6 md:col-4 lg:col-2">
+      <svi-stat-card [value]="dashboard()!.summary.completedMovements" label="Completados" [icon]="ICONS.CHECK" variant="success" size="compact" />
+    </div>
+    <div class="col-6 md:col-4 lg:col-2">
+      <svi-stat-card [value]="dashboard()!.scheduled.pending" label="Pendientes" [icon]="ICONS.CLOCK" variant="warning" size="compact" />
+    </div>
+    <div class="col-6 md:col-4 lg:col-2">
+      <svi-stat-card [value]="dashboard()!.summary.cancelledMovements" label="Cancelados" [icon]="ICONS.CANCEL" variant="danger" size="compact" />
+    </div>
+  </div>
+
+  <!-- Row 1: Status + Location Flows -->
+  <div class="grid mb-2">
+    <div class="col-12 md:col-4 lg:col-3">
+      <div class="card h-full p-2">
+        <h6 class="mb-2 mt-0 text-sm">Estado de Movimientos</h6>
+        <svi-doughnut-chart [data]="statusChartData()" height="200px" [compact]="false" />
+      </div>
+    </div>
+    <div class="col-12 md:col-8 lg:col-9">
+      <div class="card h-full p-2">
+        <h6 class="mb-2 mt-0 text-sm">Peso Movido por Ubicación</h6>
+        <svi-bar-chart [data]="locationFlowsChartData()" height="200px" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2: By Supplier + By Mine (hidden when filtered) -->
+  @if (!hasSupplierFilter() || !hasMineFilter()) {
+    <div class="grid mb-3">
+      @if (!hasSupplierFilter()) {
+        <div [class]="hasMineFilter() ? 'col-12' : 'col-12 lg:col-6'">
+          <div class="card h-full p-3">
+            <h5 class="mb-2 mt-0">Peso Movido por Proveedor</h5>
+            <svi-bar-chart [data]="supplierChartData()" orientation="horizontal" height="250px" />
+          </div>
+        </div>
+      }
+      @if (!hasMineFilter()) {
+        <div [class]="hasSupplierFilter() ? 'col-12' : 'col-12 lg:col-6'">
+          <div class="card h-full p-3">
+            <h5 class="mb-2 mt-0">Peso Movido por Mina</h5>
+            <svi-bar-chart [data]="mineChartData()" orientation="horizontal" height="250px" />
+          </div>
+        </div>
+      }
+    </div>
+  }
+} @else {
+  <svi-empty-state
+    title="Sin datos de movimientos"
+    description="Aplique los filtros para ver el dashboard de movimientos."
+    [icon]="ICONS.ROUTE"
+  />
+}

@@ -1,0 +1,25 @@
+<svi-dialog
+  [visible]="visible"
+  [header]="weightMode ? weightHeader : 'Ingresar muestra'"
+  [width]="'40rem'"
+  [modal]="true"
+  [closeOnEscape]="true"
+  [dismissableMask]="true"
+  (visibleChange)="onVisible($event)"
+>
+  <div class="flex flex-col gap-4 p-2">
+    @if (!weightMode) {
+      <form [formGroup]="scanForm" class="flex flex-col gap-4">
+        <svi-smart-scan-input formControlName="sampleCode"></svi-smart-scan-input>
+      </form>
+    } @else {
+      <form [formGroup]="weightForm" class="flex flex-col gap-4">
+        <svi-float-input [label]="weightInputLabel" [isWeightInput]="true" [formControlName]="weightFieldName" suffix="{{units}}"></svi-float-input>
+      </form>
+    }
+    <div class="flex justify-end gap-2">
+      <svi-button type="button" severity="secondary" (click)="onCancel()" [icon]="ICONS.CANCEL" label="Cancelar"></svi-button>
+  <svi-button severity="primary" type="button" (click)="onAccept()" [icon]="ICONS.CHECK" [disabled]="(!weightMode && scanForm.invalid) || (weightMode && !!weightForm.get(weightFieldName)?.invalid)" label="Aceptar"></svi-button>
+    </div>
+  </div>
+</svi-dialog>

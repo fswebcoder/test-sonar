@@ -1,0 +1,55 @@
+.user-form-container {
+  background: var(--surface-card);
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.form-header {
+  border-bottom: 1px solid var(--surface-border);
+  padding-bottom: 1rem;
+}
+
+.form-title {
+  color: var(--text-color);
+  font-weight: 600;
+}
+
+.form-subtitle {
+  color: var(--text-color-secondary);
+  font-size: 0.875rem;
+}
+
+.user-form {
+  .grid {
+    margin: 0;
+  }
+
+}
+
+@media screen and (max-width: 768px) {
+  .user-form-container {
+    margin: 0;
+    border-radius: 0;
+  }
+  
+  .form-header {
+    text-align: center;
+  }
+}
+
+.user-form-container {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

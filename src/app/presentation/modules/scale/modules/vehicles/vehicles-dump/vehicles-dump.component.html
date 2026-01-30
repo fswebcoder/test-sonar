@@ -1,0 +1,93 @@
+<section>
+  <div class="card p-4">
+    <div class="vehicles-header flex flex-wrap gap-3 justify-between items-center">
+      <h3>Vehículos</h3>
+      <div class="flex align-items-center gap-2 flex-wrap justify-end">
+        <svi-view-switcher
+          [value]="viewMode()"
+          [options]="viewOptions()"
+          [size]="'small'"
+          [showLabels]="false"
+          [showIcons]="true"
+          (valueChange)="onViewModeChange($event)"
+        ></svi-view-switcher>
+        <svi-button label="Nuevo vehículo" icon={{ICONS.ADD}} (onClick)="openVehicleModal('create')"></svi-button>
+      </div>
+    </div>
+
+    <div class="vehicles-filters flex justify-content-start align-items-center my-4 gap-3 flex-wrap">
+      <svi-float-input [formControl]="searchControl" label="Buscar por placa" [uppercase]="true" sviVehiclePlate></svi-float-input>
+      <div class="flex align-items-center gap-2">
+        <svi-checkbox
+          [ngModel]="withDeleted()"
+          label="Incluir vehículos inactivos"
+          [binary]="true"
+          (ngModelChange)="withDeletedChange($event)"
+        ></svi-checkbox>
+      </div>
+    </div>
+
+    <div class="vehicles-content">
+      @if (vehicleList().length === 0) {
+        <svi-empty-state message="No se encontraron vehículos." icon="{{ ICONS.TRUCK }}"></svi-empty-state>
+      } @else {
+        @if (viewMode() === 'cards') {
+          <svi-card-grid>
+            @for (vehicle of vehicleList(); track vehicle.id) {
+              <svi-vehicle-card
+                [vehicle]="vehicle"
+                [path]="path"
+                (onViewSoat)="openVehicleDocumentModal('soat', $event)"
+                (onViewTechnomechanical)="openVehicleDocumentModal('technomechanical', $event)"
+                (onViewRegistration)="openVehicleDocumentModal('registration', $event)"
+                (onEdit)="openVehicleModal('edit', $event)"
+                (onActivate)="activateVehicle($event)"
+                (onDeactivate)="deactivateVehicle($event)"
+              ></svi-vehicle-card>
+            }
+          </svi-card-grid>
+        } @else {
+          <svi-table [data]="vehicleList()" [columns]="columns" [actions]="actions" [showPaginator]="false"></svi-table>
+        }
+      }
+      <svi-paginator [totalRecords]="totalRecords"></svi-paginator>
+    </div>
+  </div>
+</section>
+
+<svi-dialog
+  [header]="getModalTitle()"
+  width="50rem"
+  position="top"
+  [visible]="vehicleModal()"
+  (onHide)="closeVehicleModal()"
+>
+  @if (vehicleAction() === 'view' && vehicle()) {
+    <svi-vehicle-detail
+      [vehicle]="vehicle()!"
+      [document]="selectedDocument() ?? 'soat'"
+      (onClose)="closeVehicleModal()"
+    ></svi-vehicle-detail>
+  } @else {
+    <svi-vehicle-form
+      [vehicle]="vehicle()"
+      [action]="vehicleAction()"
+      [vehicleTypes]="vehicleTypes()"
+      (onCancel)="closeVehicleModal()"
+      (onCreate)="createVehicle($event)"
+      (onUpdate)="updateVehicle($event)"
+    ></svi-vehicle-form>
+  }
+</svi-dialog>
+
+<svi-confirm-dialog
+  #confirmDialog
+  [draggable]="false"
+  [style]="{ width: '40rem' }"
+  [acceptLabel]="'Confirmar'"
+  [rejectLabel]="'Cancelar'"
+  [acceptButtonStyleClass]="'p-button-primary'"
+  [rejectButtonStyleClass]="'p-button-outlined'"
+  [acceptVisible]="true"
+  [rejectVisible]="true"
+></svi-confirm-dialog>

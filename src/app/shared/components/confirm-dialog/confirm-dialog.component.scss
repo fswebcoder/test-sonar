@@ -1,0 +1,204 @@
+:host {
+  display: block;
+}
+
+::ng-deep {
+  .p-confirm-dialog-mask {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    animation: fadeIn 0.3s ease-out;
+  }
+
+  .p-confirm-dialog {
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    border: none;
+    overflow: hidden;
+    animation: slideIn 0.3s ease-out;
+    max-width: 450px;
+    width: 90vw;
+  }
+
+  .p-confirm-dialog .p-dialog-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 1.5rem 2rem 1rem;
+    border-bottom: none;
+    position: relative;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    }
+  }
+
+  .p-confirm-dialog .p-dialog-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+    margin: 0;
+  }
+
+  .p-confirm-dialog .p-dialog-header-icon {
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.2s ease;
+    
+    &:hover {
+      color: white;
+      transform: scale(1.1);
+    }
+  }
+
+  .p-confirm-dialog .p-dialog-content {
+    padding: 2rem;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 200px;
+  }
+
+  .p-confirm-dialog .p-dialog-content > i {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #ff6b6b, #feca57);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: pulse 2s infinite;
+  }
+
+  .p-confirm-dialog .p-dialog-content p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #374151;
+    margin: 0;
+    font-weight: 400;
+  }
+
+  .p-confirm-dialog .p-dialog-footer {
+    background: #f8fafc;
+    padding: 1.5rem 2rem;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .p-confirm-dialog {
+      margin: 1rem;
+      width: calc(100vw - 2rem);
+    }
+    
+    .p-confirm-dialog .p-dialog-content {
+      padding: 1.5rem;
+      min-height: 150px;
+    }
+    
+    .p-confirm-dialog .p-dialog-content > i {
+      font-size: 3rem;
+    }
+    
+    .p-confirm-dialog .p-dialog-footer {
+      padding: 1rem 1.5rem;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(-50px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  .p-confirm-dialog.dialog-type-warning .p-dialog-content > i,
+  .p-confirm-dialog.warning .p-dialog-content > i {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .p-confirm-dialog.dialog-type-error .p-dialog-content > i,
+  .p-confirm-dialog.error .p-dialog-content > i {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .p-confirm-dialog.dialog-type-success .p-dialog-content > i,
+  .p-confirm-dialog.success .p-dialog-content > i {
+    background: linear-gradient(135deg, #10b981, #059669);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .p-confirm-dialog.dialog-type-info .p-dialog-content > i,
+  .p-confirm-dialog.info .p-dialog-content > i {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .p-confirm-dialog.dialog-type-question .p-dialog-content > i {
+    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .p-confirm-dialog.dialog-type-warning .p-dialog-header {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  }
+
+  .p-confirm-dialog.dialog-type-error .p-dialog-header {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  }
+
+  .p-confirm-dialog.dialog-type-success .p-dialog-header {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  }
+
+  .p-confirm-dialog.dialog-type-info .p-dialog-header {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  }
+
+  .p-confirm-dialog.dialog-type-question .p-dialog-header {
+    background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  }
+}

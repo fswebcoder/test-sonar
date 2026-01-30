@@ -1,0 +1,29 @@
+<!-- Contenedor principal con float label -->
+<div class="w-full">
+  <p-floatlabel class="w-full" variant="on">
+    <p-select
+      [id]="id"
+      [(ngModel)]="value"
+      [options]="options()"
+      [optionLabel]="optionLabel()"
+      [optionValue]="optionValue() || undefined"
+      [disabled]="disabled || disabledInput()"
+      [showClear]="showClear()"
+      [filter]="filter()"
+      [filterBy]="filterBy()"
+      [emptyFilterMessage]="emptyFilterMessage()"
+      [emptyMessage]="emptyMessage()"
+      [class.ng-invalid]="hasErrors"
+      [class.ng-dirty]="control?.touched"
+      class="w-full"
+      styleClass="w-full"
+      [appendTo]="'body'"
+      (onChange)="handleChange($event)"
+      (onBlur)="onBlur()"
+      [loading]="loading()"
+    />
+    <label [for]="id">{{ label() }}</label>
+  </p-floatlabel>
+
+  <div sviFormError [errorMessage]="errorMessage" [show]="hasErrors"></div>
+</div>

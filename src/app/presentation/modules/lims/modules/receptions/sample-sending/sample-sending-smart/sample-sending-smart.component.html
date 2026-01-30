@@ -1,0 +1,13 @@
+<svi-sample-sending-dump
+class="px-fadein"
+  [suppliers]="suppliers()"
+  [priorities]="priorities()"
+  [sampleTypes]="sampleTypes()"
+  [analysisTypes]="analysisTypes()"
+  [mills]="mills()"
+  [shifts]="shifts()"
+  [printers]="printers()"
+  (onSave)="save($event)"
+  (emitPrint)="onPrintSamples($event)"
+></svi-sample-sending-dump>
+

@@ -1,0 +1,38 @@
+<section class="card p-4">
+  <header class="flex flex-column gap-2 sm:flex-row sm:justify-content-between align-items-start mb-3">
+    <div>
+      <h2 class="m-0">Selecciona los big bags</h2>
+      <p class="m-0 text-sm text-color-secondary">
+        Elige los big bags que harán parte de la nueva orden de envío y confirma para guardarla.
+      </p>
+    </div>
+  </header>
+
+  <form [formGroup]="form" class="mb-4">
+    <svi-float-input formControlName="search" label="Buscar big bag" />
+  </form>
+  <div
+    class="selection-summary flex flex-column gap-1 sm:flex-row sm:align-items-center sm:justify-content-between mb-3">
+    <span class="text-sm text-color-secondary">
+      Big bags seleccionados: <strong>{{ selectedBigBags().length }}</strong>
+    </span>
+    <span class="text-sm text-color-secondary">
+      Peso acumulado: <strong>{{ formatWeight(selectedWeightTotal()) }} kg</strong>
+    </span>
+  </div>
+  @if (availableBigBags().length) {
+    <svi-table [data]="availableBigBags()" [columns]="columns" selectionMode="multiple"
+      [selectedItems]="selectedBigBags()" (selectedItemsChange)="onSelectionChange($event)"
+      [showPaginator]="false"></svi-table>
+  } @else {
+    <svi-empty-state message="No hay big bags disponibles"></svi-empty-state>
+  }
+
+  <svi-paginator class="mt-3" [totalRecords]="totalRecords()" (pageChange)="onPageChange()" />
+
+  <footer class="flex justify-content-end gap-2 mt-4">
+    <svi-button label="Cancelar" severity="secondary" (onClick)="onClose()" />
+    <svi-button label="Crear orden" [disabled]="!selectedBigBags().length" (onClick)="onSubmit()"
+      loadingId="create-sending-order-btn" icon="{{ICONS.SAVE}}" />
+  </footer>
+</section>

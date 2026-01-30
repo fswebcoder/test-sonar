@@ -1,0 +1,25 @@
+{
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#4a5672",
+        "activityBar.background": "#4a5672",
+        "activityBar.foreground": "#e7e7e7",
+        "activityBar.inactiveForeground": "#e7e7e799",
+        "activityBarBadge.background": "#27191d",
+        "activityBarBadge.foreground": "#e7e7e7",
+        "commandCenter.border": "#e7e7e799",
+        "sash.hoverBorder": "#4a5672",
+        "statusBar.background": "#363f53",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#4a5672",
+        "statusBarItem.remoteBackground": "#363f53",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "titleBar.activeBackground": "#363f53",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#363f5399",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    },
+    "peacock.color": "#363f53",
+    "explorer.compactFolders": false,
+    "appService.defaultWebAppToDeploy": "/subscriptions/ca85a61f-687c-44c5-9f0e-b2516c23cd12/resourceGroups/rg-aurumsuite-eastus/providers/Microsoft.Web/sites/app-web-aurumsuite-sv-dev",
+    "appService.deploySubpath": "."
+}

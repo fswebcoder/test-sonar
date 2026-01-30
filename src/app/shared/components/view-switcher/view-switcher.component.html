@@ -1,0 +1,26 @@
+<div [class]="containerClasses()" 
+     [class.disabled]="disabled()"
+     [class.show-labels]="showLabels()"
+     [class.show-icons]="showIcons()">
+  
+  @for (option of availableOptions(); track option.value) {
+    <button pButton 
+            type="button"
+            [disabled]="isDisabled(option.value)"
+            (click)="changeView(option.value)" 
+            [class.active]="isActive(option.value)"
+            [class.disabled]="isDisabled(option.value)"
+            [class]="buttonClasses()"
+            [title]="option.label">
+      
+      @if (showIcons() && option.icon) {
+        <i [class]="option.icon"></i>
+      }
+      
+      @if (showLabels() && option.label) {
+        <span class="button-label">{{ option.label }}</span>
+      }
+    </button>
+  }
+</div>
+  

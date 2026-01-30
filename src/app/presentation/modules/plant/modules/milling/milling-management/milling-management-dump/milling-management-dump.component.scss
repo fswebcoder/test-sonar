@@ -1,0 +1,50 @@
+:host {
+	display: block;
+}
+
+.management {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.management__header {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	padding: 1.5rem;
+	border-radius: 1rem;
+	background: var(--surface-card);
+	box-shadow: var(--card-shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
+}
+
+.management__title {
+	margin: 0;
+	font-size: 1.25rem;
+	font-weight: 600;
+}
+
+.management__hint {
+	margin: 0.35rem 0 0;
+	color: var(--text-color-secondary);
+	font-size: 0.9rem;
+}
+
+.management-tabs {
+	border-radius: 1rem;
+	overflow: hidden;
+}
+
+.management-tab__content {
+	padding: 1.75rem;
+	background: var(--surface-ground);
+	border-radius: 0 0 1rem 1rem;
+}
+
+.management-empty {
+	margin-top: 1rem;
+}
+
+:host ::ng-deep .management-card:hover {
+	transform: none;
+}

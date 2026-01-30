@@ -1,0 +1,72 @@
+<section class="card px-fadein">
+  <form [formGroup]="form" class="flex gap-4 m-0 w-full justify-content-between align-items-center h-min">
+    <h2>Configuración de Turno</h2>
+    <p-selectButton
+      [options]="shifts()"
+      optionLabel="name"
+      optionValue="id"
+      label="Turno"
+      formControlName="shift"
+      ariaLabelledBy="basic"
+    ></p-selectButton>
+  </form>
+
+  @if (currentShift()) {
+    <ng-template #areaHeader let-area>
+      {{ area.name }}
+    </ng-template>
+
+    <ng-template #areaPanel let-area>
+      <svi-shift-area
+        [path]="path"
+        [area]="area"
+        [isConfig]="true"
+        (onShowAddPersonnel)="showAddPersonnel(area.operationAreaId)"
+        (onDeletePersonnel)="showDeletePersonnel($event)"
+      ></svi-shift-area>
+    </ng-template>
+
+    <svi-tabs
+      [tabs]="currentShift() || []"
+      [value]="currentShift() ? currentShift()![0].name : ''"
+      [scrollable]="true"
+      [tabListClass]="'flex justify-content-center w-full'"
+      [headerTemplate]="areaHeader"
+      [panelTemplate]="areaPanel"
+      [tabValueFn]="areaValueAccessor"
+    ></svi-tabs>
+  } @else {
+    <div class="flex flex-column align-items-center justify-content-center w-full h-30rem">
+      <svi-empty-state
+        icon="{{ ICONS.WARNING }}"
+        title="Configuración de turno no encontrada"
+        description="Seleccione un turno para ver su configuración"
+      ></svi-empty-state>
+    </div>
+  }
+</section>
+
+<svi-dialog
+  [visible]="addPersonnelDialogVisible()"
+  [modal]="true"
+  (onHide)="clearAndCloseForms()"
+  header="Agregar Personal"
+  width="70rem"
+>
+  <svi-add-personnel-form
+    #addPersonnelForm
+    (onClose)="clearAndCloseForms()"
+    (onAddPersonnelConfig)="addPersonnel($event)"
+    [personnel]="personnel()"
+    [personnelPositions]="personnelPositions()"
+    [areaOfOperationId]="selectedAreaId()"
+    [isConfig]="true"
+    [shiftConfigId]="form.get('shift')?.value"
+  ></svi-add-personnel-form>
+</svi-dialog>
+
+<svi-confirm-dialog
+  #confirmDialog
+  header="Eliminar personal"
+  message="¿Está seguro que desea eliminar a {{ selectedPersonnel() ? selectedPersonnel()!.name : '' }} de la configuración del turno?"
+  ></svi-confirm-dialog>

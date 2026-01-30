@@ -1,0 +1,97 @@
+<section>
+  <div class="card p-4">
+    <div class="drivers-header flex flex-wrap gap-3 justify-between items-center">
+      <h3>Conductores</h3>
+      <div class="flex align-items-center gap-2 flex-wrap justify-end">
+        <svi-view-switcher
+          [value]="viewMode()"
+          [options]="viewOptions()"
+          [size]="'small'"
+          [showLabels]="false"
+          [showIcons]="true"
+          (valueChange)="onViewModeChange($event)"
+        ></svi-view-switcher>
+        <svi-button
+          label="Nuevo conductor"
+          icon={{ICONS.ADD}}
+          (onClick)="openDriverModal('create')"
+          [appPermission]="{ path, action: ScaleActions.CREAR_CONDUCTOR }"
+        ></svi-button>
+      </div>
+    </div>
+
+    <div class="drivers-filters flex justify-content-start align-items-center my-4 gap-3 flex-wrap">
+      <svi-float-input [formControl]="searchControl" label="Nombre o documento" />
+      <div class="flex align-items-center gap-2">
+        <svi-checkbox
+          [ngModel]="withDeleted()"
+          label="Incluir conductores inactivos"
+          [binary]="true"
+          (ngModelChange)="withDeletedChange($event)"
+        ></svi-checkbox>
+      </div>
+    </div>
+
+    <div class="drivers-content">
+      @if (driverList().length === 0) {
+        <svi-empty-state message="No se encontraron conductores." icon="{{ ICONS.DRIVER }}"></svi-empty-state>
+      } @else {
+        @if (viewMode() === 'cards') {
+          <svi-card-grid>
+            @for (driver of driverList(); track driver.id) {
+              <svi-driver-card
+                [driver]="driver"
+                [path]="path"
+                (onViewCc)="openDriverDocumentModal('cc', $event)"
+                (onViewArl)="openDriverDocumentModal('arl', $event)"
+                (onEdit)="openDriverModal('edit', $event)"
+                (onActivate)="activateDriver($event)"
+                (onDeactivate)="deactivateDriver($event)"
+              ></svi-driver-card>
+            }
+          </svi-card-grid>
+        } @else {
+          <svi-table [data]="driverList()" [columns]="columns" [actions]="actions" [showPaginator]="false"></svi-table>
+        }
+      }
+      <svi-paginator [totalRecords]="totalRecords"></svi-paginator>
+    </div>
+  </div>
+</section>
+
+<svi-dialog
+  [header]="getModalTitle()"
+  width="45rem"
+  position="top"
+  [visible]="driverModal()"
+  (onHide)="closeDriverModal()"
+>
+  @if (driverAction() === 'view' && driver()) {
+    <svi-driver-detail
+      [driver]="driver()!"
+      [document]="selectedDocument() ?? 'cc'"
+      (onClose)="closeDriverModal()"
+    ></svi-driver-detail>
+  } @else {
+    <svi-driver-form
+      [driver]="driver()"
+      [action]="driverAction()"
+      [documentTypes]="documentTypes()"
+      (onCancel)="closeDriverModal()"
+      (onCreate)="createDriver($event)"
+      (onUpdate)="updateDriver($event)"
+    ></svi-driver-form>
+  }
+</svi-dialog>
+
+<svi-confirm-dialog
+  #confirmDialog
+  [draggable]="false"
+  [style]="{ width: '40rem' }"
+  [acceptLabel]="'Confirmar'"
+  [rejectLabel]="'Cancelar'"
+  [acceptButtonStyleClass]="'p-button-primary'"
+  [rejectButtonStyleClass]="'p-button-outlined'"
+  [acceptVisible]="true"
+  [rejectVisible]="true"
+></svi-confirm-dialog>

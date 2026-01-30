@@ -1,0 +1,59 @@
+<app-loading [section]="LOADING.sections.ordersList" [options]="{ overlay: true, fullscreen: false, size: 'medium' }"></app-loading>
+
+<div class="flex flex-column gap-3">
+  <!-- Header with filters and create button -->
+  <div class="flex flex-column md:flex-row md:align-items-center md:justify-content-between gap-3">
+    <div class="flex flex-wrap align-items-center gap-3">
+      <div class="w-15rem">
+        <svi-float-input
+          [formControl]="searchControl"
+          label="Buscar"
+        />
+      </div>
+      <div class="w-10rem">
+        <svi-float-select
+          [formControl]="statusControl"
+          label="Estado"
+          [options]="statusOptions"
+          optionLabel="label"
+          optionValue="value"
+          [showClear]="true"
+        />
+      </div>
+    </div>
+    <svi-button
+      [icon]="ICONS.ADD"
+      label="Nueva Orden"
+      (onClick)="createOrder.emit()"
+    />
+  </div>
+
+  <!-- Orders table -->
+  @if (hasOrders()) {
+    <svi-table
+      [columns]="columns"
+      [data]="orders()"
+      [actions]="actions"
+      [loading]="loading()"
+      [showPaginator]="false"
+      [emptyMessage]="'No se encontraron órdenes'"
+    ></svi-table>
+    
+    <svi-paginator
+      [totalRecords]="totalRecords"
+      (pageChange)="onPageChange()"
+    ></svi-paginator>
+  } @else if (!loading()) {
+    <svi-empty-state
+      title="Sin órdenes de envío"
+      description="Aún no has creado ninguna orden de envío de mineral. Crea tu primera orden para comenzar."
+      [icon]="ICONS.TRUCK"
+    >
+      <svi-button
+        [icon]="ICONS.ADD"
+        label="Crear Primera Orden"
+        (onClick)="createOrder.emit()"
+      />
+    </svi-empty-state>
+  }
+</div>

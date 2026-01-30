@@ -1,0 +1,16 @@
+<svi-orders-dump
+  [orders]="ordersQueryData().items"
+  [drivers]="driversOptions()"
+  [vehicles]="vehiclesOptions()"
+  [materialTypes]="materialTypesOptions()"
+  [storageZones]="storageZoneOptions()"
+  [mines]="mineOptions()"
+  [batches]="batchOptions()"
+  [suppliers]="suppliersOptions()"
+  [orderType]="orderTypeFilter()"
+  (createOrderSubmit)="createOrder($event)"
+  (supplierIdChange)="handleSupplierSelected($event)"
+  (mineIdChange)="handleMineSelected($event)"
+  (assignBatchSubmit)="assignBatchToOrder($event)"
+  (orderTypeChange)="handleOrderTypeChange($event)"
+></svi-orders-dump>

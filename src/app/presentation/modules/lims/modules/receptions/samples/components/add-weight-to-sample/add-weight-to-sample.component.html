@@ -1,0 +1,24 @@
+<div class="flex flex-column gap-3">
+  <svi-sample-weight
+    [weight]="weight()"
+    [disableWeight]="!shouldEnableManualInput()"
+    [readWeightDisabled]="isReadingWeight()"
+    (onReadWeight)="handleReadWeight()"
+    (onManualWeightChange)="handleManualWeightChange($event)"
+  ></svi-sample-weight>
+
+  <div class="flex justify-content-end gap-2 mt-3">
+    <svi-button severity="secondary" type="button" label="Cancelar" (click)="handleCancel()">
+      <i class="{{ ICONS.CANCEL }}"></i>
+    </svi-button>
+    <svi-button
+      severity="primary"
+      type="button"
+      label="Guardar peso"
+      [disabled]="weight() === null && manualWeight() === null"
+      (click)="handleSave()"
+    >
+      <i class="{{ ICONS.SAVE }}"></i>
+    </svi-button>
+  </div>
+</div>

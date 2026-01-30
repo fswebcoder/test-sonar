@@ -1,0 +1,50 @@
+<svi-scale-card
+  [icon]="ICONS.LAYER_GROUP"
+  [title]="materialType().name"
+  [statusLabel]="statusLabel()"
+  [statusType]="statusType()"
+  [actionsClass]="'scale-card__actions--spread w-full gap-2 flex-wrap'"
+>
+  <ng-container card-actions>
+    <svi-card-button
+      label="Ver detalle"
+      [icon]="ICONS.EYE"
+      size="small"
+      [fullWidth]="true"
+      [outlined]="true"
+      [severity]="EActionSeverity.VIEW"
+      (clicked)="handleView()"
+      [permission]="{ path: path(), action: ScaleActions.VER_TIPOS_DE_MATERIAL }"
+    ></svi-card-button>
+    <svi-card-button
+      label="Editar"
+      [icon]="ICONS.PENCIL"
+      size="small"
+      [outlined]="true"
+      [severity]="EActionSeverity.EDIT"
+      (clicked)="handleEdit()"
+      [permission]="{ path: path(), action: ScaleActions.ACTUALIZAR_TIPO_DE_MATERIAL }"
+    ></svi-card-button>
+    @if (materialType().isActive) {
+      <svi-card-button
+        label="Desactivar"
+        [icon]="ICONS.INACTIVATE"
+        size="small"
+        [fullWidth]="true"
+        [severity]="EActionSeverity.DEACTIVATE"
+        (clicked)="handleDeactivate()"
+        [permission]="{ path: path(), action: ScaleActions.ELIMINAR_TIPO_DE_MATERIAL }"
+      ></svi-card-button>
+    } @else {
+      <svi-card-button
+        label="Activar"
+        [icon]="ICONS.ACTIVATE"
+        size="small"
+        [fullWidth]="true"
+        [severity]="EActionSeverity.ACTIVATE"
+        (clicked)="handleActivate()"
+        [permission]="{ path: path(), action: ScaleActions.ACTIVAR_TIPO_DE_MATERIAL }"
+      ></svi-card-button>
+    }
+  </ng-container>
+</svi-scale-card>

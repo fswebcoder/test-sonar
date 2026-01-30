@@ -1,0 +1,54 @@
+.batch-helper {
+  margin-top: 1rem;
+  font-size: 0.875rem;
+  color: var(--text-color-secondary);
+}
+
+.batch-separator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.25rem 0;
+}
+
+.batch-field {
+  width: 100%;
+
+  > svi-float-select,
+  > svi-float-input {
+    display: block;
+    width: 100%;
+  }
+}
+
+.batch-separator__text {
+  text-align: center;
+  font-size: 0.75rem;
+  line-height: 1.1;
+  color: var(--text-color-secondary);
+}
+
+.batch-separator__line {
+  width: 100%;
+  border-top: 1px solid var(--surface-border);
+  opacity: 0.8;
+}
+
+.batch-conflict {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  margin-top: 1rem;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  background-color: var(--surface-b);
+  color: var(--red-500);
+
+  i {
+    font-size: 1rem;
+    margin-top: 0.125rem;
+  }
+}

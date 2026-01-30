@@ -1,0 +1,32 @@
+<form [formGroup]="parentForm()" class="flex flex-column gap-4">
+  <div class="flex gap-2">
+    <svi-multiselect
+      [options]="analysisTypes()"
+      formControlName="requiredAnalysesIds"
+      label="Análisis requeridos"
+      [optionLabel]="'name'"
+      [optionValue]="'id'"
+      class="flex-1"
+    />
+  </div>
+
+  @if (parentForm().get('requiredAnalysesIds')?.value?.length) {
+    <div class="card shadow-2 m-0">
+      <label class="block font-semibold uppercase">Para la muestra se seleccionaron los siguientes análisis:</label>
+      <div class="flex flex-wrap gap-2">
+        @for (id of parentForm().get('requiredAnalysesIds')?.value; track id) {
+          <p-message severity="secondary">
+            <ng-template #icon>
+              <i class="fa-duotone fa-solid fa-flask-vial text-primary-color text-2xl"></i>
+            </ng-template>
+            <span class="chip">
+              {{ getAnalysisShortName(id) }}
+            </span>
+          </p-message>
+        }
+      </div>
+    </div>
+  }
+
+
+</form>

@@ -1,0 +1,27 @@
+
+
+@if (createOrderModalVisible()) {
+  <svi-bb-order-management-big-bags-modal
+    [availableBigBags]="availableBigBags()"
+    [selectedBigBags]="selectedBigBags()"
+    [totalRecords]="bigBagsTotalRecords"
+    (selectionChange)="onBigBagsSelectionChange($event)"
+    (pageChange)="bigBagsPageChange()"
+    (close)="closeCreateOrderModal()"
+    (submit)="submitCreateOrder()"
+  />
+} @else {
+  <svi-bb-order-management-orders-section
+    [data]="data()"
+    [totalRecords]="getTotalRecords"
+    [isModalOpen]="createOrderModalVisible()"
+    (filtersChange)="onFiltersChange($event)"
+    (pageChange)="ordersPageChange()"
+    (openCreateOrderModal)="openCreateOrderModal()"
+  />
+}
+
+<svi-confirm-dialog
+  #createOrderConfirmDialog
+  [draggable]="false"
+></svi-confirm-dialog>

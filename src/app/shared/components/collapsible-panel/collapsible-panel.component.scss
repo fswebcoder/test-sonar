@@ -1,0 +1,128 @@
+:host {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  min-width: 0;
+}
+
+.p-panel {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+
+  &.application-panel {
+    margin-bottom: 1rem;
+  }
+
+  &.parent-panel {
+    margin-bottom: 0.5rem;
+  }
+}
+
+:host ::ng-deep {
+  .p-panel-content {
+    overflow-x: auto;
+    max-width: 100%;
+    min-width: 0;
+    padding: 0.75rem;
+  }
+
+  .p-panel-header {
+    max-width: 100%;
+    overflow: hidden;
+    min-width: 0;
+    padding: 0.75rem;
+
+    .p-panel-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
+    }
+  }
+  .p-datatable {
+    min-width: 0;
+
+    .p-datatable-wrapper {
+      overflow-x: auto;
+    }
+  }
+
+  .field {
+    margin-bottom: 0.5rem;
+  }
+
+  .p-checkbox {
+    min-width: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  :host {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .p-panel {
+    min-width: 0;
+    width: 100%;
+  }
+
+  :host ::ng-deep {
+    .p-panel-content {
+      padding: 0.5rem;
+    }
+
+    .p-panel-header {
+      padding: 0.5rem;
+
+      .p-panel-title {
+        font-size: 0.9rem;
+      }
+    }
+
+    .p-checkbox .p-checkbox-box {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .p-field {
+      margin-bottom: 0.25rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  :host ::ng-deep {
+    .p-panel-content {
+      padding: 0.25rem;
+    }
+
+    .p-panel-header {
+      padding: 0.25rem 0.5rem;
+
+      .p-panel-title {
+        font-size: 0.8rem;
+      }
+    }
+
+    .p-button {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
+    }
+  }
+}
+
+:host ::ng-deep {
+  .p-panel .p-panel {
+    margin: 0.25rem 0;
+    .p-panel-content {
+      padding: 0.5rem;
+    }
+
+    .p-panel-header {
+      padding: 0.5rem;
+    }
+  }
+}

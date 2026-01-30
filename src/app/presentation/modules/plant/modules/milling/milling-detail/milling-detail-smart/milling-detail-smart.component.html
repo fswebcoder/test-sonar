@@ -1,0 +1,9 @@
+<svi-milling-detail-dump
+	[shifts]="shifts()"
+	[selectedShiftId]="shiftId()"
+    [selectedDate]="selectedDate()"
+	(filtersChange)="onFiltersChange($event)"
+    (onDateChange)="dateChange($event)"
+	(onGetCurrentShift)="getCurrentShiftDetail()"
+	[milllingDetailList]="currentDetails() ?? []"
+/>

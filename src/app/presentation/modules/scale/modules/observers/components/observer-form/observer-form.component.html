@@ -1,0 +1,54 @@
+@if (isFormReady()) {
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="p-4">
+    <div class="grid">
+      <div class="col-12 md:col-6">
+        <svi-float-input formControlName="name" label="Nombre" />
+      </div>
+      <div class="col-12 md:col-6">
+        <svi-float-select
+          formControlName="documentTypeId"
+          [options]="documentTypes()"
+          optionLabel="name"
+          optionValue="id"
+          label="Tipo de documento"
+        />
+      </div>
+      <div class="col-12 md:col-6">
+        <svi-float-input formControlName="documentNumber" label="Documento" />
+      </div>
+    </div>
+
+    @if (action() !== 'view') {
+      <div class="grid mt-2">
+        <div class="col-12 md:col-6">
+          <label class="block mb-2 font-medium">Documento</label>
+          <svi-file-input formControlName="cc" [multiple]="false" accept=".pdf,application/pdf,image/*"></svi-file-input>
+        </div>
+        <div class="col-12 md:col-6">
+          <label class="block mb-2 font-medium">ARL</label>
+          <svi-file-input formControlName="arl" [multiple]="false" accept=".pdf,application/pdf,image/*"></svi-file-input>
+        </div>
+      </div>
+    }
+
+    <div class="flex justify-content-end gap-3 mt-4 pt-3 border-top-1 surface-border">
+      <svi-button
+        type="button"
+        severity="secondary"
+        label="Cancelar"
+        icon="{{ ICONS.CANCEL }}"
+        (onClick)="onCancelForm()"
+      ></svi-button>
+
+      @if (action() !== 'view') {
+        <svi-button
+          type="submit"
+          label="Guardar"
+          [disabled]="form.invalid"
+          loadingId="modal-observer-button"
+          icon="{{ ICONS.SAVE }}"
+        ></svi-button>
+      }
+    </div>
+  </form>
+}

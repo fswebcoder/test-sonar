@@ -1,0 +1,39 @@
+<section class="card">
+    <header class="flex flex-column align-items-center gap-2 sm:flex-row sm:justify-content-between mb-4">
+            <h1>Llenado de Big Bags</h1>
+            <svi-button
+                label="Llenar Big Bag"
+                [icon]="ICONS.ADD"
+                [appPermission]="{ path, action: Actions.CREAR_BIG_BAG }"
+                (onClick)="changeModalVisibility(true)"
+            ></svi-button>
+    </header>
+    <svi-big-bags-filling-filters [mines]="mines()" (filtersChange)="onFiltersChange($event)" />
+
+    @if(getTotalRecords > 0) {
+        <svi-table [data]="data()" [columns]="columns" [actions]="columnActions" [showPaginator]="false"></svi-table>
+    } @else {
+        <svi-empty-state message="No hay datos para mostrar"></svi-empty-state>
+    }
+    <svi-paginator [totalRecords]="getTotalRecords" (pageChange)="pageChange()" />
+</section>
+
+<svi-dialog
+    header="Llenar Big Bag"
+    [modal]="true"
+    [visible]="isDialogVisible()"
+    width="70rem"
+    (onHide)="cancelFill()"
+>
+<svi-fill-big-bag-form #fillBigBagForm [bigBagTypes]="bigBagTypes()" [mines]="mines()" (onFill)="fillBigBagsHandler($event)" (onCancel)="cancelFill()"/>
+</svi-dialog>
+
+<svi-dialog
+    header="Detalle del Big Bag"
+    [modal]="true"
+    [visible]="isDetailDialogVisible()"
+    width="50rem"
+    (onHide)="closeBigBagDetail()"
+>
+    <svi-big-bag-detail [bigBag]="selectedBigBag()" (onClose)="closeBigBagDetail()" />
+</svi-dialog>

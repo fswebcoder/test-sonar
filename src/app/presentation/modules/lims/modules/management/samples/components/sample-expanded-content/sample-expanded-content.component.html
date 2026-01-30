@@ -1,0 +1,83 @@
+<div class="expanded-content card border-round-sm shadow-2 p-md-4 border-top">
+  <div class="expanded-header mb-3 mb-md-4">
+    <div class="header-main">
+      <div class="header-icon">
+        <i class="{{ ICONS.FLASK_VIAL }}"></i>
+      </div>
+      <div class="header-info">
+        @if (hasPermissionToSeeSupplier) {
+        <h3 class="header-title">{{ sample().supplierName }}</h3>
+        <small class="header-subtitle">{{ sample().sampleCode }}</small>
+        } @else {
+        <h3 class="header-title">{{ sample().sampleCode }}</h3>
+        }
+        <div class="header-meta">
+          <span class="meta-item">• {{ sample().sampleTypeName }}</span>
+        </div>
+      </div>
+    </div>
+    <div class="header-weight">
+      <p class="weight-label">Peso recibido</p>
+      <p class="weight-value">{{ getWeightReceived }} {{ EWeightUnits.GRAMS }}</p>
+    </div>
+  </div>
+
+  <div class="expanded-details mb-3 mb-md-4">
+    <div class="details-grid">
+      <div class="detail-item">
+        <span class="detail-label">Código de muestra</span>
+        <span class="detail-value">{{ sample().sampleCode }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Tipo de muestra</span>
+        <span class="detail-value">{{ sample().sampleTypeName }}</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">ID de muestra</span>
+        <span class="detail-value">{{ sample().sampleId }}</span>
+      </div>
+    </div>
+  </div>
+
+  @if (sample().requiredAnalyses && sample().requiredAnalyses.length > 0) {
+    <div class="expanded-analyses mb-3 mb-md-4">
+      <h5 class="analyses-title">Análisis requeridos</h5>
+      <div class="analyses-grid">
+        @for (analisis of sample().requiredAnalyses; track analisis) {
+          <div
+            class="analysis-item"
+            [ngClass]="{
+              realizado: analisis.done.value && analisis.done.label === AnalysisStatus.FINISHED,
+              pendiente: !analisis.done.value && analisis.done.label === AnalysisStatus.PENDING,
+              inAnalysis: analisis.done.label === AnalysisStatus.IN_PROGRESS
+            }"
+            [pTooltip]="analisis.done.label"
+          >
+            <i class="analysis-icon {{ ICONS.VIAL }}"></i>
+            <span class="analysis-label">{{ analisis.analysisShortName }}</span>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <div class="expanded-actions">
+    <svi-card-button
+      label="Ver detalles"
+      size="small"
+      [outlined]="true"
+      [icon]="ICONS.EYE"
+      [severity]="EActionSeverity.VIEW"
+      (clicked)="onViewDetailsClick(sample().sampleId)"
+      [permission]="{ path, action: ReceptionAction.VER_DETALLE_MUESTRAS }"
+    ></svi-card-button>
+    <svi-card-button
+      label="Imprimir"
+      size="small"
+      [icon]="ICONS.PRINT"
+      [severity]="EActionSeverity.ACTION"
+      (clicked)="onPrintClick(sample())"
+      [permission]="{ path, action: ReceptionAction.IMPRIMIR_ETIQUETAS_GESTION }"
+    ></svi-card-button>
+  </div>
+</div>

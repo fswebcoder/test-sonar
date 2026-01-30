@@ -1,0 +1,2 @@
+export const NUMBER_OF_ALLOWED_CHARACTERS_KEY_VECTOR = 16;
+export const AUTOCOMPLETE_KEY_VECTOR_CHARACTERS = 'abcdefghijklmnopqrstuvwxyz1234567890';

@@ -1,0 +1,50 @@
+<form [formGroup]="form" class="flex flex-col gap-4 p-3 w-full">
+  <svi-instructions-panel
+    title="Guía de impresión"
+    description="Para imprimir la muestra correctamente:"
+    [instructions]="instructions"
+  >
+  </svi-instructions-panel>
+
+  <div class="grid gap-4">
+    <div class="col-12">
+      <svi-float-select
+        [options]="printers() ?? []"
+        optionLabel="printerName"
+        formControlName="printer"
+        label="Seleccionar impresora"
+        [filter]="true"
+        [filterBy]="'printerName'"
+        [showClear]="true"
+        class="w-full"
+      ></svi-float-select>
+    </div>
+    <div class="col-12">
+      <svi-input-number
+        [step]="2"
+        [formControlName]="'totalPrint'"
+        [label]="'Cantidad de impresiones'"
+        [errorMessages]="errorMessages"
+      >
+      </svi-input-number>
+    </div>
+  </div>
+
+  <div class="selected-analysis-types" *ngIf="form.get('analysisType')?.value?.length"></div>
+  <div class="flex justify-content-end gap-2 mt-4">
+    <svi-button severity="secondary" label="Cancelar" (click)="cancel()">
+      <i class="{{ ICONS.CANCEL }}"></i>
+    </svi-button>
+    <svi-button
+      severity="primary"
+      label="Imprimir"
+      [disabled]="form.invalid"
+      [title]="form.invalid ? 'Complete todos los campos correctamente' : 'Proceder con la impresión'"
+      (click)="print()"
+      loadingId="loading-print-sample-button"
+    >
+      <i class="{{ ICONS.PRINT }}"></i>
+    </svi-button>
+  </div>
+</form>
+<div class="mt-4 animate__animated animate__fadeIn" *ngIf="form.get('analysisType')?.value?.length"></div>

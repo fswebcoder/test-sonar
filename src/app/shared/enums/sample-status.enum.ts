@@ -1,0 +1,7 @@
+export enum SampleStatus {
+    IN_ANALYSIS = 'EN_ANALISIS',
+    RECEIVED = 'RECIBIDO',
+    CANCELLED = 'CANCELADO',
+    FINISHED = 'FINALIZADO',
+    SENT = 'ENVIADO',
+}

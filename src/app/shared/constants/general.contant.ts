@@ -1,0 +1,11 @@
+export const ERROR_AUTHENTICATION_TITLE = 'Error de autenticación';
+export const REGISTER_SUCCESS_TITLE = 'Registro guardado correctamente';
+export const REGISTER_ERROR_TITLE = 'Error al guardar el registro';
+export const LOAD_DATA_ERROR_TITLE = 'Error al cargar los datos';
+export const UNEXPECTED_ERROR_TITLE = 'Error inesperado, intente nuevamente';
+export const ERROR_LOADING_DATA_TITLE = 'Error al cargar datos';
+export const ACCEPT_LABEL_QUESTION_SAVE_SAMPLES = '¿Está seguro guardar las muestras?';
+export const ACCEPT_LABEL_QUESTION_LOGOUT = '¿Está seguro de cerrar sesión?';
+export const ACCEPT_LABEL_QUESTION_CREATE_SUPPLIER = '¿Está seguro de crear el proveedor?';
+export const SUCCESS_OPERATION_TITLE = 'Operación realizada correctamente';
+export const ERROR_OPERATION_TITLE = 'Error en la operación';

@@ -1,0 +1,34 @@
+<div [formGroup]="analysisFormGroup()" class="flex flex-column gap-3 p-3 card shadow-2">
+  <div class="flex items-center justify-between">
+    <div class="flex items-center gap-2 flex-1">
+      <i [class]="ICONS.FLASK_VIAL + ' text-primary text-lg'"></i>
+      <span class="font-medium text-sm">
+        {{ analysisName() }}
+      </span>
+    </div>
+    <svi-card-button
+      [icon]="ICONS.TRASH"
+      [severity]="EActionSeverity.DELETE"
+      size="small"
+      [tooltip]="'Eliminar análisis'"
+      tooltipPosition="top"
+      [styleClass]="'flex-shrink-0'"
+      (clicked)="removeAnalysis()"
+    ></svi-card-button>
+  </div>
+
+  <div class="flex items-center gap-2">
+    <svi-input-number
+      formControlName="quantity"
+      [min]="1"
+      [max]="99"
+      [step]="1"
+      [showButtons]="false"
+      buttonLayout="horizontal"
+      [decimal]="false"
+      class="flex-1"
+      [label]="'Cantidad'"
+      [errorMessages]="errorMessages"
+    />
+  </div>
+</div>

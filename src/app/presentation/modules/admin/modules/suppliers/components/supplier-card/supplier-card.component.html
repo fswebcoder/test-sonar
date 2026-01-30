@@ -1,0 +1,155 @@
+<div class="supplier-card">
+  <div class="card-header">
+    <div class="supplier-info">
+      <div class="supplier-avatar">
+        <i class="fa-duotone fa-solid fa-truck-field"></i>
+      </div>
+      <div class="supplier-details">
+        <h3 class="supplier-name">{{ supplier().name?.value }}</h3>
+        <div class="document-info">
+          <span class="document-number">
+            <i class="fa-duotone fa-regular fa-id-card"></i> {{ supplier().documentNumber }}
+          </span>
+        </div>
+        @if (supplier().legalRepresentative?.value) {
+          <div class="legal-representative">
+            <span class="legal-label">
+              <i class="fa-duotone fa-regular fa-user"></i>{{ supplier().legalRepresentative?.label }}:
+            </span>
+            <span class="legal-value">{{ supplier().legalRepresentative?.value }}</span>
+          </div>
+        }
+      </div>
+    </div>
+    <div class="status-badge" [class.active]="supplier().isActive" [class.inactive]="!supplier().isActive">
+      <i class="pi" [class.pi-check-circle]="supplier().isActive" [class.pi-times-circle]="!supplier().isActive"></i>
+      {{ supplier().isActive?.value ? 'Activo' : 'Inactivo' }}
+    </div>
+  </div>
+
+  <div class="panel-section">
+    <p-panel [toggleable]="true" [collapsed]="true" styleClass="compact-panel">
+      <ng-template pTemplate="header">
+        <div class="panel-header">
+          <i class="fa-duotone fa-solid fa-house-building"></i>
+          <span>Información del proveedor</span>
+        </div>
+      </ng-template>
+      
+      <div class="metrics-section">
+        <div class="metrics-grid">
+          @if (supplier().refiningDiscountConcentrate?.value) {
+              <svi-metric-item
+                [label]="supplier().refiningDiscountConcentrate?.label"
+                [value]="supplier().refiningDiscountConcentrate?.value "
+              ></svi-metric-item>
+          }
+          @if (supplier().refiningDiscountMineral?.value) {
+            <div class="metric-item">
+              <span class="metric-label">Descuento Mineral</span>
+              <span class="metric-value">{{ supplier().refiningDiscountMineral?.value || '-' }}</span>
+            </div>
+          }
+
+          @if (supplier().goldProfitMarginConcentrate?.value) {
+            <div class="metric-item">
+              <span class="metric-label">{{ supplier().goldProfitMarginConcentrate?.label }}</span>
+              <span class="metric-value">{{ supplier().goldProfitMarginConcentrate?.value || '-' }}</span>
+            </div>
+          }
+          @if (supplier().goldProfitMarginDore?.value) {
+            <div class="metric-item">
+              <span class="metric-label">{{ supplier().goldProfitMarginDore?.label }}</span>
+              <span class="metric-value">{{ supplier().goldProfitMarginDore?.value || '-' }}</span>
+            </div>
+          }
+          @if (supplier().silverProfitMarginConcentrate?.value) {
+            <div class="metric-item">
+              <span class="metric-label">{{ supplier().silverProfitMarginConcentrate?.label }}</span>
+              <span class="metric-value">{{ supplier().silverProfitMarginConcentrate?.value || '-' }}</span>
+            </div>
+          }
+          @if (supplier().silverProfitMarginDore?.value) {
+            <div class="metric-item">
+              <span class="metric-label">{{ supplier().silverProfitMarginDore?.label }}</span>
+              <span class="metric-value">{{ supplier().silverProfitMarginDore?.value || '-' }}</span>
+            </div>
+          }
+
+          @if (supplier().maxAdvanceFixingsGoldGrams?.value) {
+            <div class="metric-item">
+              <span class="metric-label">{{ supplier().maxAdvanceFixingsGoldGrams?.label }}</span>
+              <span class="metric-value">{{ supplier().maxAdvanceFixingsGoldGrams?.value || '-' }}</span>
+            </div>
+          }
+          @if (supplier().maxAdvanceFixingsSilverGrams?.value) {
+            <div class="metric-item">
+              <span class="metric-label">{{ supplier().maxAdvanceFixingsSilverGrams?.label }}</span>
+              <span class="metric-value">{{ supplier().maxAdvanceFixingsSilverGrams?.value || '-' }}</span>
+            </div>
+          }
+
+          @if (supplier().concentrateRecoveryPercentage?.value) {
+            <div class="metric-item">
+              <span class="metric-label">{{ supplier().concentrateRecoveryPercentage?.label }}</span>
+              <span class="metric-value">{{ supplier().concentrateRecoveryPercentage?.value || '-' }}</span>
+            </div>
+          }
+          @if (supplier().mineralRecoveryPercentage?.value) {
+            <div class="metric-item">
+              <span class="metric-label">{{ supplier().mineralRecoveryPercentage?.label }}</span>
+              <span class="metric-value">{{ supplier().mineralRecoveryPercentage?.value || '-' }}</span>
+            </div>
+          }
+          @if (supplier().labRecovery?.value) {
+            <div class="metric-item">
+              <span class="metric-label">{{ supplier().labRecovery?.label }}</span>
+              <span class="metric-value">{{ supplier().labRecovery?.value || '-' }}</span>
+            </div>
+          }
+
+          @if (supplier().royaltyPercentage?.value) {
+            <div class="metric-item">
+              <span class="metric-label">{{ supplier().royaltyPercentage?.label }}</span>
+              <span class="metric-value">{{ supplier().royaltyPercentage?.value || '-' }}</span>
+            </div>
+          }
+          @if (supplier().withholdingPercentage?.value) {
+            <div class="metric-item">
+              <span class="metric-label">{{ supplier().withholdingPercentage?.label }}</span>
+              <span class="metric-value">{{ supplier().withholdingPercentage?.value || '-' }}</span>
+            </div>
+          }
+        </div>
+      </div>
+
+    </p-panel>
+  </div>
+  <div class="panel-footer col-12">
+    <div class="action-buttons flex flex-row justify-content-end">
+      <svi-action-button
+        [appPermission]="{ path: '/admin/proveedores', action: 'CREAR_USUARIO_PROVEEDOR' }"
+        [config]="{ type: 'custom', icon: 'fa-duotone fa-solid fa-user-plus', tooltip: 'Crear usuario admin', severity: 'secondary' }"
+        (actionClick)="onCreateAdminUser()"
+      >
+      </svi-action-button>
+      <svi-action-button 
+        [appPermission]="{ path: '/admin/proveedores', action: 'VER_PROVEEDORES' }"
+        [config]="{ type: 'view' }"
+        (actionClick)="onViewSupplier(supplier())">
+      </svi-action-button>
+      <svi-action-button 
+        [appPermission]="{ path: '/admin/proveedores', action: 'EDITAR_PROVEEDOR' }"
+        [config]="{ type: 'edit' }"
+        (actionClick)="onEditSupplier(supplier())">
+        >
+      </svi-action-button>
+      <svi-action-button 
+        [appPermission]="{ path: '/admin/proveedores', action: 'INACTIVAR_PROVEEDOR' }"
+        [config]="{ type: 'delete' }"
+        (actionClick)="onDeleteSupplier(supplier())">
+        >
+      </svi-action-button>
+    </div>
+  </div>
+</div>

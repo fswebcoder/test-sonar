@@ -1,0 +1,146 @@
+<form [formGroup]="form">
+    <div class="flex flex-column gap-3">
+      
+      <p-accordion [multiple]="false" class="w-full">
+        <p-accordionTab class="shadow-none">
+          <ng-template pTemplate="header">
+            <div class="flex items-center">
+              <i class="fa-solid fa-scale-balanced text-blue-400 mr-2"></i>
+              <span class="font-semibold text-blue-800">Instrucciones de uso de balanza</span>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="content">
+            <div class="bg-blue-50 border-l-4 border-blue-400 p-4 border-round-md w-full">
+              <div class="text-sm text-blue-700">
+                <p class="mb-3">Para capturar correctamente los datos desde la balanza:</p>
+                <ul class="space-y-4">
+                  <li class="flex flex-col sm:flex-row sm:items-center">
+                    <div class="flex items-start sm:items-center">
+                      <i class="fa-solid fa-check-circle text-green-500 mr-2 mt-1 sm:mt-0"></i>
+                      <strong>Intento automático:&nbsp;</strong>
+                    </div>
+                    <span>Haz clic en<em>&nbsp;"Obtener datos de balanza"</em>&nbsp;para recuperar peso e imagen desde el sistema.</span>
+                  </li>
+                  <li class="flex flex-col sm:flex-row sm:items-center">
+                    <div class="flex items-start sm:items-center">
+                      <i class="fa-solid fa-exclamation-triangle text-yellow-500 mr-2 mt-1 sm:mt-0"></i>
+                      <strong>En caso de fallo:&nbsp;</strong>
+                    </div>
+                    <span>Si no se recuperan datos, se habilitará el ingreso manual.</span>
+                  </li>
+                  <li class="flex flex-col sm:flex-row sm:items-center">
+                    <div class="flex items-start sm:items-center">
+                      <i class="fa-solid fa-pen-to-square text-blue-500 mr-2 mt-1 sm:mt-0"></i>
+                      <strong>Ingreso manual:&nbsp;</strong>
+                    </div>
+                    <span>Ingresa manualmente el peso recibido y carga una imagen de la balanza.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </ng-template>
+        </p-accordionTab>
+      </p-accordion>
+      
+      
+      
+
+      @if (isManualInput()) {
+        <p-message 
+          severity="warn" 
+          text="No se pudieron obtener los datos automáticamente. Por favor, ingrese los datos manualmente."
+          [icon]="'fa-solid fa-exclamation-triangle'"
+        ></p-message>
+      }
+  
+      <div class="flex justify-content-end">
+        <svi-button 
+          [label]="isLoading() ? 'Obteniendo datos...' : 'Obtener datos de balanza'"
+          [type]="'button'"
+          [disabled]="isLoading()"
+          (onClick)="getScaleData()"
+        >
+          <i class="fa-duotone fa-scale-balanced"></i>
+        </svi-button>
+      </div>
+  
+      <svi-float-input 
+        label="Peso recibido (gr)"
+        formControlName="receivedWeight"
+        [isWeightInput]="true"
+        [errorMessages]="weightErrorMessages"
+      ></svi-float-input>
+
+      <svi-text-area 
+        [label]="'Observación'"
+        [maxLength]="100"
+        [formControlName]="'observation'"
+        [showCharCount]="true"
+      ></svi-text-area>
+
+      @if (showImageUpload()) {
+        <div class="flex flex-column gap-2">
+          <label class="text-sm font-medium">Imagen de la balanza:</label>
+          <p-fileUpload 
+            mode="basic" 
+            name="image" 
+            accept="image/*" 
+            [maxFileSize]="1000000"
+            chooseLabel="Seleccionar imagen"
+            [auto]="true"
+            (onSelect)="onImageUpload($event)"
+            [showCancelButton]="false"
+            [showUploadButton]="false"
+          ></p-fileUpload>
+          <small class="text-gray-500">Formatos permitidos: JPG, PNG. Tamaño máximo: 1MB</small>
+        </div>
+      }
+  
+      @if (form.get('image')?.value?.base64) {
+        <div class="flex flex-column gap-2">
+          <div class="flex justify-content-between align-items-center">
+            <label class="text-sm font-medium">Imagen de la balanza:</label>
+            @if (showImageUpload()) {
+              <svi-button 
+                [label]="'Eliminar'" 
+                [type]="'button'"
+                (onClick)="removeImage()"
+                severity="danger"
+                size="small"
+              >
+                <i class="fa-duotone fa-trash"></i>
+              </svi-button>
+            }
+          </div>
+          <p-image 
+            [src]="getImageUrl()" 
+            alt="Imagen de balanza"
+            class="w-full max-w-md border-round"
+            [preview]="true"
+          ></p-image>
+        </div>
+      }
+  
+
+      <div class="flex justify-content-end gap-2">
+        <svi-button 
+          [label]="'Agregar'" 
+          [type]="'submit'"
+          [disabled]="form.invalid || (!isDataLoaded() && !isManualInput())"
+          (onClick)="addRegister()"
+          severity="primary"
+        >
+          <i class="fa-duotone fa-plus"></i>
+        </svi-button>
+        <svi-button 
+          [label]="'Cancelar'" 
+          [type]="'button'"
+          (onClick)="cancel()"
+          severity="secondary"
+        >
+          <i class="fa-duotone fa-xmark"></i>
+        </svi-button>
+      </div>
+    </div>
+  </form>
+  

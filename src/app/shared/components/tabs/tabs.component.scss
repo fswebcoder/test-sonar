@@ -1,0 +1,13 @@
+.svi-tabs {
+  width: 100%;
+}
+
+.svi-tabs :where(.p-tablist) {
+  gap: 0.25rem;
+}
+
+.svi-tabs :where(.p-tabpanels) {
+  padding: 0;
+  border: none;
+  background: transparent;
+}

@@ -1,0 +1,112 @@
+<section class="management">
+  <header class="management__header">
+    <div>
+      <h2 class="management__title">Gestión de molienda</h2>
+      <p class="management__hint">Selecciona un molino para gestionar variables y operaciones del proceso.</p>
+    </div>
+  </header>
+
+  @if (millings().length) {
+    <ng-template #millingHeader let-milling>
+      {{ milling.mill.name || 'Molino' }}
+    </ng-template>
+
+    <ng-template #millingPanel let-milling>
+      <svi-milling-card
+        [mill]="milling"
+        (onOperation)="operation($event)"
+        (onEditVariable)="showEditVariable($event)"
+      ></svi-milling-card>
+    </ng-template>
+
+    <svi-tabs
+      [tabs]="millings()"
+      [value]="activeTab() ?? firstMillTab()"
+      (valueChange)="onTabChange($event)"
+      [scrollable]="true"
+      [containerClass]="'management-tabs card shadow-2'"
+      [headerTemplate]="millingHeader"
+      [panelTemplate]="millingPanel"
+      [tabValueFn]="tabValueAccessor"
+    ></svi-tabs>
+  } @else {
+    <svi-empty-state
+      class="management-empty"
+      title="No hay turno activo"
+      description="No hay molinos disponibles para gestionar en este momento."
+      icon="{{ ICONS.PUMP }}"
+    ></svi-empty-state>
+  }
+</section>
+
+<svi-dialog
+  #addBatchDialog
+  [visible]="isAddBatchModalVisible()"
+  width="50rem"
+  header="Agregar lote a {{ selectedMill() ? selectedMill()!.mill.name : '' }}"
+  (onHide)="cancelAddBatch()"
+>
+  <svi-add-batch-form
+    #addBatchForm
+    (onSupplierIdChanges)="changeSupplierId($event)"
+    (onMineIdChanges)="changeMineId($event)"
+    [selectedMill]="selectedMill()"
+    [pumps]="pumps()"
+    [suppliers]="suppliers()"
+    [mines]="mines()"
+    [batches]="batches()"
+    (onClose)="cancelAddBatch()"
+    (onSave)="saveBatch($event)"
+  />
+</svi-dialog>
+
+<svi-dialog
+  #editVariableDialog
+  [visible]="isEditVariableModalVisible()"
+  width="50rem"
+  header="Editar variable {{ selectedVariable() ? selectedVariable()!.variable.name : '' }}"
+  (onHide)="cancelEditVariable()"
+>
+  <svi-edit-variable-form
+    #editVariableForm
+    [variable]="selectedVariable() ? selectedVariable()!.variable : null"
+    (onClose)="cancelEditVariable()"
+    (onSave)="saveEditVariable($event)"
+  />
+</svi-dialog>
+
+<svi-dialog
+  #startMillingDialog
+  [visible]="isStartMillingModalVisible()"
+  width="50rem"
+  header="Iniciar molienda {{ selectedMill() ? selectedMill()!.mill.name : '' }}"
+  (onHide)="cancelStartMilling()"
+>
+  <svi-start-milling-form
+    #startMillingForm
+    [mill]="selectedMill()"
+    (onCancel)="cancelStartMilling()"
+    (onStart)="startMilling($event)"
+  />
+</svi-dialog>
+
+<svi-dialog
+  #stopMillingForm
+  [visible]="isStopMillingModalVisible()"
+  width="50rem"
+  header="Detener molienda {{ selectedMill() ? selectedMill()!.mill.name : '' }}"
+  (onHide)="cancelStopMilling()"
+>
+  <svi-stop-milling-form
+    #stopMillingForm
+    [mill]="selectedMill()"
+    (onClose)="cancelStopMilling()"
+    (onCancel)="cancelStopMilling()"
+    (onStop)="stopMilling($event)"
+  />
+</svi-dialog>
+
+<svi-confirm-dialog
+  #confirmDialog
+  width="40rem"
+></svi-confirm-dialog>

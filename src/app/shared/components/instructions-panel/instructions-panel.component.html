@@ -1,0 +1,37 @@
+<p-panel
+  [toggleable]="toggleable()"
+  collapsed="'false'"
+  toggler="header"
+  collapseIcon="{{ ICONS.CHEVRON_DOWN }}"
+  expandIcon="{{ ICONS.CHEVRON_UP }}"
+  styleClass="{{ textColor() + ' ' + 'border-round-lg cursor-pointer' }}"
+>
+  <ng-template #header>
+    <div class="flex items-center gap-2">
+      <i [class]="icon() + ' ' + iconColor()"></i>
+      <span class="font-bold text-lg {{ textColor() }}">{{ title() }}</span>
+    </div>
+  </ng-template>
+  <ng-template #toggleIcon>
+    <i [class]="icon() + ' ' + iconColor()"></i>
+  </ng-template>
+  <div class="p-4">
+    @if (description()) {
+      <p class="mb-4">{{ description() }}</p>
+    }
+    <ul class="space-y-2">
+      @for (instruction of instructions(); track instruction.title) {
+        <li class="flex flex-col items-start">
+          <div class="flex flex-col sm:flex-row">
+            <strong class="flex flex-row align-items-center gap-2">
+              <i [class]="instruction.icon + ' ' + instruction.iconColor"> </i>
+              {{ instruction.title }}: &nbsp;
+            </strong>
+            <span class="block">{{ instruction.description }}</span>
+          </div>
+        </li>
+        <br />
+      }
+    </ul>
+  </div>
+</p-panel>

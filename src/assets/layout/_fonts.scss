@@ -1,0 +1,50 @@
+/* RobotoCondensed-Light - principal font */
+@font-face {
+    font-family: 'RobotoCondensed';
+    font-style: normal;
+    font-weight: 300;
+    src: local('RobotoCondensed-Light'),
+         url('src/assets/layout/fonts/RobotoCondensed-SemiBold.ttf') format('truetype');
+}
+
+/* Aplicar la fuente a todo el documento */
+* {
+    font-family: 'RobotoCondensed', sans-serif;
+}
+
+/* Estilos para encabezados */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+h1 {
+    font-size: 2rem;
+    line-height: 2.4rem;
+}
+
+h2 {
+    font-size: 1.75rem;
+    line-height: 2.1rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+    line-height: 1.8rem;
+}
+
+h4 {
+    font-size: 1.25rem;
+    line-height: 1.5rem;
+}
+
+h5 {
+    font-size: 1.1rem;
+    line-height: 1.3rem;
+}
+
+h6 {
+    font-size: 1rem;
+    line-height: 1.2rem;
+}

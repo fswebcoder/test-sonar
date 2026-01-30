@@ -1,0 +1,7 @@
+export enum EOrderScaleStatus{
+    CREATED = "CREADO",
+    PENDING = "PENDIENTE",
+    IN_PROCCESS = "PROCESO",
+    COMPLETED = "COMPLETADO",
+    CANCELLED = "CANCELADO"
+}

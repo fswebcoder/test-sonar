@@ -1,0 +1,237 @@
+<section class="card">
+  @if (viewMode() === 'list') {
+    <h3 class="card-title mb-4">Órdenes de Envío</h3>
+    <svi-orders-list
+      [orders]="orders()"
+      [meta]="ordersMeta()"
+      [loading]="ordersLoading()"
+      (createOrder)="createOrderClick.emit()"
+      (viewOrder)="openOrderModal('view', $event)"
+      (editOrder)="editOrder.emit($event)"
+      (cancelOrder)="confirmCancelOrder($event)"
+      (pageChange)="pageChange.emit()"
+      (searchChange)="searchChange.emit($event)"
+      (statusChange)="statusChange.emit($event)"
+    />
+  } @else {
+    <div class="flex align-items-center gap-3 mb-4">
+      <svi-button
+        [icon]="ICONS.ARROW_LEFT"
+        variant="text"
+        size="small"
+        (onClick)="backToList.emit()"
+      />
+      <h3 class="card-title m-0">{{ wizardTitle() }}</h3>
+    </div>
+
+    <svi-stepper
+    [steps]="steps()"
+    [(value)]="stepValue"
+    [linear]="true"
+    [finishLabel]="finishButtonLabel()"
+    [finishIcon]="ICONS.CHECK"
+    [finishLoadingId]="LOADING.buttons.confirmSend"
+    [finishDisabled]="
+      generalInfoForm.invalid ||
+      !vehicleSearchResult() ||
+      !driverSearchResult() ||
+      (requireObserver() && !observerSearchResult())
+    "
+    (finishClick)="finishSend()"
+    [nextDisabled]="
+      (stepValue === 1 && generalInfoForm.invalid) ||
+      (stepValue === 2 && !vehicleSearchResult()) ||
+      (stepValue === 3 && !driverSearchResult()) ||
+      (stepValue === 4 && requireObserver() && !observerSearchResult())
+    "
+  >
+    <ng-template sviStep [sviStepValue]="1" let-ctx>
+      <svi-step-general-info
+        [mines]="minesWithEditingOrderMine()"
+        [materialTypes]="materialTypes()"
+        [form]="generalInfoForm"
+        [requiresRemissionDocument]="requiresRemissionDocument()"
+        [minShippingDate]="minShippingDate"
+      />
+    </ng-template>
+    <ng-template sviStep [sviStepValue]="2" let-ctx>
+      <svi-step-vehicle
+        (searchVehicle)="handleSearchVehicle($event)"
+        (openCreateVehicle)="openVehicleModal('create')"
+        (openEditDocuments)="openVehicleDocumentsModal()"
+        (clearVehicle)="handleClearVehicle()"
+        [vehicleSearchResult]="vehicleSearchResult()"
+      />
+    </ng-template>
+
+    <ng-template sviStep [sviStepValue]="3" let-ctx>
+      <svi-step-driver
+        (searchDriver)="handleSearchDriver($event)"
+        (openCreateDriver)="openDriverModal('create')"
+        (openEditDocuments)="openDriverDocumentsModal()"
+        (clearDriver)="handleClearDriver()"
+        [requireObserver]="requireObserver()"
+        (requireObserverChange)="setRequireObserver($event)"
+        [driverSearchResult]="driverSearchResult()"
+      />
+    </ng-template>
+
+    <ng-template sviStep [sviStepValue]="4" let-ctx>
+      <svi-step-observer
+        (searchObserver)="handleSearchObserver($event)"
+        (openCreateObserver)="openObserverModal('create')"
+        (openEditDocuments)="openObserverDocumentsModal()"
+        (clearObserver)="handleClearObserver()"
+        [observerSearchResult]="observerSearchResult()"
+      />
+    </ng-template>
+
+    <ng-template sviStep [sviStepValue]="5" let-ctx>
+      <svi-step-summary
+        [mines]="mines()"
+        [materialTypes]="materialTypes()"
+        [form]="generalInfoForm"
+        [vehicle]="vehicleSearchResult()"
+        [driver]="driverSearchResult()"
+        [observer]="observerSearchResult()"
+        [requireObserver]="requireObserver()"
+      />
+    </ng-template>
+  </svi-stepper>
+  }
+</section>
+
+<svi-dialog
+  [header]="getModalTitle()"
+  width="50rem"
+  position="top"
+  [visible]="vehicleModal()"
+  (onHide)="closeVehicleModal()"
+>
+  <svi-vehicle-form
+    [vehicle]="vehicle()"
+    [action]="vehicleAction()"
+    [vehicleTypes]="vehicleTypes()"
+    (onCancel)="closeVehicleModal()"
+    (onCreate)="handleCreateVehicle($event)"
+    (onUpdate)="closeVehicleModal()"
+  ></svi-vehicle-form>
+</svi-dialog>
+
+<svi-dialog
+  header="Editar documentos del vehículo"
+  width="60rem"
+  position="top"
+  [visible]="vehicleDocumentsModal()"
+  (onHide)="closeVehicleDocumentsModal()"
+>
+  @if (vehicleForDocuments(); as v) {
+    <svi-vehicle-documents-form
+      [vehicle]="v"
+      (dismiss)="closeVehicleDocumentsModal()"
+      (documentsSubmit)="handleUpdateVehicleDocuments($event)"
+    />
+  }
+</svi-dialog>
+
+<svi-dialog
+  [header]="getDriverModalTitle()"
+  width="50rem"
+  position="top"
+  [visible]="driverModal()"
+  (onHide)="closeDriverModal()"
+>
+  <svi-driver-form
+    [driver]="driver()"
+    [action]="driverAction()"
+    [documentTypes]="documentTypes()"
+    (onCancel)="closeDriverModal()"
+    (onCreate)="handleCreateDriver($event)"
+    (onUpdate)="closeDriverModal()"
+  ></svi-driver-form>
+</svi-dialog>
+
+<svi-dialog
+  header="Editar documentos del veedor"
+  width="55rem"
+  position="top"
+  [visible]="observerDocumentsModal()"
+  (onHide)="closeObserverDocumentsModal()"
+>
+  @if (observerForDocuments(); as o) {
+    <svi-observer-documents-form
+      [observer]="o"
+      (dismiss)="closeObserverDocumentsModal()"
+      (documentsSubmit)="handleUpdateObserverDocuments($event)"
+    />
+  }
+</svi-dialog>
+
+<svi-dialog
+  header="Editar documentos del conductor"
+  width="55rem"
+  position="top"
+  [visible]="driverDocumentsModal()"
+  (onHide)="closeDriverDocumentsModal()"
+>
+  @if (driverForDocuments(); as d) {
+    <svi-driver-documents-form
+      [driver]="d"
+      (dismiss)="closeDriverDocumentsModal()"
+      (documentsSubmit)="handleUpdateDriverDocuments($event)"
+    />
+  }
+</svi-dialog>
+
+<svi-dialog
+  [visible]="observerModal()"
+  [header]="getObserverModalTitle()"
+  width="50rem"
+  position="top"
+  (onHide)="closeObserverModal()"
+>
+  <svi-observer-form
+    [observer]="observer()"
+    [action]="observerAction()"
+    [documentTypes]="documentTypes()"
+    (onCancel)="closeObserverModal()"
+    (onCreate)="handleCreateObserver($event)"
+    (onUpdate)="closeObserverModal()"
+  />
+</svi-dialog>
+
+<!-- Order Detail/Edit Modal -->
+<svi-dialog
+  [header]="getOrderModalTitle()"
+  width="50rem"
+  position="top"
+  [visible]="orderModal()"
+  (onHide)="closeOrderModal()"
+>
+  @if (selectedOrder()) {
+    @if (orderModalAction() === 'view') {
+      <svi-order-detail
+        [order]="selectedOrder()!"
+        (closeModal)="closeOrderModal()"
+      />
+    } @else {
+      <svi-order-form
+        [order]="selectedOrder()!"
+        [mines]="mines()"
+        [materialTypes]="materialTypes()"
+        (cancelForm)="closeOrderModal()"
+        (updateOrder)="handleUpdateOrder($event)"
+      />
+    }
+  }
+</svi-dialog>
+
+<svi-confirm-dialog
+  #confirmDialog
+  [draggable]="false"
+  [style]="{ width: '40rem' }"
+  [acceptLabel]="'Confirmar'"
+  [rejectLabel]="'Cancelar'"
+  [acceptVisible]="true"
+  [rejectVisible]="true"
+></svi-confirm-dialog>

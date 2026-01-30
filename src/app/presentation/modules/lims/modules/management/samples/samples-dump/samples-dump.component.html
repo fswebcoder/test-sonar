@@ -1,0 +1,129 @@
+<div class="card px-fadein">
+  <form [formGroup]="form">
+    <div class="flex justify-content-between flex-col sm:flex-row gap-2 align-items-center col-12 mb-4">
+      <h3 class="card-title">Gestión de muestras</h3>
+    </div>
+    <div class="flex flex-col lg:flex-row flex-wrap gap-4 md:gap-4 align-items-end">
+      <svi-date-piker [label]="'Fecha de inicio'" formControlName="startDate" class="w-full md:flex-1 md:min-w-200px" />
+      <svi-date-piker [label]="'Fecha de fin'" formControlName="endDate" class="w-full md:flex-1 md:min-w-200px" />
+      <svi-float-input
+        [label]="'Código de muestra'"
+        class="w-full md:flex-1 md:min-w-200px"
+        formControlName="sampleCode"
+      >
+      </svi-float-input>
+      @if (suppliersDropdownMultiselect().length > 0) {
+        <svi-multiselect
+          [label]="'Proveedores'"
+          [appPermission]="{ path: '/lims/gestion-muestras', action: ReceptionAction.VER_PROVEEDOR_GESTION_MUESTRAS }"
+          [options]="suppliersDropdownMultiselect()"
+          formControlName="supplierIds"
+          optionLabel="name"
+          optionValue="id"
+          class="w-full md:flex-1 md:min-w-200px"
+        />
+      }
+      @if (sampleTypesDropdownMultiselect().length > 0) {
+        <svi-multiselect
+          [label]="'Tipos de muestra'"
+          [options]="sampleTypesDropdownMultiselect()"
+          formControlName="sampleTypeIds"
+          optionLabel="name"
+          optionValue="id"
+          class="w-full md:flex-1 md:min-w-200px"
+        />
+      }
+      @if (sampleStatusDropdownMultiselect().length > 0) {
+        <svi-multiselect
+          [label]="'Estados de muestra'"
+          [options]="sampleStatusDropdownMultiselect()"
+          formControlName="statusIds"
+          optionLabel="name"
+          optionValue="id"
+          class="w-full md:flex-1 md:min-w-200px"
+        />
+      }
+    </div>
+  </form>
+</div>
+<div class="card flex flex-col gap-2">
+  <div class="flex justify-content-between w-full">
+    <h3 class="card-title mb-4">Muestras</h3>
+    <div class="flex gap-2">
+      <svi-view-switcher
+        [value]="viewMode()"
+        [options]="viewOptions()"
+        [size]="'small'"
+        [variant]="'default'"
+        [showLabels]="false"
+        [showIcons]="true"
+        (valueChange)="onViewChanged($event)"
+      >
+      </svi-view-switcher>
+    </div>
+  </div>
+  <div class="flex justify-content-center w-full">
+    <div class="grid grid-cols-2 gap-4 justify-content-center w-full">
+      @if (viewMode() === 'cards') {
+        @for (sample of data()?.items; track sample.sampleId) {
+          <svi-sample-card [sample]="sample" (onPrint)="onPrint($event)"></svi-sample-card>
+        } @empty {
+          <svi-empty-state
+            icon="fa-box-open"
+            class="col-12"
+            title="No hay muestras disponibles"
+            description="No se encontraron muestras en el período seleccionado. Intenta ajustar los filtros o crear una nueva muestra."
+          ></svi-empty-state>
+        }
+      } @else {
+        <svi-table
+          [showPaginator]="false"
+          [columns]="columns"
+          [data]="data()?.items ?? []"
+          [responsive]="true"
+          [selectionMode]="null"
+          [globalFilter]="false"
+          [emptyMessage]="'No se encontraron registros'"
+          [expandableRows]="true"
+          [dataKey]="'sampleId'"
+          class="col-12"
+          [actions]="actions"
+        >
+          <ng-template #expanded let-sample>
+            <svi-sample-expanded-content
+              [sample]="sample"
+              (onViewDetails)="navigateToSampleDetail($event)"
+              (onPrint)="onPrint($event)"
+            ></svi-sample-expanded-content>
+          </ng-template>
+        </svi-table>
+      }
+    </div>
+  </div>
+  <svi-paginator
+    (pageChange)="pageChange()"
+    [totalRecords]="getTotalRecords"
+    [rowsPerPageOptions]="[9, 10, 20, 50, 100]"
+  ></svi-paginator>
+</div>
+
+<svi-dialog
+  [header]="'Imprimir muestras'"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  width="45rem"
+  [visible]="printerModal()"
+  (visibleChange)="onPrintVisibleChange($event)"
+  #printDialog
+>
+  <svi-print
+    #printComponent
+    [sample]="sampleToPrint()"
+    [printers]="printers()"
+    (emitCancel)="onPrintCancel()"
+    (emitPrint)="onPrintSample($event)"
+  >
+  </svi-print>
+</svi-dialog>

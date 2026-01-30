@@ -1,0 +1,87 @@
+<section>
+  <div class="card p-4">
+    <div class="material-types-header flex flex-wrap gap-3 justify-between items-center">
+      <h3>Tipos de material</h3>
+      <div class="flex align-items-center gap-2 flex-wrap justify-end">
+        <svi-view-switcher
+          [value]="viewMode()"
+          [options]="viewOptions()"
+          [size]="'small'"
+          [showLabels]="false"
+          [showIcons]="true"
+          (valueChange)="onViewModeChange($event)"
+        ></svi-view-switcher>
+        <svi-button
+          label="Nuevo tipo de material"
+          icon={{ICONS.ADD}}
+          (onClick)="openMaterialTypeModal('create')"
+          [appPermission]="{ path, action: ScaleActions.CREAR_TIPO_DE_MATERIAL }"
+        ></svi-button>
+      </div>
+    </div>
+
+    <div class="material-types-filters flex justify-content-start align-items-center my-4 gap-3 flex-wrap">
+      <svi-float-input [formControl]="searchControl" label="Buscar por nombre" />
+      <div class="flex align-items-center gap-2">
+        <svi-checkbox
+          [ngModel]="withDeleted()"
+          label="Incluir tipos de material inactivos"
+          [binary]="true"
+          (ngModelChange)="withDeletedChange($event)"
+        ></svi-checkbox>
+      </div>
+    </div>
+
+    <div class="material-types-content">
+      @if (materialTypeList().length === 0) {
+        <svi-empty-state message="No se encontraron tipos de material." icon="{{ ICONS.LAYER_GROUP }}"></svi-empty-state>
+      } @else {
+        @if (viewMode() === 'cards') {
+          <svi-card-grid>
+            @for (materialType of materialTypeList(); track materialType.id) {
+              <svi-material-type-card
+                [materialType]="materialType"
+                [path]="path"
+                (onView)="openMaterialTypeModal('view', $event)"
+                (onEdit)="openMaterialTypeModal('edit', $event)"
+                (onActivate)="activateMaterialType($event)"
+                (onDeactivate)="deactivateMaterialType($event)"
+              ></svi-material-type-card>
+            }
+          </svi-card-grid>
+        } @else {
+          <svi-table [data]="materialTypeList()" [columns]="columns" [actions]="actions" [showPaginator]="false"></svi-table>
+        }
+      }
+      <svi-paginator [totalRecords]="totalRecords"></svi-paginator>
+    </div>
+  </div>
+</section>
+
+<svi-dialog
+  [header]="getModalTitle()"
+  width="35rem"
+  position="top"
+  [visible]="materialTypeModal()"
+  (onHide)="closeMaterialTypeModal()"
+>
+  <svi-material-type-form
+    [materialType]="materialType()"
+    [action]="materialTypeAction()"
+    (onCancel)="closeMaterialTypeModal()"
+    (onCreate)="createMaterialType($event)"
+    (onUpdate)="updateMaterialType($event)"
+  ></svi-material-type-form>
+</svi-dialog>
+
+<svi-confirm-dialog
+  #confirmDialog
+  [draggable]="false"
+  [style]="{ width: '32rem' }"
+  [acceptLabel]="'Confirmar'"
+  [rejectLabel]="'Cancelar'"
+  [acceptButtonStyleClass]="'p-button-primary'"
+  [rejectButtonStyleClass]="'p-button-outlined'"
+  [acceptVisible]="true"
+  [rejectVisible]="true"
+></svi-confirm-dialog>

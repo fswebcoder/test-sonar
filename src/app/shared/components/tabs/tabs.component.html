@@ -1,0 +1,36 @@
+<p-tabs
+  class="svi-tabs"
+  [ngClass]="containerClass()"
+  [value]="currentValue() ?? ''"
+  [scrollable]="scrollable()"
+  (valueChange)="handleValueChange($event)"
+>
+  <p-tablist [ngClass]="tabListClass()">
+    <ng-container *ngFor="let tab of tabItems(); let idx = index; trackBy: trackTab">
+      <p-tab [value]="resolveValue(tab, idx) ?? ''">
+        <ng-container
+          *ngIf="getHeaderTemplate(); else defaultHeader"
+          [ngTemplateOutlet]="getHeaderTemplate()"
+          [ngTemplateOutletContext]="createContext(tab, idx)"
+        ></ng-container>
+        <ng-template #defaultHeader>
+          {{ resolveLabel(tab, idx) }}
+        </ng-template>
+      </p-tab>
+    </ng-container>
+  </p-tablist>
+  <p-tabpanels [ngClass]="panelsClass()">
+    <ng-container *ngFor="let tab of tabItems(); let idx = index; trackBy: trackTab">
+      <p-tabpanel [value]="resolveValue(tab, idx) ?? ''">
+        <ng-container
+          *ngIf="getPanelTemplate(); else fallbackPanel"
+          [ngTemplateOutlet]="getPanelTemplate()"
+          [ngTemplateOutletContext]="createContext(tab, idx)"
+        ></ng-container>
+        <ng-template #fallbackPanel>
+          <ng-content></ng-content>
+        </ng-template>
+      </p-tabpanel>
+    </ng-container>
+  </p-tabpanels>
+</p-tabs>

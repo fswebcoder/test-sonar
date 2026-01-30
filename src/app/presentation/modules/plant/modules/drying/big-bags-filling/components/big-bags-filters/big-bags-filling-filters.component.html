@@ -1,0 +1,33 @@
+<form class="filters-grid" [formGroup]="filtersForm">
+    <div class="filter-field">
+        <svi-float-select
+            formControlName="mineId"
+            label="Mina"
+            placeholder="Selecciona una mina"
+            [options]="mineOptions"
+            optionLabel="name"
+            optionValue="id"
+            [showClear]="true"
+            [filter]="true"
+        ></svi-float-select>
+    </div>
+
+    <div class="filter-field">
+        <svi-date-piker formControlName="date" label="Fecha" dateFormat="yy-mm-dd" [showClear]="true"></svi-date-piker>
+    </div>
+
+    <div class="filter-field">
+        <svi-float-input formControlName="search" label="Búsqueda" placeholder="Consecutivo, mina..."></svi-float-input>
+    </div>
+
+    <div class="filter-field">
+        <svi-multiselect
+            formControlName="status"
+            label="Estados"
+            [options]="statusOptions"
+            optionLabel="label"
+            optionValue="value"
+            [maxSelectedLabels]="5"
+        ></svi-multiselect>
+    </div>
+</form>

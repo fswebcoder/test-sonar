@@ -1,0 +1,36 @@
+<form [formGroup]="form" class="p-4" (ngSubmit)="submit()">
+
+    <div class=" grid">
+        <div class="col-12 md:col-6">
+            <svi-float-select id="bigBagTypeId" formControlName="bigBagTypeId" [options]="bigBagTypes()"
+                optionLabel="name" optionValue="id" label="Tipo de big bag"></svi-float-select>
+        </div>
+
+        <div class="col-12 md:col-6">
+            <svi-float-input id="filledWeight" formControlName="filledWeight" [isWeightInput]="true" label="Peso"
+                suffix="{{ EWeightUnits.KILOGRAMS }}" [errorMessages]="bigBagErrorMessages"></svi-float-input>
+        </div>
+
+        <div class="col-12 md:col-6">
+            <svi-date-piker id="expectedTime" formControlName="expectedTime" label="Fecha esperada de llenado"
+                [showTime]="true"></svi-date-piker>
+        </div>
+
+        <div class="col-12 md:col-6">
+            <svi-input-number label="Sello de seguridad" id="sealSecurity" formControlName="sealSecurity"
+                [showButtons]="false" />
+        </div>
+
+        <div class="col-12 md:col-6">
+            <svi-float-select id="mineId" formControlName="mineId" [options]="mines()" label="Mina" optionLabel="name"
+                optionValue="id"></svi-float-select>
+        </div>
+
+    </div>
+
+    <div class="flex justify-content-end gap-2 mt-4">
+        <svi-button label="Cancelar" severity="secondary" icon="{{ ICONS.CANCEL }}" type="button" (click)="cancel()" />
+        <svi-button label="Guardar" icon="{{ ICONS.SAVE }}" type="submit" loadingId="btn-fill-big-bag" [disabled]="form.invalid"/>
+    </div>
+
+</form>

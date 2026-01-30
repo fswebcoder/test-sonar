@@ -1,0 +1,9 @@
+<div
+  class="card-grid"
+  [class.card-grid--no-margin]="!margin()"
+  [style.--card-grid-min-width]="minWidth()"
+  [style.--card-grid-max-width]="maxWidth()"
+  [style.--card-grid-gap]="gap()"
+>
+  <ng-content></ng-content>
+</div>

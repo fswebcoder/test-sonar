@@ -1,0 +1,42 @@
+<div class="w-full">
+  <h3>Fundición</h3>
+  <svi-smelting-setup-form
+    [form]="form"
+    [furnaces]="furnaces()"
+    [rowsError]="ROWS_ERROR"
+    [columnsError]="COLUMNS_ERROR"
+    [weightMode]="weightMode()"
+    [samplesLength]="samples().length"
+    (generate)="createGrid()"
+    (clear)="clearGrid()"
+  />
+
+  <svi-smelting-grid
+    [rows]="rows()"
+    [columns]="columns()"
+    [samples]="samples()"
+    [weightMode]="weightMode()"
+    [weights]="regulusWeights()"
+    [finished]="finishedSmelting()"
+    (cellSelected)="onCellSelected($event)"
+    (editCell)="onEditCell($event)"
+    (deleteCell)="onDeleteCell($event)"
+    (weightCellSelected)="onWeightCell($event)"
+  ></svi-smelting-grid>
+
+  @if (weightMode() && getTotalSamples() > 0) {
+    <svi-smelting-weight-panel class="mt-4" [assigned]="getAssignedCount()" [total]="getTotalSamples()" [canFinalize]="allAssigned()" [finished]="finishedSmelting()" (finalize)="finishSmelting()"></svi-smelting-weight-panel>
+  }
+
+  <svi-smelting-start-action [show]="!weightMode() && samples().length > 0" (start)="startSmelting()" />
+
+  <svi-smelting-scan-dialog
+    [visible]="scanDialogVisible()"
+    [weightMode]="weightMode()"
+    [scanForm]="scanForm"
+    [weightForm]="weightForm"
+    (visibleChange)="onScanDialogVisibleChange($event)"
+    (cancel)="cancelScan()"
+    (confirm)="confirmScan()"
+  ></svi-smelting-scan-dialog>
+</div>

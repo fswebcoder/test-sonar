@@ -1,0 +1,148 @@
+import { createReducer, on } from '@ngrx/store';
+import { initialCommonState } from '@/store/models/common/common.model';
+import {
+  citiesListFailureAction,
+  citiesListSuccessAction,
+  departmentsListFailureAction,
+  departmentsListSuccessAction,
+  getCitiesAction,
+  getDepartmentsAction,
+  getDoreReceptionOriginsAction,
+  doreReceptionOriginsListSuccessAction,
+  doreReceptionOriginsListFailureAction,
+  getPrintersAction,
+  printersListSuccessAction,
+  printersListFailureAction,
+  getDocumentTypesAction,
+  documentTypesListSuccessAction,
+  documentTypesListFailureAction,
+  getRolesInternalAction,
+  rolesInternalListSuccessAction,
+  rolesInternalListFailureAction,
+  getPersonnelAction,
+  personnelListSuccessAction,
+  personnelListFailureAction,
+  getPersonnelPositionAction,
+  personnelPositionSuccessAction,
+  personnelPositionFailureAction,
+  getPumpsAction,
+  pumpsListSuccessAction,
+  pumpsListFailureAction,
+  getShiftsConfigAction,
+  shiftsConfigListSuccessAction,
+  shiftsConfigListFailureAction,
+  getAnalysisTypesAction,
+  analysisTypesListFailureAction,
+  analysisTypesListSuccessAction,
+  sampleTypesListSuccessAction,
+  getSampleTypesAction,
+  sampleTypesListFailureAction,
+  getSuppliersAction,
+  suppliersListSuccessAction,
+  suppliersListFailureAction,
+  getVehicleTypesAction,
+  vehicleTypesListSuccessAction,
+  vehicleTypesListFailureAction,
+  getMaterialTypesAction,
+  materialTypesSuccessAction,
+  materialTypesFailureAction,
+  getStorageZonesAction,
+  storageZonesSuccessAction,
+  storageZonesFailureAction,
+  getDriversAction,
+  driversFailureAction,
+  driversSuccessAction,
+  getVehiclesAction,
+  vehiclesFailureAction,
+  vehiclesSuccessAction,
+  getMillsAction,
+  millsSuccessAction,
+  millsFailureAction,
+  getBigBagTypesAction,
+  bigBagTypesSuccessAction,
+  bigBagTypesFailureAction
+} from '@/store/actions/common/common.action';
+
+export const commonReducer = createReducer(
+  initialCommonState,
+  on(getDepartmentsAction, state => ({ ...state, loading: true })),
+  on(departmentsListSuccessAction, (state, { departments }) => ({ ...state, departments, loading: false })),
+  on(departmentsListFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(getCitiesAction, state => ({ ...state, loading: true })),
+  on(citiesListSuccessAction, (state, { cities }) => ({ ...state, cities, loading: false })),
+  on(citiesListFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(getDoreReceptionOriginsAction, state => ({ ...state, loading: true })),
+  on(doreReceptionOriginsListSuccessAction, (state, { doreReceptionOrigins }) => ({ ...state, doreSampleTypes: doreReceptionOrigins, loading: false })),
+  on(doreReceptionOriginsListFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(getPrintersAction, state => ({ ...state, loading: true })),
+  on(printersListSuccessAction, (state, { printers }) => ({ ...state, printers, loading: false })),
+  on(printersListFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(getDocumentTypesAction, state => ({ ...state, loading: true })),
+  on(documentTypesListSuccessAction, (state, { documentTypes }) => ({ ...state, documentTypes, loading: false })),
+  on(documentTypesListFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(getRolesInternalAction, state => ({ ...state, loading: true })),
+  on(rolesInternalListSuccessAction, (state, { roles }) => ({ ...state, roles, loading: false })),
+  on(rolesInternalListFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(getPersonnelAction, state => ({ ...state, loading: true })),
+  on(personnelListSuccessAction, (state, { personnel }) => ({ ...state, personnel, loading: false })),
+  on(personnelListFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(getPersonnelPositionAction, state => ({ ...state, loading: true })),
+  on(personnelPositionSuccessAction, (state, { personnelPositions }) => ({ ...state, personnelPositions, loading: false })),
+  on(personnelPositionFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(getShiftsConfigAction, state => ({ ...state, loading: true })),
+  on(shiftsConfigListSuccessAction, (state, { shiftsConfig }) => ({ ...state, shiftsConfig, loading: false })),
+  on(shiftsConfigListFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(getPumpsAction, state => ({ ...state, loading: true })),
+  on(pumpsListSuccessAction, (state, { pumps }) => ({ ...state, pumps, loading: false })),
+  on(pumpsListFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(getAnalysisTypesAction, state => ({ ...state, loading: true })),
+  on(analysisTypesListSuccessAction, (state, { analysisTypes }) => ({ ...state, analysisTypes, loading: false })),
+  on(analysisTypesListFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(getSampleTypesAction, state => ({ ...state, loading: true })),
+  on(sampleTypesListSuccessAction, (state, { sampleTypes }) => ({ ...state, sampleTypes, loading: false })),
+  on(sampleTypesListFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(getSuppliersAction, state => ({ ...state, loading: true })),
+  on(suppliersListSuccessAction, (state, { suppliers }) => ({ ...state, suppliers, loading: false })),
+  on(suppliersListFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(getVehicleTypesAction, state => ({ ...state, loading: true })),
+  on(vehicleTypesListSuccessAction, (state, { vehicleTypes }) => ({ ...state, vehicleTypes, loading: false })),
+  on(vehicleTypesListFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(getMaterialTypesAction, state => ({ ...state, loading: true })),
+  on(materialTypesSuccessAction, (state, { materialTypes }) => ({ ...state, materialTypes, loading: false })),
+  on(materialTypesFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(getStorageZonesAction, state => ({ ...state, loading: true })),
+  on(storageZonesSuccessAction, (state, { storageZones }) => ({ ...state, storageZones, loading: false })),
+  on(storageZonesFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(getDriversAction, state => ({ ...state, loading: true })),
+  on(driversSuccessAction, (state, { drivers }) => ({ ...state, drivers, loading: false })),
+  on(driversFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(getVehiclesAction, state => ({ ...state, loading: true })),
+  on(vehiclesSuccessAction, (state, { vehicles }) => ({ ...state, vehicles, loading: false })),
+  on(vehiclesFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+  on(getMillsAction, state => ({ ...state, loading: true })),
+  on(millsSuccessAction, (state, { mills }) => ({ ...state, mills, loading: false })),
+  on(millsFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+  
+  on(getBigBagTypesAction, state => ({ ...state, loading: true })),
+  on(bigBagTypesSuccessAction, (state, { bigBagTypes }) => ({ ...state, bigBagTypes, loading: false })),
+  on(bigBagTypesFailureAction, (state, { error }) => ({ ...state, error, loading: false })),
+
+);

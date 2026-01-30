@@ -1,0 +1,92 @@
+<div class="process-container">
+  @if (locations().length) {
+    <div class="locations-grid">
+      @for (location of locations(); track location.id ?? location.name ?? $index) {
+        <article class="location-card card">
+          <header class="location-card__header">
+            <h5>{{ location.name || 'Ubicación' }}</h5>
+          </header>
+
+          @if (variables(location).length) {
+            @if (viewMode() === 'charts') {
+              <div class="variables-grid">
+                @for (variable of variables(location); track variable.id ?? variable.name ?? $index) {
+                  <div class="variable-card variable-card--chart">
+                    <header class="variable-card__header">
+                      <span>{{ variable.name }}</span>
+                      <div class="variable-card__actions">
+                        @if (isAverageVisible(variable) && hasDataPoints(variable)) {
+                          <p-tag
+                            class="variable-average-pill"
+                            [value]="'Promedio: ' + getAverageLabel(variable)"
+                          ></p-tag>
+                        }
+                        <svi-card-button
+                            [label]="isAverageVisible(variable) ? 'Ocultar promedio' : 'Mostrar promedio'"
+                            [icon]="ICONS.CHART_BAR"
+                            [disabled]="!hasDataPoints(variable)"
+                            [styleClass]="'variable-average-button'"
+                            [outlined]="false"
+                            severity="secondary"
+                            (clicked)="toggleAverage(variable)"
+                          ></svi-card-button>
+                      </div>
+                    </header>
+
+                    @if (dataPoints(variable).length) {
+                      <p-chart type="line" [data]="buildChartData(variable)" [options]="chartOptions"></p-chart>
+                    } @else {
+                      <p class="variable-empty">Sin registros disponibles.</p>
+                    }
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="variables-grid">
+                @for (variable of variables(location); track variable.id ?? variable.name ?? $index) {
+                  <div class="variable-card variable-card--detail">
+                    <header class="variable-card__header">
+                      <span>{{ variable.name }}</span>
+                      <div class="variable-card__actions">
+                        @if (isAverageVisible(variable) && hasDataPoints(variable)) {
+                          <p-tag
+                            class="variable-average-pill"
+                            [value]="'Promedio: ' + getAverageLabel(variable)"
+                          ></p-tag>
+                        }
+                        <svi-card-button
+                            [label]="isAverageVisible(variable) ? 'Ocultar promedio' : 'Mostrar promedio'"
+                            [icon]="ICONS.CHART_BAR"
+                            [disabled]="!hasDataPoints(variable)"
+                            [styleClass]="'variable-average-button'"
+                            [outlined]="false"
+                            severity="secondary"
+                            (clicked)="toggleAverage(variable)"
+                          ></svi-card-button>
+                      </div>
+                    </header>
+
+                    @if (dataPoints(variable).length) {
+                      <svi-key-value-table
+                        [rows]="variableRows(variable)"
+                        [variant]="'valueTimestamp'"
+                        [leftHeader]="'Valor'"
+                        [rightHeader]="'Hora'"
+                      ></svi-key-value-table>
+                    } @else {
+                      <p class="variable-empty">Sin registros disponibles.</p>
+                    }
+                  </div>
+                }
+              </div>
+            }
+          } @else {
+            <p class="location-empty">Sin variables configuradas.</p>
+          }
+        </article>
+      }
+    </div>
+  } @else {
+    <p class="location-empty">Sin ubicaciones registradas.</p>
+  }
+</div>

@@ -1,0 +1,63 @@
+<div class="view-role-container">
+  <div class="role-header-section">
+    <div class="role-title-card">
+      <div class="role-main-info">
+        <div class="flex alignt-items-center">
+          <h2 class="role-name">{{ roleDetail().name }}</h2>
+        </div>
+        <div class="role-status">
+          <span class="status-badge" [class]="roleData().isActive ? 'active' : 'inactive'">
+            <i class="{{ roleData().isActive ? ICONS.CHECK_CIRCLE : ICONS.TIMES_CIRCLE }}"></i>
+            {{ getRoleStatus() }}
+          </span>
+        </div>
+        @if (roleDetail().description) {
+          <div class="role-description">
+            <p class="description-text">{{ roleDetail().description }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="permissions-overview-section">
+    <div class="overview-header">
+      <h3 class="overview-title">
+        <i class="{{ ICONS.KEY }}"></i>
+        Resumen de Permisos
+      </h3>
+    </div>
+
+    <div class="stats-grid">
+      <svi-stat-card
+        [value]="getSelectedActionsCount()"
+        label="Permisos Asignados"
+        [icon]="ICONS.CHECK"
+        variant="primary"
+      />
+
+      <svi-stat-card
+        [value]="getTotalActionsCount()"
+        label="Total Disponibles"
+        [icon]="ICONS.LAYER_GROUP"
+        variant="secondary"
+      />
+
+      <svi-stat-card
+        [value]="getCoveragePercentage() + '%'"
+        label="Cobertura"
+        [icon]="ICONS.DOUBLE_CHECK"
+        variant="accent"
+        [showProgressBar]="true"
+        [progressPercentage]="getCoveragePercentageForProgress()"
+      />
+    </div>
+  </div>
+
+  <svi-action-resource-panel
+    [actions]="actionsPermissions()"
+    [selectedActionIds]="getRoleActionIds()"
+    [protectedActions]="[]"
+    [isReadOnly]="true"
+  />
+</div>

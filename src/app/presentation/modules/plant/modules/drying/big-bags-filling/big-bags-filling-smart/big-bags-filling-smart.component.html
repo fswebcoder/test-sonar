@@ -1,0 +1,8 @@
+<svi-big-bags-filling-dump
+	#bigBagsFillingDump
+	[data]="bigBagsItems()"
+	[bigBagTypes]="bigBagTypes()"
+	[mines]="mines()"
+	(onFilterChange)="filtersChange($event)"
+	(onFill)="fillBigBagsHandler($event)"
+/>

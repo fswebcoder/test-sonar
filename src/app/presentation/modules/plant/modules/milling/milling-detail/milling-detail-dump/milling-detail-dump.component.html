@@ -1,0 +1,54 @@
+<section class="card p-4">
+  <header class="flex flex-column align-items-center justify-content-between mb-4 gap-4 sm:flex-row sm:align-items-start sm:gap-3">
+    <div>
+      <h1>Detalle de Molienda</h1>
+      <p>Busca el detalle de la molienda por el turno y/o el lote </p>
+    </div>
+    <svi-button label="Obtener turno actual" icon="{{ICONS.INFO}}" (click)="getCurrentShiftDetail()"></svi-button>
+  </header>
+  <form [formGroup]="filterForm" class="filter-form">
+    <div class="filters-grid">
+      <svi-date-piker class="filter-field" label="Fecha de turnos" formControlName="date"></svi-date-piker>
+
+      <svi-float-select
+        class="filter-field"
+        formControlName="shiftId"
+        [label]="'Turno'"
+        [options]="shifts()"
+        optionLabel="name"
+        optionValue="id"
+        [showClear]="true"
+        [filter]="true"
+        filterBy="name"
+        emptyMessage="No hay turnos disponibles"
+        emptyFilterMessage="No hay turnos con ese criterio"
+      ></svi-float-select>
+    </div>
+  </form>
+  
+</section>
+
+<section class="card p-4">
+    @if (milllingDetailList().length === 0) {
+      <svi-empty-state title="No se encontraron detalles de molienda." description="Intenta ajustar los filtros" icon="{{ ICONS.INFO }}"></svi-empty-state>
+    } @else {
+      <ng-template #detailHeader let-detail let-idx="index">
+        {{ formatDateWithoutYear(detail.date) || ('Detalle ' + (idx + 1)) }}
+      </ng-template>
+
+      <ng-template #detailPanel let-detail>
+        <svi-milling-detail-display [detail]="detail" />
+      </ng-template>
+
+      <svi-tabs
+        [tabs]="milllingDetailList()"
+        [value]="activeTab() ?? ''"
+        (valueChange)="onTabChange($event)"
+        [scrollable]="true"
+        [tabListClass]="'milling-tablist'"
+        [headerTemplate]="detailHeader"
+        [panelTemplate]="detailPanel"
+        [tabValueFn]="detailTabValue"
+      ></svi-tabs>
+    }
+  </section>

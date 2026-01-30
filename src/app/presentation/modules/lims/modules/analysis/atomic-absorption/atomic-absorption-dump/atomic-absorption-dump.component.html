@@ -1,0 +1,20 @@
+<div class="card px-fadein">
+    <h3 class="card-title mb-4">Absorción atómica</h3>
+    <form [formGroup]="form" class="flex flex-col gap-4 animate__animated animate__fadeIn" (ngSubmit)="onSubmit()">
+        <svi-smart-scan-input formControlName="sampleId"></svi-smart-scan-input>
+        <svi-file-input
+            formControlName="file"
+            label="Archivo"
+            [multiple]="false"
+            accept=".xls, .xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            ></svi-file-input>
+            <div class="flex justify-content-end">
+                <svi-button
+                [appPermission]="{ path, action: 'CREAR_ANALISIS_ABSORCION_ATOMICA' }"
+
+                label="Guardar" type="submit" [disabled]="form.invalid" severity="primary" type="submit" loadingId="create-atomic-absorption-btn">
+                    <i class="fa-duotone fa-regular fa-floppy-disk"></i>
+                </svi-button>
+            </div>
+        </form>
+</div>

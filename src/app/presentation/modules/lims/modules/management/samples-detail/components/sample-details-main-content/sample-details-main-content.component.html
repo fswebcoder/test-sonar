@@ -1,0 +1,88 @@
+<div class="flex flex-column lg:flex-row gap-4">
+  <svi-sample-list-card
+    [title]="'Análisis Requeridos'"
+    [icon]="'fa-flask-vial'"
+    [color]="'blue'"
+    class="flex-1"
+    [items]="sampleDetail()?.requiredAnalyses ?? []"
+    [itemTemplate]="analysisTemplate"
+  >
+  </svi-sample-list-card>
+
+  <svi-sample-list-card
+    [title]="'Cuarteos'"
+    [icon]="'fa-boxes'"
+    [color]="'green'"
+    class="flex-1"
+    [items]="sampleDetail()?.quartering ?? []"
+    [tagSeverity]="'success'"
+    [itemTemplate]="subsamplesTemplate"
+  >
+    <div header-actions>
+      @if (sampleDetail()?.quartering?.length) {
+        <svi-button
+          severity="secondary"
+          [rounded]="true"
+          pTooltip="Imprimir todos"
+          tooltipPosition="top"
+          (click)="printBulkQuartering()"
+        >
+          <i class="{{ ICONS.PRINT }}"></i>
+        </svi-button>
+      }
+    </div>
+  </svi-sample-list-card>
+</div>
+
+<ng-template #analysisTemplate let-analysis>
+  <div
+    class="max-w-12rem col-12 sm:col-3 w-2/5 card flex flex-column justify-content-between shadow-2 px-0 pb-0 gap-2 select-none h-full m-1 mx-auto"
+    pTooltip="{{ analysis.analysisName }}"
+  >
+    <div class="flex align-items-center justify-content-center gap-2 relative">
+      <p class="text-md text-900 m-0">{{ analysis.analysisShortName }}</p>
+      <span class="absolute right-0 mr-2">
+        <p-tag
+          value="{{ analysis.replicatedIndex }}"
+          severity="warn"
+          rounded
+          class="px-2 py-1 text-xs font-semibold shadow-1"
+        ></p-tag>
+      </span>
+    </div>
+    <div (click)="selectResult(analysis)" class="cursor-pointer w-full">
+      <p-tag
+        [value]="getStatusLabel(analysis)"
+        [severity]="getStatusColor(analysis)"
+        class="border-round-bottom-lg w-full"
+      ></p-tag>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #subsamplesTemplate let-quartering>
+  <div
+    class="relative mx-auto max-w-10rem col-5 card flex flex-column shadow-2 gap-2 p-3 select-none h-full m-1 hover:shadow-4 transition-duration-200 cursor-pointer"
+    pTooltip="{{ quartering.subSampleTypeName }}"
+    tooltipPosition="bottom"
+    (click)="printQuartering(quartering.id)"
+  >
+    <span class="absolute top-0 right-0 m-2">
+      <p-tag
+        value="{{ quartering.replicatedIndex }}"
+        severity="warn"
+        rounded
+        class="px-2 py-1 text-xs font-semibold shadow-1"
+      ></p-tag>
+    </span>
+
+    <div class="flex align-items-center gap-2">
+      <i class="{{ ICONS.VIAL }} text-xl text-700"></i>
+    </div>
+
+    <div class="text-sm font-medium flex gap-2">
+      {{ quartering.analysisShortName }}
+      <p class="text-500">{{ formatWeight(quartering.weight) }} {{ EWeightUnits.GRAMS }}</p>
+    </div>
+  </div>
+</ng-template>

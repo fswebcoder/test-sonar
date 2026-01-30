@@ -1,0 +1,42 @@
+    <form [formGroup]="form">
+      <div class="p-4">
+        <div class="mb-4">
+          <svi-auto-complete
+            id="personnelId"
+            formControlName="personnelId"
+            [suggestions]="filteredPersonnel"
+            labelField="fullName"
+            valueField="id"
+            [forceSelection]="true"
+            label="Personal"
+            [minLength]="1"
+            (completeMethod)="complete($event)"
+          />
+        </div>
+        <div class="mb-4">
+          <svi-float-select
+            class="form-input"
+            id="role"
+            optionLabel="name"
+            optionValue="id"
+            formControlName="positionId"
+            [options]="filteredPersonnelPositions()"
+            label="Posición"
+          />
+        </div>
+        @if (isConfig()) {
+          <div class="grid mb-4 gap-2 md:gap-0">
+            <div class="col-12 md:col-6">
+              <svi-date-piker label="Fecha inicio" formControlName="startDateConfig"/>
+            </div>
+            <div class="col-12 md:col-6">
+              <svi-date-piker label="Fecha fin" formControlName="endDateConfig"/>
+            </div>
+          </div>
+        }
+        <div class="mb-4 flex justify-content-end gap-4">
+          <svi-button icon="{{ ICONS.CANCEL }}" label="Cancelar" severity="secondary" (click)="onClose.emit()" />
+          <svi-button icon="{{ ICONS.SAVE }}" label="Guardar" loadingId="add-personnel-button" [disabled]="form.invalid" (click)="onSubmit()" />
+        </div>
+      </div>
+    </form>

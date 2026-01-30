@@ -1,0 +1,80 @@
+<div class="w-full">
+  <h3>Copelación</h3>
+  <form [formGroup]="form" class="flex flex-col gap-4">
+    <div>
+      <svi-float-select
+        label="Horno"
+        id="furnaceId"
+        formControlName="furnaceId"
+        [options]="furnaces()"
+        optionLabel="name"
+        optionValue="id"
+      >
+      </svi-float-select>
+    </div>
+
+    <div>
+      <svi-float-select
+        label="Fundiciones Finalizadas"
+        id="smeltingToFinish"
+        formControlName="smeltingToFinish"
+        [options]="finishedSmeltingOptions()"
+        optionLabel="displayDate"
+        optionValue="fireAssayId"
+        [disabled]="activeCupellation() !== null"
+      >
+      </svi-float-select>
+    </div>
+  </form>
+  <div class="my-4 flex flex-col gap-2">
+      @if (rows() > 0 && columns() > 0) {
+      <svi-smelting-grid
+        [rows]="rows()"
+        [columns]="columns()"
+        [samples]="samples()"
+        [weights]="doreWeights()"
+        [weightMode]="finishingMode()"
+        [finished]="false"
+        [readOnly]="!finishingMode()"
+        (weightCellSelected)="onDoreWeightCell($event)"
+        units="{{EWeightUnits.MILLIGRAMS}}"
+      ></svi-smelting-grid>
+      @if (finishingMode()) {
+        <svi-cupellation-weight-panel
+          class="mt-4"
+          [assigned]="getAssignedDoreCount()"
+          [total]="getTotalSamplesWithCode()"
+          [canFinalize]="allDoreWeightsAssigned()"
+          [finished]="false"
+          (finalize)="startCupellation()"
+        />
+      }
+  }
+  </div>
+  <div class="mt-4 flex justify-end">
+    <svi-button
+      [label]="finishingMode() ? 'Finalizar Copelación' : 'Iniciar Copelación'"
+      severity="primary"
+      (onClick)="startCupellation()"
+      [disabled]="
+        !form.get('furnaceId')?.value ||
+        !form.get('smeltingToFinish')?.value ||
+        (finishingMode() && !allDoreWeightsAssigned())
+      "
+    >
+    </svi-button>
+  </div>
+  <svi-smelting-scan-dialog
+    [visible]="weightDialogVisible()"
+    [weightMode]="true"
+    [scanForm]="form"
+    [weightForm]="doreWeightForm"
+    weightFieldName="doreWeight"
+    weightHeader="Asignar Peso dore"
+    weightInputLabel="Peso Dore {{EWeightUnits.MILLIGRAMS}}"
+    [units]="EWeightUnits.MILLIGRAMS"
+    (visibleChange)="onWeightDialogVisibleChange($event)"
+    (cancel)="cancelWeightDialog()"
+    (confirm)="confirmWeightDialog()"
+  ></svi-smelting-scan-dialog>
+</div>

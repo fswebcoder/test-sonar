@@ -1,0 +1,140 @@
+.sample-card {
+  background: #fff;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  padding: 1.2rem;
+  width: 290px;
+  gap: 1rem;
+  border: 1px solid #eee;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+
+  &__header {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+  }
+
+  &__icon {
+    background: var(--primary-color);
+    color: #fff;
+    border-radius: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+  }
+
+  &__title {
+    font-size: 1.1rem;
+    margin: 0;
+    color: #222;
+  }
+
+  &__subtitle {
+    font-size: 0.9rem;
+    margin: 0;
+    color: #777;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    div {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.92rem;
+    }
+  }
+  &__label {
+    color: #555;
+    font-size: 12px;
+    font-weight: 500;
+    text-wrap: nowrap;
+  }
+
+  &__value {
+    color: #333;
+    font-size: 12px;
+    font-weight: 600;
+    text-wrap: nowrap;
+  }
+
+  &__analisis-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.7rem;
+    margin-top: 0.5rem;
+    padding-right: 0.5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-height: 90px;
+    min-height: 90px;
+    &::-webkit-scrollbar {
+      width: 5px;
+      background: color-mix(in srgb, var(--primary-color) 30%, white);
+      border-radius: 10px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: var(--primary-color);
+      border-radius: 10px;
+    }
+  }
+
+  &__analisis {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1rem;
+    border-radius: 2rem;
+    font-size: 0.98rem;
+    font-weight: 500;
+    background: #f3f3fa;
+    color: #22223b;
+    border: 2px solid transparent;
+    transition:
+      background 0.2s,
+      border 0.2s,
+      color 0.2s;
+    cursor: default;
+    white-space: nowrap;
+    max-height: 40px;
+
+    &.realizado {
+      background: #e6fbe8;
+      color: #1b5e20;
+      border-color: #a5d6a7;
+    }
+    &.pendiente {
+      background: #fff0f0;
+      color: #b71c1c;
+      border-color: #ffcdd2;
+    }
+    &.inAnalysis {
+      background: #09f2;
+      color: #09f;
+      border-color: #09f2;
+    }
+    i {
+      font-size: 1.1rem;
+    }
+
+    .sample-card__analisis-label {
+      font-weight: 600;
+    }
+
+    .sample-card__analisis-status {
+      font-size: 0.85em;
+      margin-left: 0.3em;
+      font-weight: 400;
+    }
+  }
+}

@@ -1,0 +1,39 @@
+<section>
+  <div class="card px-fadein">
+    <h3 class="card-title mb-4">Retalla</h3>
+    <form [formGroup]="form" class="flex flex-col gap-4 animate__animated animate__fadeIn" (ngSubmit)="onSubmit()">
+      <svi-smart-scan-input formControlName="sampleCode"></svi-smart-scan-input>
+
+      <svi-float-input
+        label="Peso retenido (gr)"
+        formControlName="retainedWeight"
+        [isWeightInput]="true"
+        [errorMessages]="weightErrorMessages"
+      >
+      </svi-float-input>
+
+      <svi-float-input
+        label="Peso pasante (gr)"
+        formControlName="passWeight"
+        [isWeightInput]="true"
+        [errorMessages]="weightErrorMessages"
+      >
+      </svi-float-input>
+
+      <div class="flex justify-content-end">
+        <svi-button
+          [appPermission]="{ path, action: 'CREAR_ANALISIS_RT' }"
+
+          label="Guardar"
+          type="submit"
+          [disabled]="form.invalid"
+          severity="primary"
+          type="submit"
+          loadingId="create-retalla-btn"
+        >
+          <i class="fa-duotone fa-regular fa-floppy-disk"></i>
+        </svi-button>
+      </div>
+    </form>
+  </div>
+</section>

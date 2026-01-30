@@ -1,0 +1,103 @@
+<app-loading [section]="LOADING.sections.stock" [options]="{ overlay: true, fullscreen: false, size: 'medium' }"></app-loading>
+
+@if (hasData()) {
+  <div class="flex align-items-center gap-2 mb-3">
+    <span class="text-sm" [class.font-bold]="!useToneladas()">kg</span>
+    <p-inputSwitch [ngModel]="useToneladas()" (ngModelChange)="useToneladas.set($event)" />
+    <span class="text-sm" [class.font-bold]="useToneladas()">ton</span>
+  </div>
+
+  <!-- KPIs Row -->
+  <div class="grid mb-2">
+    <div class="col-6 md:col-4 lg:col-3">
+      <svi-stat-card [value]="formatWeight(dashboard()!.totals.finalStock)" label="Stock Final" [icon]="ICONS.WEIGHT" variant="primary" size="compact" />
+    </div>
+    <div class="col-6 md:col-4 lg:col-3">
+      <svi-stat-card [value]="formatWeight(dashboard()!.totals.movements.inputs)" label="Total Entradas" [icon]="ICONS.ARROW_DOWN" variant="success" size="compact" />
+    </div>
+    <div class="col-6 md:col-4 lg:col-3">
+      <svi-stat-card [value]="formatWeight(dashboard()!.totals.movements.outputs)" label="Total Salidas" [icon]="ICONS.ARROW_UP" variant="danger" size="compact" />
+    </div>
+    <div class="col-6 md:col-4 lg:col-3">
+      <svi-stat-card [value]="dashboard()!.zones.length" label="Zonas Activas" [icon]="ICONS.LAYER_GROUP" variant="secondary" size="compact" />
+    </div>
+  </div>
+
+  <!-- Row 1: Distribution + Stock by Zone -->
+  <div class="grid mb-2">
+    <div class="col-12 md:col-4 lg:col-3">
+      <div class="card h-full p-2">
+        <h6 class="mb-2 mt-0 text-sm">Distribución de Stock por Zona</h6>
+        <svi-doughnut-chart [data]="stockDistributionChartData()" height="200px" [compact]="false" />
+      </div>
+    </div>
+    <div class="col-12 md:col-8 lg:col-9">
+      <div class="card h-full p-2">
+        <h6 class="mb-2 mt-0 text-sm">Stock Actual por Zona</h6>
+        <svi-bar-chart [data]="stockByZoneChartData()" height="200px" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Row 2: Flow by Zone + Top Suppliers -->
+  <div class="grid mb-3">
+    <div [class]="hasSupplierFilter() ? 'col-12' : 'col-12 lg:col-6'">
+      <div class="card h-full p-3">
+        <h5 class="mb-2 mt-0">Entradas y Salidas por Zona</h5>
+        <svi-bar-chart [data]="flowByZoneChartData()" height="250px" />
+      </div>
+    </div>
+    @if (!hasSupplierFilter()) {
+      <div class="col-12 lg:col-6">
+        <div class="card h-full p-3">
+          <h5 class="mb-2 mt-0">Stock por Proveedor</h5>
+          <svi-bar-chart [data]="topSuppliersByZoneChartData()" orientation="horizontal" height="250px" />
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Zone Details Table -->
+  <div class="card p-3">
+    <h5 class="mb-3 mt-0">Detalle por Zona</h5>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="border-bottom-1 surface-border">
+            <th class="text-left p-2">Zona</th>
+            <th class="text-right p-2">Stock Total</th>
+            <th class="text-right p-2">Entradas</th>
+            <th class="text-right p-2">Salidas</th>
+            <th class="text-right p-2">Viajes</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (zone of dashboard()!.zones; track zone.zoneId) {
+            <tr class="border-bottom-1 surface-border hover:surface-hover">
+              <td class="p-2 font-medium">{{ zone.zoneName }}</td>
+              <td class="text-right p-2">{{ formatWeight(zone.finalStock) }}</td>
+              <td class="text-right p-2 text-green-500">{{ formatWeight(zone.movements.inputs) }}</td>
+              <td class="text-right p-2 text-red-500">{{ formatWeight(zone.movements.outputs) }}</td>
+              <td class="text-right p-2">{{ zone.movements.inputCount + zone.movements.outputCount }}</td>
+            </tr>
+          }
+        </tbody>
+        <tfoot>
+          <tr class="surface-ground font-bold">
+            <td class="p-2">Total</td>
+            <td class="text-right p-2">{{ formatWeight(dashboard()!.totals.finalStock) }}</td>
+            <td class="text-right p-2 text-green-500">{{ formatWeight(dashboard()!.totals.movements.inputs) }}</td>
+            <td class="text-right p-2 text-red-500">{{ formatWeight(dashboard()!.totals.movements.outputs) }}</td>
+            <td class="text-right p-2">-</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+} @else {
+  <svi-empty-state
+    title="Sin datos de stock"
+    description="Aplique los filtros para ver el balance de stock por ubicación."
+    [icon]="ICONS.LAYER_GROUP"
+  />
+}

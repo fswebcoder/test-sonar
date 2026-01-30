@@ -1,0 +1,55 @@
+:host {
+  display: block;
+}
+
+.kv-table-wrapper {
+  overflow: auto;
+}
+
+.kv-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead {
+    display: none;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid var(--surface-border);
+  }
+
+  tbody tr:last-child {
+    border-bottom: none;
+  }
+
+  td {
+    padding: 0.5rem 0;
+    vertical-align: middle;
+  }
+
+  td:last-child {
+    text-align: right;
+  }
+}
+
+.kv-table.kv--labelValue {
+  td:first-child {
+    color: var(--text-color-secondary);
+    font-weight: 400;
+  }
+
+  td:last-child {
+    font-weight: 600;
+  }
+}
+
+.kv-table.kv--valueTimestamp {
+  td:first-child {
+    font-weight: 600;
+  }
+
+  td:last-child {
+    color: var(--text-color-secondary);
+    font-weight: 400;
+  }
+}

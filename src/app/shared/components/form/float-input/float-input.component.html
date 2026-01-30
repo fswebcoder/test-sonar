@@ -1,0 +1,79 @@
+<p-floatlabel variant="on">
+  @if (icon()) {
+    <p-icon-field>
+      <p-inputicon [class]="icon()" />
+      <ng-container [ngTemplateOutlet]="input"></ng-container>
+    </p-icon-field>
+  } @else if (type() === 'password') {
+    <p-password
+      [formControl]="control"
+      [feedback]="false"
+      toggleMask
+      inputId="password_label"
+      styleClass="w-full"
+      [inputStyle]="{ width: '100%' }"
+      class="w-full"
+      (onBlur)="onBlur()"
+    />
+  } @else if (isWeightInput()) {
+    <ng-container [ngTemplateOutlet]="weightInput"></ng-container>
+  } @else {
+    <ng-container [ngTemplateOutlet]="input"></ng-container>
+  }
+  <label [for]="id">{{ label() }}</label>
+</p-floatlabel>
+
+<div sviFormError [errorMessage]="errorMessage" [show]="hasErrors"></div>
+
+<ng-template #input>
+  <input
+    [mask]="mask()"
+    [suffix]="suffix()"
+    [prefix]="prefix()"
+    [allowNegativeNumbers]="allowNegativeNumbers()"
+    [thousandSeparator]="thousandSeparator()"
+    [decimalMarker]="decimalMarker()"
+    [inputTransformFn]="inputTransformFn()"
+    [outputTransformFn]="outputTransformFn()"
+    pInputText
+    [formControl]="control"
+    [id]="id"
+    type="text"
+    [disabled]="isDisabled()"
+    class="w-full p-inputtext-sm"
+    [style]="{
+      width: '100%',
+      'text-align': type() === 'number' ? 'right' : 'left',
+      'text-right': type() === 'number',
+      'text-transform': uppercase() ? 'uppercase' : 'none'
+    }"
+    size="small"
+    (blur)="onBlur()"
+  />
+</ng-template>
+
+<ng-template #weightInput>
+  <input
+    [mask]="weightOptions().mask"
+    [suffix]="weightOptions().suffix"
+    [prefix]="weightOptions().prefix"
+    [allowNegativeNumbers]="weightOptions().allowNegativeNumbers"
+    [thousandSeparator]="weightOptions().thousandSeparator"
+    [decimalMarker]="weightOptions().decimalMarker"
+    [inputTransformFn]="inputTransformFn()"
+    [outputTransformFn]="outputTransformFn()"
+    pInputText
+    [formControl]="control"
+    [id]="id"
+    type="text"
+    [disabled]="isDisabled()"
+    [style]="{
+      width: '100%',
+      'text-align': type() === 'number' ? 'right' : 'left',
+      'text-right': type() === 'number'
+    }"
+    class="p-inputtext-md"
+    size="medium"
+    (blur)="onBlur()"
+  />
+</ng-template>

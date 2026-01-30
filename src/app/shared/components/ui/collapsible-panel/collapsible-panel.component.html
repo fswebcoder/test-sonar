@@ -1,0 +1,12 @@
+<p-panel
+  [toggleable]="toggleable()"
+  [collapsed]="collapsed()"
+  [styleClass]="styleClass()"
+  (onAfterToggle)="onToggle($event)"
+>
+  <ng-template #header>
+    <ng-content select="[slot=header]"></ng-content>
+  </ng-template>
+
+  <ng-content></ng-content>
+</p-panel>

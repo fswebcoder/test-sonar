@@ -1,0 +1,37 @@
+<section class="card">
+  <article>
+    <div class="flex flex-col align-items-center gap-3 md:flex-row md:justify-content-between p-4">
+      <h1>Configuración de Notificaciones</h1>
+      <svi-button icon="{{ ICONS.ADD }}" (click)="openDialog()" (keydown.enter)="openDialog()" label="Agregar configuración"/>
+    </div>
+
+    <div class="p-4">
+      <svi-table
+        [columns]="columns()"
+        [data]="data()"
+        [actions]="actions()"
+        [showPaginator]="true"
+      />
+    </div>
+  </article>
+</section>
+
+<svi-dialog
+  header="Nueva Configuración de Notificación"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  width="40rem"
+  [visible]="dialogOpen()"
+  (onHide)="closeAllDialogs()"
+>
+  <svi-notification-config-form
+    [notificationTypes]="notificationTypes()"
+    [contacts]="contacts()"
+    (cancelForm)="closeAllDialogs()"
+    (createConfig)="createConfig($event)"
+  />
+</svi-dialog>
+
+<svi-confirm-dialog #confirmDialog />

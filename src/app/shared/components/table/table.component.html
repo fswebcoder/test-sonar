@@ -1,0 +1,413 @@
+@if (globalFilter) {
+  <div class="p-inputgroup mb-3">
+    <input type="text" pInputText [(ngModel)]="globalFilterValue" placeholder="Buscar..." class="w-full" />
+  </div>
+}
+@if (!isMobile()) {
+  <p-table
+    [value]="pagedData"
+    [loading]="loading"
+    [responsive]="responsive"
+    [selectionMode]="selectionMode"
+    [(selection)]="selectedItems"
+    [globalFilterFields]="globalFilterFields"
+    [dataKey]="expandableRows ? dataKey : undefined"
+    (selectionChange)="handleSelectionChange($event)"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        @if (selectionMode) {
+          <th class="selection-column text-center" style="width: 3rem">
+            @if (selectionMode === 'multiple') {
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            }
+          </th>
+        }
+        @for (col of columns; track col.field) {
+          @if (col.permission) {
+            <th 
+              [appPermission]="getColumnPermission(col)"
+              [pSortableColumn]="col.field" 
+              [style.width]="col.width" 
+              [class]="getColumnClass(col)" 
+              class="text-center"
+            >
+              {{ col.header }}
+              @if (col.sortable) {
+                <i class="fa-thin fa-sort"></i>
+              }
+            </th>
+          } @else {
+            <th 
+              [pSortableColumn]="col.field" 
+              [style.width]="col.width" 
+              [class]="getColumnClass(col)" 
+              class="text-center"
+            >
+              {{ col.header }}
+              @if (col.sortable) {
+                <i class="fa-thin fa-sort"></i>
+              }
+            </th>
+          }
+        }
+        @if (actions.length > 0) {
+          <th class="actions-column text-center">Acciones</th>
+        }
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" #body let-rowData let-rowIndex="rowIndex">
+      <tr [pSelectableRow]="rowData" class="{{expandableRows ? 'cursor-pointer' : ''}}" [pSelectableRowIndex]="rowIndex" (click)="expandableRows ? toggleRowExpansion(rowData) : ''">
+        @if (selectionMode) {
+          <td class="selection-column text-center">
+            @if (selectionMode === 'multiple') {
+              <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+            } @else {
+              <p-tableRadioButton [value]="rowData"></p-tableRadioButton>
+            }
+          </td>
+        }
+        @for (col of columns; track col.field) {
+          @if (col.permission) {
+            <td 
+              [appPermission]="getColumnPermission(col)"
+              [class]="getColumnClass(col) + ' text-center'"
+            >
+              @if (col.type === 'actions') {
+                <div class="action-buttons">
+                  @for (action of actions; track action) {
+                    @if (!isActionDisabled(action, rowData)) {
+                      <button
+                        pButton
+                        pRipple
+                        [icon]="action.icon"
+                        [pTooltip]="action.tooltip"
+                        [severity]="action.severity"
+                        (click)="$event.stopPropagation(); action.action(rowData)"
+                        class="p-button-text"
+                      ></button>
+                    }
+                  }
+                </div>
+              } @else if (col.type === 'badge') {
+                <p-badge 
+                  [value]="getBadgeText(rowData[col.field], col)"
+                  [severity]="getBadgeSeverity(rowData[col.field], col)"
+                  [style]="{ 'background-color': getBadgeColor(rowData[col.field], col) }"
+                  size="large"
+                ></p-badge>
+              } @else if (isImageField(rowData[col.field], col, rowData)) {
+                <p-image
+                  [src]="getImageSource(rowData[col.field], col, rowData)"
+                  [preview]="true"
+                  [appendTo]="'body'"
+                  [imageStyle]="{
+                    'max-width': '60px',
+                    'max-height': '60px',
+                    'object-fit': 'contain',
+                    'object-position': 'center',
+                    'border-radius': '8px',
+                    border: '1px solid #e0e0e0'
+                  }"
+                  [style]="{ 'max-width': '900px', 'max-height': '900px' }"
+                  alt="Imagen"
+                ></p-image>
+              } @else if (col.template) {
+                @if (col.isHtml) {
+                  <div [innerHTML]="col.template(rowData)"></div>
+                } @else {
+                  {{ col.template(rowData) }}
+                }
+              } @else {
+                @if (shouldShowTooltip(rowData[col.field], col, rowData)) {
+                  <span
+                    [pTooltip]="getTooltipText(rowData[col.field], col, rowData)"
+                    [tooltipPosition]="getTooltipPosition(col)"
+                  >
+                    {{ getTruncatedText(rowData[col.field], col) }}
+                  </span>
+                } @else {
+                  {{ formatValue(rowData[col.field], col) }}
+                }
+              }
+            </td>
+          } @else {
+            <td [class]="getColumnClass(col) + ' text-center'">
+              @if (col.type === 'actions') {
+                <div class="action-buttons">
+                  @for (action of actions; track action) {
+                    @if (!isActionDisabled(action, rowData)) {
+                      <button
+                        pButton
+                        pRipple
+                        [icon]="action.icon"
+                        [pTooltip]="action.tooltip"
+                        [severity]="action.severity"
+                        (click)="$event.stopPropagation(); action.action(rowData)"
+                        class="p-button-text"
+                      ></button>
+                    }
+                  }
+                </div>
+              } @else if (col.type === 'badge') {
+                <p-badge 
+                  [value]="getBadgeText(rowData[col.field], col)"
+                  [severity]="getBadgeSeverity(rowData[col.field], col)"
+                  [style]="{ 'background-color': getBadgeColor(rowData[col.field], col) }"
+                  size="large"
+                ></p-badge>
+              } @else if (isImageField(rowData[col.field], col, rowData)) {
+                <p-image
+                  [src]="getImageSource(rowData[col.field], col, rowData)"
+                  [preview]="true"
+                  [appendTo]="'body'"
+                  [imageStyle]="{
+                    'max-width': '60px',
+                    'max-height': '60px',
+                    'object-fit': 'contain',
+                    'object-position': 'center',
+                    'border-radius': '8px',
+                    border: '1px solid #e0e0e0'
+                  }"
+                  [style]="{ 'max-width': '900px', 'max-height': '900px' }"
+                  alt="Imagen"
+                ></p-image>
+              } @else if (col.template) {
+                @if (col.isHtml) {
+                  <div [innerHTML]="col.template(rowData)"></div>
+                } @else {
+                  {{ col.template(rowData) }}
+                }
+              } @else {
+                @if (shouldShowTooltip(rowData[col.field], col, rowData)) {
+                  <span
+                    [pTooltip]="getTooltipText(rowData[col.field], col, rowData)"
+                    [tooltipPosition]="getTooltipPosition(col)"
+                  >
+                    {{ getTruncatedText(rowData[col.field], col) }}
+                  </span>
+                } @else {
+                  {{ formatValue(rowData[col.field], col) }}
+                }
+              }
+            </td>
+          }
+        }
+        @if (actions.length > 0) {
+          <td class="actions-column text-center">
+            <div class="action-buttons">
+              @for (action of actions; track action) {
+                @if (!isActionDisabled(action, rowData)) {
+                  <button
+                    [appPermission]="{ path: action.permission?.path, action: action.permission?.action }"
+                    pButton
+                    pRipple
+                    [icon]="action.icon"
+                    [pTooltip]="action.tooltip"
+                    tooltipPosition="bottom"                    
+                    [severity]="action.severity"
+                    (click)="$event.stopPropagation(); action.action(rowData)"
+                    class="p-button-text"
+                  ></button>
+                }
+              }
+            </div>
+          </td>
+        }
+      </tr>
+      @if (expandableRows && hasExpandedTemplate() && isRowExpanded(rowData) && expandedTemplate) {
+        <tr class="p-row-expansion">
+          <td [attr.colspan]="columns.length + (actions.length > 0 ? 1 : 0) + 1">
+            <ng-container [ngTemplateOutlet]="expandedTemplate" [ngTemplateOutletContext]="{ $implicit: rowData }"></ng-container>
+          </td>
+        </tr>
+      }
+    </ng-template>
+    @if (expandableRows && hasExpandedTemplate() && expandedTemplate) {
+      <ng-template pTemplate="rowexpansion" let-rowData>
+        <tr>
+          <td [attr.colspan]="columns.length + (actions.length > 0 ? 1 : 0) + 1">
+            <ng-container [ngTemplateOutlet]="expandedTemplate" [ngTemplateOutletContext]="{ $implicit: rowData }"></ng-container>
+          </td>
+        </tr>
+      </ng-template>
+    }
+    <ng-template #emptymessage>
+      <tr>
+        <td [attr.colspan]="columns.length + (actions.length > 0 ? 1 : 0) + (selectionMode ? 1 : 0)" class="text-center">
+          {{ emptyMessage }}
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+} @else {
+  <div class="mobile-cards">
+    @for (item of pagedData; track item) {
+      <div class="card">
+        @if (selectionMode) {
+          <div class="card-selection">
+            @if (selectionMode === 'multiple') {
+              <p-checkbox
+                [binary]="true"
+                [ngModel]="isRowSelected(item)"
+                (ngModelChange)="onMobileCheckboxToggle(item, $event)"
+              ></p-checkbox>
+            } @else {
+              <p-radioButton
+                name="mobile-selection"
+                [value]="item"
+                [ngModel]="selectedItems[0]"
+                (onClick)="onMobileRadioSelect(item)"
+              ></p-radioButton>
+            }
+          </div>
+        }
+        @if (expandableRows && hasExpandedTemplate()) {
+          <div class="card-expansion-toggle">
+            <button 
+              type="button" 
+              pButton 
+              pRipple 
+              class="p-button-text p-button-rounded p-button-sm expansion-button"
+              [icon]="isRowExpanded(item) ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+              [class.p-highlight]="isRowExpanded(item)"
+              (click)="$event.stopPropagation(); toggleRowExpansion(item)"
+            ></button>
+            <span class="expansion-label">Expandir detalles</span>
+          </div>
+        }
+        
+        @for (col of columns; track col.field) {
+          @if (col.permission) {
+            <div 
+              [appPermission]="getColumnPermission(col)"
+              class="card-row"
+            >
+              <span class="label">{{ col.header }}:</span>
+              <span class="value">
+                @if (col.type === 'actions') {
+                  <div class="action-buttons">
+                    @for (action of actions; track action) {
+                      @if (!isActionDisabled(action, item)) {
+                        <button
+                          pButton
+                          pRipple
+                          [icon]="action.icon"
+                          [pTooltip]="action.tooltip"
+                          [severity]="action.severity"
+                          (click)="$event.stopPropagation(); action.action(item)"
+                          class="p-button-text"
+                        ></button>
+                      }
+                    }
+                  </div>
+                } @else if (col.type === 'badge') {
+                  
+                  <p-badge 
+                    [value]="getBadgeText(item[col.field], col)"
+                    [severity]="getBadgeSeverity(item[col.field], col)"
+                    [style]="{ 'background-color': getBadgeColor(item[col.field], col) }"
+                  ></p-badge>
+                } @else if (isImageField(item[col.field], col, item)) {
+                  <p-image
+                    [src]="getImageSource(item[col.field], col, item)"
+                    [preview]="true"
+                    [imageStyle]="{ 'max-width': '50px', 'max-height': '50px' }"
+                    [style]="{ 'max-width': '500px', 'max-height': '500px' }"
+                    alt="Imagen"
+                  ></p-image>
+                } @else if (col.template) {
+                  @if (col.isHtml) {
+                    <span [innerHTML]="col.template(item)"></span>
+                  } @else {
+                    {{ col.template(item) }}
+                  }
+                } @else {
+                  {{ formatValue(item[col.field], col) }}
+                }
+              </span>
+            </div>
+          } @else {
+            <div class="card-row">
+              <span class="label">{{ col.header }}:</span>
+              <span class="value">
+                @if (col.type === 'actions') {
+                  <div class="action-buttons">
+                    @for (action of actions; track action) {
+                      @if (!isActionDisabled(action, item)) {
+                        <button
+                          pButton
+                          pRipple
+                          [icon]="action.icon"
+                          [pTooltip]="action.tooltip"
+                          [severity]="action.severity"
+                          (click)="$event.stopPropagation(); action.action(item)"
+                          class="p-button-text"
+                        ></button>
+                      }
+                    }
+                  </div>
+                } @else if (col.type === 'badge') {
+                  
+                  <p-badge 
+                    [value]="getBadgeText(item[col.field], col)"
+                    [severity]="getBadgeSeverity(item[col.field], col)"
+                    [style]="{ 'background-color': getBadgeColor(item[col.field], col) }"
+                ></p-badge>
+              } @else if (isImageField(item[col.field], col, item)) {
+                <p-image
+                  [src]="getImageSource(item[col.field], col, item)"
+                  [preview]="true"
+                  [imageStyle]="{ 'max-width': '50px', 'max-height': '50px' }"
+                  [style]="{ 'max-width': '500px', 'max-height': '500px' }"
+                  alt="Imagen"
+                ></p-image>
+              } @else if (col.template) {
+                @if (col.isHtml) {
+                  <span [innerHTML]="col.template(item)"></span>
+                } @else {
+                  {{ col.template(item) }}
+                }
+              } @else {
+                {{ formatValue(item[col.field], col) }}
+              }
+            </span>
+          </div>
+          }
+        }
+        @if (actions.length > 0) {
+          <div class="card-actions">
+            @for (action of actions; track action) {
+              @if (!isActionDisabled(action, item)) {
+                <button
+                  pButton
+                  pRipple
+                  [icon]="action.icon"
+                  [pTooltip]="action.tooltip"
+                  [severity]="action.severity"
+                  (click)="$event.stopPropagation(); action.action(item)"
+                  class="p-button-text"
+                ></button>
+              }
+            }
+          </div>
+        }
+        @if (expandableRows && hasExpandedTemplate() && isRowExpanded(item) && expandedTemplate) {
+          <div class="card-expansion">
+            <ng-container [ngTemplateOutlet]="expandedTemplate" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
+          </div>
+        }
+      </div>
+    }
+  </div>
+}
+
+@if (showPaginator) {
+  <p-paginator
+    [rows]="rows"
+    [totalRecords]="totalRecordCount"
+    [rowsPerPageOptions]="rowsPerPageOptions"
+    (onPageChange)="onPageChange($event)"
+    [first]="first"
+  ></p-paginator>
+}

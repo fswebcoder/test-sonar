@@ -1,0 +1,62 @@
+<div class="card px-fadein">
+  <div class="flex flex-col sm:flex-row justify-content-between align-items-center mb-4">
+    <h3>Muestras en proceso de lixiviación (LeachWELL)</h3>
+    <svi-button
+    [appPermission]="{ path, action: 'CREAR_ANALISIS_LW' }"
+
+      class="p-button-rounded p-button-primary"
+      pTooltip="Añadir nueva muestra"
+      label="Añadir muestra"
+      tooltipPosition="bottom"
+      (click)="openDialog()"
+    >
+      <i class="{{ ICONS.ADD }}"></i>
+    </svi-button>
+  </div>
+  @if (leachwells() && leachwells().length > 0) {
+    <form [formGroup]="scanForm" class="flex flex-col gap-2">
+      <label class="font-semibold text-lg text-color-secondary"> Finalizar lixiviación por escaneo </label>
+      <p class="text-sm text-color-secondary mb-1">
+        Escanea el código de la muestra para marcarla como completada en el proceso de lixiviación.
+      </p>
+      <svi-smart-scan-input
+        #scanInput
+        label="Escanear muestra para finalizar"
+        pTooltip="Al escanear una muestra, se dará por terminado su proceso de lixiviación"
+        tooltipPosition="bottom"
+        formControlName="scanInput"
+      ></svi-smart-scan-input>
+    </form>
+  }
+
+  <div class="grid gap-2 px-2 mt-4 justify-content-center">
+    @for (leachwell of leachwells(); track leachwell.id) {
+      <svi-leachwell-card
+        class="px-fadein shadow-2 rounded-md col-12 md:col-6 lg:col-4"
+        [leachwell]="leachwell"
+        (onCompleteAnalisis)="completeAnalisis($event)"
+      ></svi-leachwell-card>
+    } @empty {
+      <svi-empty-state
+        [title]="'No hay muestras en proceso de lixiviación'"
+        [description]="'No hay muestras en proceso de lixiviación'"
+        [icon]="'fa-duotone fa-flask-vial'"
+        class="col-12"
+      ></svi-empty-state>
+    }
+  </div>
+  <svi-paginator [totalRecords]="getTotalRecords" (pageChange)="onPageChange.emit($event)"></svi-paginator>
+</div>
+
+<svi-dialog
+  [visible]="isVisible()"
+  (onHide)="closeDialog()"
+  position="top"
+  header="Añadir muestra a lixiviación (LeachWELL)"
+  width="70rem"
+>
+  <svi-create-leachwell-form-dialog
+    (onSave)="onSave.emit($event)"
+    (onCancel)="closeDialog()"
+  ></svi-create-leachwell-form-dialog>
+</svi-dialog>

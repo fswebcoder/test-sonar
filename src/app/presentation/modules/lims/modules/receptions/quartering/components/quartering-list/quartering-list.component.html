@@ -1,0 +1,30 @@
+<div class="card">
+  @if (subSamples().length > 0) {
+    <svi-table
+      [columns]="columns"
+      [data]="subSamples()"
+      [actions]="actions"
+      [loading]="loading()"
+      [showPaginator]="false"
+    ></svi-table>
+  } @else {
+    <svi-empty-state
+      [title]="'No hay cuarteos registrados'"
+      [description]="'No se han realizado cuarteos para esta muestra'"
+      [icon]="ICONS.ADD_QUARTERING"
+    ></svi-empty-state>
+  }
+</div>
+
+<svi-confirm-dialog
+  #confirmDialog
+  header="Confirmar eliminación"
+  [draggable]="false"
+  [style]="{ width: '40rem' }"
+  [acceptLabel]="'Eliminar'"
+  [rejectLabel]="'Cancelar'"
+  [acceptButtonStyleClass]="'p-button-danger'"
+  [rejectButtonStyleClass]="'p-button-outlined'"
+  [acceptVisible]="true"
+  [rejectVisible]="true"
+></svi-confirm-dialog>

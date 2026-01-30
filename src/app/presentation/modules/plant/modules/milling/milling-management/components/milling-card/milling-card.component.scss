@@ -1,0 +1,122 @@
+:host {
+  display: block;
+}
+
+.management-card__icon {
+  font-size: 1.25rem;
+  color: var(--primary-color);
+}
+
+.management-card__name {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.management-card__hint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+}
+
+.management-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--surface-border);
+}
+
+.management-card__badge--empty {
+  color: var(--text-color-secondary);
+  font-weight: 500;
+}
+
+:host ::ng-deep .management-card__status {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+}
+
+.management-card__empty {
+  margin: 0;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: var(--surface-ground);
+  border: 1px dashed var(--surface-border);
+  color: var(--text-color-secondary);
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.equipment-tabs {
+  border-radius: 0.75rem;
+  background: var(--surface-card);
+  box-shadow: var(--card-shadow, 0 1px 6px rgba(15, 23, 42, 0.08));
+}
+
+:host ::ng-deep .equipment-tabs .p-tabview-nav-container {
+  border-bottom: 1px solid var(--surface-border);
+}
+
+:host ::ng-deep .equipment-tabs .p-tabview-nav button.p-tabview-nav-link {
+  padding: 0.65rem 1.25rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+:host ::ng-deep .equipment-tabs .p-tabview-panels {
+  background: var(--surface-card);
+  padding: 1.5rem;
+}
+
+.equipment-panel__icon {
+  font-size: 1.1rem;
+  color: var(--primary-color);
+}
+
+.equipment-panel__name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.equipment-panel__description {
+  font-size: 0.8rem;
+  color: var(--text-color-secondary);
+}
+
+.equipment-panel__meta {
+  font-size: 0.85rem;
+  color: var(--text-color-secondary);
+}
+
+.location-group__icon {
+  font-size: 0.95rem;
+  color: var(--primary-color);
+}
+
+.location-group {
+  &:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+}
+
+.location-empty {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--text-color-secondary);
+  text-align: center;
+}
+
+.variable-pill__icon {
+  font-size: 0.85rem;
+}

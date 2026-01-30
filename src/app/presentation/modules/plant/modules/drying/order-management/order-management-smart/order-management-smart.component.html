@@ -1,0 +1,10 @@
+<svi-bb-order-management-dump
+  [data]="ordersItems()"
+  [availableBigBags]="availableBigBagsItems()"
+  [availableBigBagsTotalRecords]="availableBigBagsTotalRecords()"
+  (onOrdersParamsChange)="ordersPageChange()"
+  (onBigBagsParamsChange)="availableBigBagsPageChange()"
+  (onFilterChange)="filtersChange($event)"
+  (onSubmitCreateOrder)="createSendingOrder($event)"
+  (onOpenCreateOrderModal)="handleOpenCreateOrderModal()"
+></svi-bb-order-management-dump>

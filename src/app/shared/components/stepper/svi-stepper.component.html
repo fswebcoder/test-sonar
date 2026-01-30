@@ -1,0 +1,86 @@
+<!-- Hidden reference so ButtonComponent is considered used (standalone import analysis can miss usages inside @if/@for). -->
+<svi-button style="display:none"></svi-button>
+
+@if (internalSteps().length) {
+    <p-stepper [(value)]="value" [linear]="linear()" [transitionOptions]="transitionOptions()">
+        <p-step-list>
+            @for (step of internalSteps(); track $index) {
+                <p-step [value]="step.value" [disabled]="step.disabled">
+                    {{ step.title }}
+                </p-step>
+            }
+        </p-step-list>
+
+        <p-step-panels>
+            @for (step of internalSteps(); track $index) {
+                <p-step-panel [value]="step.value">
+                    <ng-template
+                        pTemplate="content"
+                        let-activateCallback="activateCallback"
+                        let-panelValue="value"
+                        let-active="active"
+                    >
+                        @if (step.templateRef) {
+                            <ng-container
+                                [ngTemplateOutlet]="step.templateRef"
+                                [ngTemplateOutletContext]="{ $implicit: buildContext({
+                                    label: step.title,
+                                    index: $index,
+                                    total: internalSteps().length,
+                                    panelValue,
+                                    active,
+                                    activate: activateCallback
+                                }) }"
+                            />
+                        } @else {
+                            <div class="text-500 text-sm">
+                                Este paso no tiene contenido.
+                            </div>
+                        }
+                    </ng-template>
+                </p-step-panel>
+            }
+        </p-step-panels>
+    </p-stepper>
+
+    <div class="flex justify-content-between align-items-center gap-2 mt-4">
+        <div>
+            @if (showBackButton()) {
+                <svi-button
+                    type="button"
+                    [label]="backLabel()"
+                    [icon]="backIcon()"
+                    [severity]="backSeverity()"
+                        [disabled]="!canGoBack() || backDisabled()"
+                    (onClick)="onBack()"
+                ></svi-button>
+            }
+        </div>
+
+        <div class="flex gap-2">
+            @if (showNextButton() && !isLastActive()) {
+                <svi-button
+                    type="button"
+                    [label]="nextLabel()"
+                    [icon]="nextIcon()"
+                    [severity]="nextSeverity()"
+                        [disabled]="!canGoNext() || nextDisabled()"
+                    (onClick)="onNext()"
+                    [iconPos]="'right'"
+                ></svi-button>
+            }
+
+            @if (showFinishButton() && isLastActive()) {
+                <svi-button
+                    type="button"
+                    [label]="finishLabel()"
+                    [icon]="finishIcon()"
+                    [severity]="finishSeverity()"
+                    [disabled]="finishDisabled()"
+                    [loadingId]="finishLoadingId()"
+                    (onClick)="onFinish()"
+                ></svi-button>
+            }
+        </div>
+    </div>
+}

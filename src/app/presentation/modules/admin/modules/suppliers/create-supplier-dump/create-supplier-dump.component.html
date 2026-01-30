@@ -1,0 +1,12 @@
+<div class="card-body mt-4">
+      @if (isLoading()) {
+        <svi-form-skeleton [formFields]="formFieldsInput()"></svi-form-skeleton>
+      } @else {
+        <svi-form-supplier
+          [formFieldsInput]="formFieldsInput()"
+          (createSupplierOutput)="createSupplier($event)"
+          (closeDialogOutput)="closeDialog()"
+        ></svi-form-supplier>
+      }
+ 
+</div>

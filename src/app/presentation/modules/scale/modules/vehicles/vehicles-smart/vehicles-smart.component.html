@@ -1,0 +1,8 @@
+<svi-vehicles-dump
+  [vehicles]="vehiclesQueryData().items"
+  [vehicleTypes]="vehicleTypes()"
+  (onCreateVehicle)="createVehicle($event)"
+  (onUpdateVehicle)="updateVehicle($event)"
+  (onActivateVehicle)="activateVehicle($event)"
+  (onDeactivateVehicle)="deactivateVehicle($event)"
+></svi-vehicles-dump>

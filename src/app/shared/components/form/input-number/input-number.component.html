@@ -1,0 +1,22 @@
+<div class="w-full">
+    <p-floatlabel variant="on" class="w-full">
+        <p-input-number 
+        [step]="step" 
+        [min]="min" 
+        [max]="max" 
+        [showButtons]="showButtons" 
+        [buttonLayout]="buttonLayout" 
+        [disabled]="disabled"
+        [mode]="decimal ? 'decimal' : 'decimal'"
+        [minFractionDigits]="decimal ? decimalPlaces : 0"
+        [maxFractionDigits]="decimal ? decimalPlaces : 0"
+        class="w-full"
+        [ngModel]="value"
+        (onInput)="handleValueChange($event)"
+        [id]="'input-number-id'"
+        >
+      </p-input-number>
+      <label [for]="'input-number-id'">{{ label() }}</label>
+    </p-floatlabel>
+    <div sviFormError [errorMessage]="errorMessage" [show]="hasErrors"></div>
+</div>

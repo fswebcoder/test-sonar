@@ -1,0 +1,17 @@
+.duplicate-sample-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.duplicate-sample-form__body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.duplicate-sample-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}

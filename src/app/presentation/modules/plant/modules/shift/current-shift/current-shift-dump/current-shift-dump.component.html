@@ -1,0 +1,88 @@
+<section class="px-fadein">
+  <div class="w-full">
+    @if (!currentShift() || !currentShift()?.shiftDescription || !currentShift()?.areasOfOperation) {
+      <div class="card">
+        <div class="flex justify-content-between my-4 w-full sm:flex-row flex-col align-items-center gap-3">
+          <h1>Turno Actual</h1>
+          <svi-button
+            [appPermission]="{ path: this.path, action: this.currentShiftActions.ABRIR_TURNO }"
+            (click)="showDialog('No se encontró un turno abierto, ¿Desea abrir uno nuevo?', 'open')"
+            >Iniciar nuevo turno</svi-button
+          >
+        </div>
+        <svi-empty-state
+          title="No hay turno activo"
+          description="Por favor, inicie un nuevo turno."
+          icon="{{ ICONS.CLOCK }}"
+        ></svi-empty-state>
+      </div>
+    } @else {
+      <div class="flex w-full">
+        <svi-shift-description
+          class="w-full"
+          [shiftDescription]="currentShift()!.shiftDescription"
+          (onCloseShift)="showDialog(undefined, 'close')"
+          [path]="path"
+        ></svi-shift-description>
+      </div>
+      <div class="py-4 w-full card my-4">
+        <ng-template #areaHeader let-area>
+          {{ area.name }}
+        </ng-template>
+
+        <ng-template #areaPanel let-area>
+          <svi-shift-area
+            [path]="path"
+            [area]="area"
+            (onShowAddPersonnel)="showAddPersonnel($event)"
+            (onDeletePersonnel)="showDeletePersonnel($event)"
+          ></svi-shift-area>
+        </ng-template>
+
+        <svi-tabs
+          [tabs]="currentShift()?.areasOfOperation || []"
+          [value]="currentShift()?.areasOfOperation?.length ? areaValueAccessor(currentShift()!.areasOfOperation[0], 0) : ''"
+          [scrollable]="true"
+          [tabListClass]="'flex justify-content-center w-full'"
+          [headerTemplate]="areaHeader"
+          [panelTemplate]="areaPanel"
+          [tabValueFn]="areaValueAccessor"
+        ></svi-tabs>
+      </div>
+    }
+  </div>
+</section>
+
+<svi-confirm-dialog #confirmDialog width="40rem"></svi-confirm-dialog>
+
+<svi-dialog
+  #addPersonnelDialog
+  [visible]="addPersonnelDialogVisible()"
+  width="70rem"
+  header="Agregar Personal"
+  (onHide)="clearAndCloseDialog()"
+>
+  <svi-add-personnel-form
+    #addPersonnelForm
+    [personnel]="personnel()"
+    [personnelPositions]="personnelPositions()"
+    (onClose)="clearAndCloseDialog()"
+    (onAddPersonnel)="addPersonnel($event)"
+    [areaOfOperationId]="selectedAreaId()"
+  ></svi-add-personnel-form>
+</svi-dialog>
+
+<svi-dialog
+  #deletePersonnelDialog
+  [visible]="deletePersonnelDialogVisible()"
+  width="40rem"
+  header="Eliminar a {{ selectedPersonnel()?.name }} {{ selectedPersonnel()?.lastName }} del turno actual"
+  (onHide)="clearAndCloseDialog()"
+>
+  <svi-delete-personnel-form
+    #deletePersonnelForm
+    [person]="selectedPersonnel()"
+    (onClose)="clearAndCloseDialog()"
+    (onDeletePersonnel)="deletePersonnel($event)"
+  ></svi-delete-personnel-form>
+</svi-dialog>

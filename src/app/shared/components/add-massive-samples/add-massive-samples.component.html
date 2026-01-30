@@ -1,0 +1,74 @@
+<form [formGroup]="form" class="grid py-4">
+  <div class="col-12">
+    <svi-float-select
+      label="Tipo de muestra"
+      formControlName="sampleType"
+      [options]="samplesTypes()"
+      optionLabel="name"
+      optionValue="id"
+      [filter]="true"
+      [filterBy]="'name'"
+    ></svi-float-select>
+  </div>
+
+  <div class="col-12">
+    <svi-float-input
+      label="Prefijo del código"
+      formControlName="prefix"
+      placeholder="Ej: PR, MR, etc."
+    ></svi-float-input>
+  </div>
+
+  <div class="col-6">
+    <svi-input-number formControlName="rangeStart" label="Rango inicial" [max]="99999"/>
+  </div>
+
+  <div class="col-6">
+    <svi-input-number
+      label="Rango final"
+      formControlName="rangeEnd"
+      [max]="99999"
+    ></svi-input-number>
+  </div>
+
+  @if (samplesCount() > 0) {
+    <div class="col-12">
+      <div class="p-3 border-round" [ngClass]="samplesCount() > 100 ? 'bg-red-100' : 'bg-blue-100'">
+        <p class="m-0 font-semibold" [ngClass]="samplesCount() > 100 ? 'text-red-900' : 'text-blue-900'">
+          Se generarán {{ samplesCount() }} muestras
+        </p>
+        @if (samplesCount() > 100) {
+          <p class="m-0 mt-2 text-red-700">
+            El límite es 100 muestras. Por favor, ajuste el rango.
+          </p>
+        }
+      </div>
+    </div>
+  }
+
+  @if (showMoistureField()) {
+    <div class="col-12">
+      <svi-checkbox
+        label="¿Determinación de humedad?"
+        formControlName="moistureDetermination"
+      ></svi-checkbox>
+    </div>
+  }
+
+  <div class="col-12">
+    <div class="flex justify-content-end gap-2">
+      <svi-button severity="secondary" type="button" label="Cancelar" (click)="onCancel()">
+        <i class="fa-duotone fa-regular fa-ban"></i>
+      </svi-button>
+      <svi-button
+        severity="primary"
+        type="button"
+        label="Generar muestras"
+        [disabled]="form.invalid || samplesCount() === 0 || samplesCount() > 100"
+        (click)="validateForm()"
+      >
+        <i class="pi pi-plus"></i>
+      </svi-button>
+    </div>
+  </div>
+</form>

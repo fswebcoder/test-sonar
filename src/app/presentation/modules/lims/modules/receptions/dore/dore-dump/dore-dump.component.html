@@ -1,0 +1,110 @@
+<section class="px-fadein">
+    <div class="card">
+        <h3 class="card-title mb-4">Recepcion doré</h3>
+        <div class="card-body">
+            <form [formGroup]="form">
+              <div class="grid">
+                <div class="col-12 md:col-4">
+                  <svi-date-piker label="Fecha de recepcion" formControlName="receptionDate"></svi-date-piker>
+                </div>
+                <div class="col-12 md:col-4">
+                  <svi-float-select
+                    label="Tipo de oro"
+                    formControlName="doreReceptionOrigin"
+                    [options]="doreReceptionOriginsSignal()"
+                    optionLabel="name"
+                    optionValue="id"
+                  ></svi-float-select>
+                </div>
+                <div class="col-12 md:col-4">
+                  <svi-float-select
+                    label="Proveedor"
+                    formControlName="supplier"
+                    [options]="suppliersSignal() || []"
+                    optionLabel="name"
+                    optionValue="id"
+                  ></svi-float-select>
+                </div>
+        
+                <div class="col-12 md:col-4" *ngIf="hasMiningTitle()">
+                  <svi-float-select
+                    label="Título Minero"
+                    formControlName="miningTitle"
+                    [options]="miningTitles()"
+                    optionLabel="name"
+                    optionValue="id"
+                  ></svi-float-select>
+                </div>
+                <div class="col-12 md:col-4">
+                  <svi-float-select
+                    label="Departamento"
+                    formControlName="department"
+                    optionLabel="name"
+                    optionValue="id"
+                    [options]="departmentsSignal()"
+                  ></svi-float-select>
+                </div>
+                <div class="col-12 md:col-4">
+                  <svi-float-select
+                  label="Municipio"
+                  formControlName="city"
+                  [options]="citiesByDepartment()"
+                  optionLabel="name"
+                  optionValue="id"
+                ></svi-float-select>                
+                </div>
+                <div class="col-12 md:col-4">
+                  <svi-float-input label="Numero de entrega" formControlName="deliveryNumber"></svi-float-input>
+                </div>
+                <div class="col-12 md:col-4">
+                  <svi-float-input label="Observaciones" formControlName="observation"></svi-float-input>
+                </div>
+
+              </div>
+        
+              <div class="flex justify-content-end gap-2">
+                <svi-button
+                  [appPermission]="{ path, action: doreAction.CREAR_RECEPCION_DORE }"
+                  severity="info"
+                  type="submit"
+                  label="Agregar registro"
+                  (onClick)="openRegisterForm()"
+                >
+                  <i class="fa-duotone fa-regular fa-plus"></i>
+                </svi-button>
+                <svi-button 
+                [appPermission]="{ path, action: doreAction.CREAR_RECEPCION_DORE }"
+                icon="pi pi-save"
+                label="Guardar" 
+                (onClick)="saveDore()" 
+                [disabled]="!isFormValid()"
+              ></svi-button>
+              
+              </div>
+            </form>
+          </div>
+    </div>
+    <div class="card">
+        <h3 class="card-title mb-4">Registros de peso</h3>
+        <div class="card-body">
+          <svi-table [columns]="columns" [data]="items()" [actions]="tableActions" [showPaginator]="false"></svi-table>
+        </div>
+    </div>
+</section>
+
+<svi-dialog [visible]="visible()" [header]="'Agregar registro de barra'" [modal]="true" [draggable]="false" [dismissableMask]="true" [closeOnEscape]="true" [showHeader]="false" width="58rem" (onHide)="hideRegisterForm()">
+  <svi-dore-register-form (onAddRegister)="addRegisterForm($event)" (onCancel)="hideRegisterForm()"></svi-dore-register-form>
+</svi-dialog>
+
+<svi-confirm-dialog
+  #confirmDialog
+  header="Confirmar eliminación"
+  [draggable]="false"
+  [style]="{ width: '40rem' }"
+  [acceptLabel]="'Eliminar'"
+  [rejectLabel]="'Cancelar'"
+  [acceptButtonStyleClass]="'p-button-danger'"
+  [rejectButtonStyleClass]="'p-button-outlined'"
+  [acceptVisible]="true"
+  [rejectVisible]="true"
+></svi-confirm-dialog>

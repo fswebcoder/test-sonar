@@ -1,0 +1,38 @@
+<section class="card flex flex-column">
+  <h3 class="mb-3">Recepciones Pendientes</h3>
+  <div class="flex justify-content-end my-4">
+    <svi-float-input
+      label="Buscar por código"
+      [formControl]="searchControl"
+      placeholder="Código o tipo de muestra"
+    ></svi-float-input>
+  </div>
+  <article>
+    @if(filteredData().length === 0) {
+      <svi-empty-state
+        title="No hay recepciones pendientes"
+      ></svi-empty-state>
+    } @else {
+    <svi-table [columns]="columns" [data]="filteredData()" [actions]="actions" [showPaginator]="false"></svi-table>
+    }
+  </article>
+</section>
+
+<svi-dialog
+  [header]="'Completar recepción'"
+  [visible]="showCompleteModal()"
+  width="40rem"
+  (onHide)="closeModal()"
+>
+  @if (selectedReception()) {
+    <svi-complete-pending-reception-form
+      [sampleCode]="selectedReception()!.sampleCode"
+      [weight]="weight()"
+      [allowManualWeight]="allowManualWeight()"
+      [isReadingWeight]="isReadingWeight()"
+      (submitForm)="handleFormSubmit($event)"
+      (cancel)="closeModal()"
+      (readWeight)="handleReadWeightRequest()"
+    ></svi-complete-pending-reception-form>
+  }
+</svi-dialog>

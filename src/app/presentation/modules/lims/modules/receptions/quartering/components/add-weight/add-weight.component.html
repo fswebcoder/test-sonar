@@ -1,0 +1,60 @@
+<form [formGroup]="form">
+  <div class="card flex flex-column gap-4">
+    <svi-instructions-panel
+      title="Guía de cuarteo"
+      description="Para cuartear la muestra correctamente:"
+      [instructions]="instructions"
+    ></svi-instructions-panel>
+
+    <div class="bg-gray-50 p-3 border-round">
+      <div class="flex flex-column gap-2">
+        <div class="flex justify-content-between">
+          <span class="font-medium">Peso total de la muestra:</span>
+          <span class="font-bold text-primary">{{ sampleReceivedWeight() }} gr</span>
+        </div>
+        <div class="flex justify-content-between">
+          <span class="font-medium">Peso ya cuarteado:</span>
+          <span class="font-bold text-orange-600">{{ totalQuarteringWeight() }} gr</span>
+        </div>
+        <div class="flex justify-content-between">
+          <span class="font-medium">Peso disponible:</span>
+          <span class="font-bold" [ngClass]="availableWeight() > 0 ? 'text-green-600' : 'text-red-600'">
+            {{ availableWeight() }} gr
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-column gap-4">
+      <svi-float-select
+        formControlName="requiredAnalysisId"
+        label="Análisis"
+        [options]="availableAnalysis()"
+        optionLabel="analysisName"
+        optionValue="requiredAnalysisId"
+      ></svi-float-select>
+
+      <svi-float-input
+        #weightInput
+        formControlName="weight"
+        label="Peso del cuarteo (gr)"
+        [isWeightInput]="true"
+        [required]="true"
+        [errorMessages]="weightErrorMessages"
+      ></svi-float-input>
+
+      @if(showRequiresFa()){
+      <svi-checkbox formControlName="requiresFa" label="¿Requiere ensayo al fuego?"></svi-checkbox>
+      }
+    </div>
+
+    <div class="flex justify-content-end gap-2">
+      <svi-button label="Cerrar" type="button" (click)="closeModal()" severity="secondary">
+        <i class="{{ ICONS.CANCEL }}"></i>
+      </svi-button>
+      <svi-button label="Cuartear" [disabled]="!isFormValid()" (click)="addQuartering()">
+        <i class="{{ ICONS.ADD_QUARTERING }}"></i>
+      </svi-button>
+    </div>
+  </div>
+</form>

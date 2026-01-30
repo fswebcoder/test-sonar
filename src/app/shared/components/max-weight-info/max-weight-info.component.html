@@ -1,0 +1,13 @@
+<small class="text-muted block mt-1">
+  <span>
+    Peso máximo permitido:
+    @if (unit === 'gr') {
+      {{ maxWeightGrams.toLocaleString(locale) }} gr
+    } @else {
+      {{ (maxWeightGrams / 1000).toLocaleString(locale) }} kg
+    }
+    @if (showBothUnits) {
+      ({{ (maxWeightGrams / 1000).toLocaleString(locale) }} kg)
+    }
+  </span>
+</small>

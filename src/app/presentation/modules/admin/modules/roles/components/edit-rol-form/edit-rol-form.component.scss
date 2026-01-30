@@ -1,0 +1,34 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.form-section {
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  background: var(--surface-0);
+  border: 1px solid var(--surface-200);
+}
+
+.section-title {
+  color: var(--text-color);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  font-size: 1.125rem;
+  
+  i {
+    color: var(--primary-color);
+    margin-right: 0.5rem;
+  }
+}
+
+.text-muted {
+  color: var(--text-color-secondary);
+}
+
+@media (max-width: 768px) {
+  .form-section {
+    padding: 1rem;
+  }
+} 

@@ -1,0 +1,42 @@
+
+:root {
+    --primary-color: var(--primaryColor, --p-primary-color);
+    --primary-color-text: var(--p-primary-contrast-color);
+    --text-color: var(--p-text-color);
+    --text-color-secondary: var(--p-text-muted-color);
+    --surface-border: var(--p-content-border-color);
+    --surface-card: var(--p-content-background);
+    --surface-hover: var(--p-content-hover-background);
+    --surface-overlay: var(--p-overlay-popover-background);
+    --transition-duration: var(--p-transition-duration);
+    --maskbg: var(--p-mask-background);
+    --border-radius: var(--p-content-border-radius);
+    --layout-section-transition-duration: 0.2s;
+    --focus-ring-shadow: var(--p-focus-ring-shadow);
+
+    // primary buton
+    --p-button-primary-background: var(--primary-color) !important;
+    --p-button-primary-border-color: var(--primary-color) !important;
+    --p-button-primary-hover-background: var(--primary-color) !important;
+    --p-button-primary-hover-background: color-mix(in srgb, var(--primary-color) 90%, white 8%) !important;
+    --p-button-primary-hover-border-color: color-mix(in srgb, var(--primary-color) 10%, white 8%) !important;
+
+
+    //select
+    --p-select-option-selected-background: color-mix(in srgb, var(--primary-color) 20%, white 8%) !important;
+
+    --p-select-option-selected-focus-background: color-mix(in srgb, var(--primary-color) 20%, white 8%) !important;
+    --p-select-option-selected-focus-color: var(--primary-color) !important;
+    --p-form-field-padding-x: 0.70rem !important;
+    --p-form-field-padding-y: 0.70rem !important;
+    --active-menuitem-text-color: var(--primary-color) !important;
+    --p-primary-900: var(--primary-color) !important;
+    --p-primary-50:color-mix(in srgb, var(--primary-color) 20%, white 8%) !important;
+
+    // Checkbox
+    --p-checkbox-checked-background	: var(--primary-color) !important;
+    --p-checkbox-checked-hover-background: var(--primary-color) !important;
+    --p-checkbox-checked-border-color: var(--primary-color) !important;
+    --p-checkbox-checked-hover-border-color: var(--primary-color) !important;
+
+}

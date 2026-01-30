@@ -1,0 +1,16 @@
+<form [formGroup]="form" class="p-3 flex flex-column gap-3">
+  <div class="flex flex-column gap-1">
+    <svi-float-input id="mineName" formControlName="name" label="Nombre" type="text" [uppercase]="true" />
+  </div>
+
+  <div class="flex justify-content-end gap-2 mt-2">
+    <svi-button severity="secondary" label="Cancelar" type="button" (onClick)="dismiss.emit()" />
+    <svi-button
+      label="Crear"
+      type="button"
+      (onClick)="submit()"
+      [loadingId]="'modal-mine-button'"
+      [disabled]="form.invalid"
+    />
+  </div>
+</form>

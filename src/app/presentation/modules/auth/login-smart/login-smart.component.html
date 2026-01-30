@@ -1,0 +1,6 @@
+<app-login-dump
+  [inputCompanies]="listCompanies()"
+  (emitLogin)="onLogin($event)"
+  (outputTheme)="setTheme($event)"
+  (ouputSetCompany)="getPermission($event.toString())"
+></app-login-dump>

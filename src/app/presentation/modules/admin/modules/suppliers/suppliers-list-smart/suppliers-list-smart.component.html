@@ -1,0 +1,13 @@
+<svi-suppliers-list-dump
+  [meta]="suppliersMeta()"
+  (onParamsChange)="paramsChange($event)"
+  [suppliers]="suppliersItems()"
+  [documentTypes]="documentTypes()"
+  (onGetSupplier)="refreshSuppliers()"
+  (onGetSupplierById)="getSupplierById($event)"
+  [supplierToEdit]="supplierToEdit()"
+  [supplierIdToEdit]="supplierIdToEdit()"
+  (onDeleteSupplier$)="deleteSupplier($event)"
+  (onActivateSupplier$)="activateSupplier($event)"
+  (onCreateSupplierAdminUser)="createSupplierAdminUser($event)"
+/>

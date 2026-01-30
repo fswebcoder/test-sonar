@@ -1,0 +1,14 @@
+<p-paginator
+  [rows]="pageSize || 9"
+  [totalRecords]="totalRecords"
+  [rowsPerPageOptions]="rowsPerPageOptions || []"
+  (onPageChange)="onPageChange($event)"
+  [first]="first!"
+  [showFirstLastIcon]="showFirstLastIcon"
+  [showPageLinks]="showPageLinks"
+  [showJumpToPageDropdown]="showJumpToPageDropdown"
+  [alwaysShow]="alwaysShow"
+  [showCurrentPageReport]="showCurrentPageReport"
+  [currentPageReportTemplate]="currentPageReportTemplate"
+  show
+></p-paginator>

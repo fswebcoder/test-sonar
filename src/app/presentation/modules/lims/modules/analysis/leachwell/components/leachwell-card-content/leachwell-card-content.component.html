@@ -1,0 +1,37 @@
+<div class="circular-progress relative">
+  <svg class="progress-ring" viewBox="0 0 120 120">
+    <circle class="progress-ring-circle-bg" cx="60" cy="60" r="45" />
+    <circle
+      class="progress-ring-circle"
+      cx="60"
+      cy="60"
+      r="45"
+      [style.strokeDasharray]="circumference"
+      [style.strokeDashoffset]="((100 - progressPercentage()) * circumference) / 100"
+    />
+  </svg>
+  <div class="progress-content absolute inset-0 flex items-center justify-center">
+    <div class="text-center">
+      <span class="progress-text text-2xl font-bold">{{ isOverdue() ? '100%' : progressPercentage() + '%' }}</span>
+      <span class="block text-sm text-gray-500">Completado</span>
+    </div>
+  </div>
+</div>
+
+<div class="flex flex-col">
+  <h3 class="text-xl font-bold text-gray-800 text-center">{{ sampleCode() }}</h3>
+  <small class="text-gray-500 text-center">Duración del análisis: {{ duration() }} minutos</small>
+</div>
+
+<div class="flex flex-col gap-2">
+  <div class="surface flex justify-between">
+    <div class="text-center">
+      <p class="text-sm">Inicio</p>
+      <p class="font-medium">{{ startDate() | date: 'short' }}</p>
+    </div>
+    <div class="text-center">
+      <p class="text-sm">Fin</p>
+      <p class="font-medium">{{ endDate() | date: 'short' }}</p>
+    </div>
+  </div>
+</div>

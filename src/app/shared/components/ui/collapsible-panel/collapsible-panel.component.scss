@@ -1,0 +1,15 @@
+/* Collapsible Panel Component Styles */
+:host {
+  display: block;
+  width: 100%;
+}
+
+.p-panel {
+  &.application-panel {
+    margin-bottom: 1rem;
+  }
+
+  &.parent-panel {
+    margin-bottom: 0.5rem;
+  }
+}

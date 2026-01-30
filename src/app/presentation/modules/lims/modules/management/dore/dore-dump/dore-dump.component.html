@@ -1,0 +1,58 @@
+<div class="card px-fadein">
+  <form [formGroup]="form">
+    <div class="flex justify-content-between flex-col sm:flex-row gap-2 align-items-center col-12 mb-4">
+      <h3 class="card-title">Gestión doré</h3>
+    </div>
+    <div class="grid md:gap-4">
+      <svi-date-piker [label]="'Fecha de inicio'" formControlName="startDate" class="col-12 md:col-3" />
+      <svi-date-piker [label]="'Fecha de fin'" formControlName="endDate" class="col-12 md:col-3" />
+      @if (suppliers()) {
+        <svi-multiselect
+          [options]="suppliers() || []"
+          formControlName="supplierId"
+          optionLabel="name"
+          optionValue="id"
+          class="col-12 md:col-3"
+        />
+      }
+      @if (doreDropdown()) {
+        <svi-multiselect
+          [options]="doreDropdown() || []"
+          formControlName="doreId"
+          optionLabel="code"
+          optionValue="id"
+          class="col-12 md:col-3"
+        />
+      }
+      @if (batchNumbers()) {
+        <svi-multiselect
+          [label]="'Número de lote'"
+          [options]="batchNumbers() || []"
+          formControlName="batchNumber"
+          class="col-12 md:col-3"
+        />
+      }
+    </div>
+  </form>
+</div>
+<div class="card flex flex-col gap-2">
+  <div class="flex justify-content-center w-full">
+    <div class="table-container mt-4 flex flex-wrap col-12 relative">
+      @for (item of data(); track item.id) {
+        <div class="col-12 md:col-6 lg:col-4 px-fadein">
+          <svi-dore-card [dore]="item"></svi-dore-card>
+        </div>
+      } @empty {
+        <svi-empty-state
+          [title]="'No hay lotes disponibles'"
+          [description]="'No hay doré disponibles para los criterios seleccionados'"
+          [icon]="'fa-duotone fa-coins empty-icon'"
+          class="col-12"
+        ></svi-empty-state>
+      }
+    </div>
+  </div>
+  <svi-paginator
+    [totalRecords]="meta().total"
+  ></svi-paginator>
+</div>

@@ -1,0 +1,29 @@
+<div class="panel-root">
+  <div class="legend-wrapper" aria-label="Leyenda estados de celdas">
+    <div class="legend-item" title="Celda con código">
+      <span class="legend-swatch code"></span><span>Código</span>
+    </div>
+    <div class="legend-item" title="Sin peso asignado">
+      <span class="legend-swatch missing"></span><span>Peso pendiente</span>
+    </div>
+    <div class="legend-item" title="Peso asignado">
+      <span class="legend-swatch weight"></span><span>Peso asignado</span>
+    </div>
+  </div>
+  <div class="status-row">
+    <div class="progress" [attr.aria-label]="'Pesos asignados ' + assigned + ' de ' + total">
+      <div class="numbers"><strong>{{ assigned }}</strong><span>/{{ total }}</span></div>
+      <div class="bar">
+        <div class="fill" [style.width]="total ? (assigned/total*100)+'%' : '0%'"></div>
+      </div>
+    </div>
+    <div class="actions">
+      <ng-container *ngIf="!finished; else doneTpl">
+        <svi-button type="button" size="small" [disabled]="!canFinalize" (click)="onFinalize()" [icon]="ICONS.SAVE" label="Finalizar"></svi-button>
+      </ng-container>
+      <ng-template #doneTpl>
+        <span class="finished-label">Finalizada</span>
+      </ng-template>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,20 @@
+<article class="card px-fadein ">
+  <h3>
+    {{ area().name }}
+  </h3>
+  <div class="p-4 grid justify-content-center gap-4">
+    @for(person of area().personnel; track $index) {
+        <svi-personnel-register [actions]="actions()" [path]="path()" [person]="person" (onDeletePersonnel)="deletePersonnel($event)"></svi-personnel-register>
+    } @empty {
+      <svi-empty-state
+        title="No hay personal asignado"
+        description="Por favor, agregue personal a esta área."
+        icon="{{ ICONS.XMARK_USER }}"
+      ></svi-empty-state>
+    }
+  </div>
+
+  <div class="flex justify-content-end w-full">
+    <svi-button [appPermission]="{ path: this.path(), action: this.actions().AGREGAR_PERSONAL}" icon="{{ICONS.ADD}}" size="small" (onClick)="showAddPersonnel(area().operationAreaId)" label="Agregar personal"></svi-button>
+  </div>
+</article>

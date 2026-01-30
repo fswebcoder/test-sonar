@@ -1,0 +1,107 @@
+:host {
+  /* Revert visual container background; keep spacing minimal. Allow theming via CSS vars */
+  --legend-panel-bg: transparent;
+  --legend-panel-border: 0;
+  --legend-panel-padding: 0; /* was 0.9rem 1.1rem 1rem */
+  --legend-code-bg: rgba(0, 0, 0, 0.25);
+  --legend-missing-bg: #f59e0b;
+  --legend-missing-opacity: 0.6;
+  --legend-weight-bg: #16a34a;
+  --legend-weight-opacity: 0.65;
+  display: block;
+  background: var(--legend-panel-bg);
+  border: var(--legend-panel-border);
+  padding: var(--legend-panel-padding);
+}
+.panel-root {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+.legend-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem 1.25rem;
+}
+.legend-item { display:inline-flex; align-items:center; gap:.4rem; font-size:.74rem; line-height:1.05; font-weight:600; letter-spacing:.2px; }
+.legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  display: inline-block;
+}
+.legend-swatch.missing {
+  background: var(--legend-missing-bg);
+  opacity: var(--legend-missing-opacity);
+}
+.legend-swatch.weight {
+  background: var(--legend-weight-bg);
+  opacity: var(--legend-weight-opacity);
+}
+.status-row {
+  display: flex;
+  gap: 1rem;
+  align-items: stretch;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 180px;
+}
+.numbers {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+}
+.numbers strong {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+.bar {
+  flex: 1;
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  min-width: 120px;
+}
+.fill {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--primary-color));
+  transition: width 0.3s ease;
+}
+.actions {
+  display: flex;
+  align-items: center;
+}
+.finished-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #16a34a;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background: #dcfce7;
+  padding: 0.35rem 0.55rem;
+  border-radius: 6px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :host {
+    --legend-code-bg: rgba(255, 255, 255, 0.32);
+  }
+  /* no explicit color: inherit */
+  .numbers strong {
+    color: #f1f5f9;
+  }
+  .finished-label {
+    background: #14532d;
+    color: #4ade80;
+  }
+}

@@ -1,0 +1,23 @@
+<article class="card flex md:flex-row flex-col">
+  <div class="flex-1">
+    <div>
+      <h2>{{ shiftDescription().name }}</h2>
+    </div>
+    <div>
+      <p>
+        <strong>Turno detectado:</strong>
+        {{ getTimeFormatted(shiftDescription().startDate) }} –
+        {{ getTimeFormatted(shiftDescription().endDate) }}
+      </p>
+
+      <p>
+        <strong>Iniciado por:</strong> {{ shiftDescription().createdBy }}
+      </p>
+
+    </div>
+  </div>
+  <div class="flex flex-1 mt-4 md:m-0 justify-content-end align-items-end gap-3">
+    <svi-button [appPermission]="{ path: this.path(), action: this.currentShiftActions.CERRAR_TURNO }" severity="danger"
+      icon="{{ ICONS.CANCEL }}" (onClick)="closeShift()">Cerrar turno</svi-button>
+  </div>
+</article>

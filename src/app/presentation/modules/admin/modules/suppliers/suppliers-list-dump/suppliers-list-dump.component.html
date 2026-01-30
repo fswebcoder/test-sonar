@@ -1,0 +1,132 @@
+<div class="card">
+  <div class="flex flex-col sm:flex-row justify-content-between align-items-center mb-4">
+    <h3>Proveedores</h3>
+
+    <div class="flex gap-2 justify-content-end align-items-center w-full">
+      <svi-view-switcher
+        [value]="viewMode()"
+        [options]="viewOptions()"
+        [size]="'small'"
+        [variant]="'default'"
+        [showLabels]="false"
+        [showIcons]="true"
+        (valueChange)="onViewChanged($event)"
+      >
+      </svi-view-switcher>
+      <svi-button
+        [appPermission]="{ path: '/admin/proveedores', action: 'CREAR_PROVEEDOR' }"
+        class="p-button-rounded p-button-primary"
+        pTooltip="Crear nuevo proveedor"
+        label="Crear proveedor"
+        tooltipPosition="bottom"
+        (click)="openDialog()"
+      >
+        <i class="fa-duotone fa-regular fa-plus"></i>
+      </svi-button>
+    </div>
+  </div>
+  <div class="flex align-items-center gap-2">
+    <svi-checkbox
+      [ngModel]="paginationService.withDeleted()"
+      [binary]="true"
+      (ngModelChange)="withDeletedChange($event)"
+    ></svi-checkbox>
+    <label for="withDeleted">Incluir proveedores eliminados</label>
+  </div>
+  @if (viewMode() === 'cards') {
+    <div class="grid">
+      @for (supplier of suppliersForCards(); track supplier.documentNumber) {
+        <div class="col-12 md:col-6 lg:col-4">
+          <svi-supplier-card
+            [supplier]="supplier"
+            (editSupplier)="onEditSupplier($event)"
+            (deleteSupplier)="onDeleteSupplier($event)"
+            (toggleStatus)="onToggleSupplierStatus($event)"
+            (viewSupplier)="onViewSupplier($event)"
+            (createAdminUser)="openSupplierUserDialog($event)"
+            (editSupplier)="onEditSupplier($event)"
+            (deleteSupplier)="onDeleteSupplier($event)"
+            (toggleStatus)="onToggleSupplierStatus($event)"
+          >
+          </svi-supplier-card>
+        </div>
+      } @empty {
+        <div class="col-12">
+          <svi-empty-state
+            icon="fa-box-open"
+            title="No hay proveedores disponibles"
+            description="No se encontraron proveedores en el período seleccionado. Intenta ajustar los filtros o crear un nuevo proveedor."
+          ></svi-empty-state>
+        </div>
+      }
+    </div>
+  }
+
+  @if (viewMode() !== 'cards') {
+    <div class="w-full px-fadein">
+      <svi-table
+        [data]="subppliersTransformed()"
+        [columns]="columns()"
+        [actions]="actions"
+        [showPaginator]="false"
+        class="w-full"
+      >
+      </svi-table>
+    </div>
+  }
+
+  <div class="flex justify-content-center w-full mt-4">
+    <svi-paginator
+      [totalRecords]="getTotalRecords()"
+      [rowsPerPageOptions]="[4, 8, 10, 20]"
+      (pageChange)="onPageChange($event)"
+    >
+    </svi-paginator>
+  </div>
+</div>
+
+<svi-dialog
+  [visible]="visible()"
+  [header]="dialogTitle()"
+  [width]="'70vw'"
+  [modal]="true"
+  [closeOnEscape]="false"
+  [dismissableMask]="false"
+  (onHide)="closeDialog()"
+>
+  <svi-management-supplier
+    [viewMode]="viwModeVisualisation()"
+    [initialDataInput]="supplierDataForForm()"
+    [dataForEdit]="viwModeVisualisation() === 'edit' ? supplierToEdit() : {}"
+    (closeDialogOutput)="closeDialog()"
+    (getSupplier)="handleGetSupplier()"
+    [supplierToEdit]="supplierToEdit()"
+    [supplierId]="supplierId()"
+  >
+  </svi-management-supplier>
+</svi-dialog>
+
+<svi-dialog
+  [visible]="supplierUserVisible()"
+  header="Crear usuario administrador"
+  [width]="'70rem'"
+  [modal]="true"
+  [closeOnEscape]="false"
+  [dismissableMask]="false"
+  (onHide)="closeSupplierUserDialog()"
+>
+  <svi-supplier-admin-user-form
+    [supplierId]="supplierUserSupplierId()"
+    [supplierName]="supplierUserSupplierName()"
+    [documentTypes]="documentTypes()"
+    (onCancel)="closeSupplierUserDialog()"
+    (onCreate)="onCreateSupplierAdminUser.emit($event)"
+  ></svi-supplier-admin-user-form>
+</svi-dialog>
+<svi-confirm-dialog
+  #confirmDialog
+  header="Alerta de seguridad"
+  [style]="{ width: '30rem' }"
+  rejectLabel="Cancelar"
+  acceptLabel="Si, continuar"
+></svi-confirm-dialog>

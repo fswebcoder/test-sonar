@@ -1,0 +1,9 @@
+<svi-users-dump
+  [users]="usersQueryData().items"
+  [documentTypes]="documentTypes()"
+  [roles]="roles()"
+  (onCreateUser)="createUser($event)"
+  (onUpdateUser)="updateUser($event)"
+  (onActivateUser)="changeUserStatus($event, true)"
+  (onDeactivateUser)="changeUserStatus($event, false)"
+></svi-users-dump>

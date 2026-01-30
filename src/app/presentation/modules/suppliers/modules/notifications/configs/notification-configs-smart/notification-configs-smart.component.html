@@ -1,0 +1,9 @@
+<svi-notification-configs-dump
+  #configsDump
+  [data]="configs()"
+  [notificationTypes]="notificationTypes()"
+  [contacts]="contacts()"
+  (configCreated)="createConfig($event)"
+  (configActivated)="activateConfig($event)"
+  (configInactivated)="inactivateConfig($event)"
+/>

@@ -1,0 +1,193 @@
+<svi-search-step-header
+  [searchTitle]="'Buscar conductor por documento'"
+  [control]="documentControl"
+  [inputId]="'driverDocument'"
+  [inputLabel]="'Número de documento'"
+  [inputType]="'text'"
+  [disabled]="(loadingService.isLoading$(LOADING.sections.driverSearch) | async) ?? false"
+  [minLength]="5"
+  [hintText]="'Escribe el documento y presiona “Buscar”.'"
+  [createLabel]="'Crear conductor'"
+  [createIcon]="ICONS.ADD"
+  [createLoadingId]="LOADING.buttons.driverCreate"
+  (searchClick)="searchDriver.emit($event)"
+  (createClick)="openCreateDriver.emit()"
+>
+  <div slot="createHint" class="text-500 text-sm flex align-items-center gap-2">
+    <i class="pi pi-info-circle"></i>
+    Crea el conductor y luego podrás seleccionarlo.
+  </div>
+</svi-search-step-header>
+
+<article class="card shadow-2 flex flex-column mt-3 p-3 gap-3 relative">
+  <app-loading
+    [section]="LOADING.sections.driverSearch"
+    [options]="{ overlay: true, fullscreen: false, size: 'small' }"
+  ></app-loading>
+  <div class="flex flex-column gap-2">
+    <div class="flex align-items-center justify-content-between">
+      <div class="flex flex-column">
+        <span class="text-900 font-medium">Conductor</span>
+        @if (!driverSearchResult()) {
+          <span class="text-500 text-sm">Sin seleccionar</span>
+        }
+      </div>
+
+      @if (driverSearchResult()) {
+        <div class="hidden md:flex gap-2">
+          <svi-button
+            label="Editar documentos"
+            icon="{{ ICONS.PENCIL }}"
+            [size]="'small'"
+            severity="primary"
+            (onClick)="openEditDocumentsModal()"
+          ></svi-button>
+
+          <svi-button
+            label="Deseleccionar"
+            icon="{{ ICONS.CANCEL }}"
+            [size]="'small'"
+            severity="secondary"
+            (onClick)="clearDriverSelection()"
+            [loadingId]="LOADING.buttons.driverDeselect"
+          ></svi-button>
+        </div>
+      }
+    </div>
+
+    @if (driverSearchResult()) {
+      <div class="grid md:hidden">
+        <div class="col-6">
+          <svi-button
+            label="Editar documentos"
+            icon="{{ ICONS.PENCIL }}"
+            [size]="'small'"
+            severity="primary"
+            [fullWidth]="true"
+            (onClick)="openEditDocumentsModal()"
+          ></svi-button>
+        </div>
+        <div class="col-6">
+          <svi-button
+            label="Deseleccionar"
+            icon="{{ ICONS.CANCEL }}"
+            [size]="'small'"
+            severity="secondary"
+            [fullWidth]="true"
+            (onClick)="clearDriverSelection()"
+            [loadingId]="LOADING.buttons.driverDeselect"
+          ></svi-button>
+        </div>
+      </div>
+    }
+  </div>
+
+  @if (driverSearchResult(); as d) {
+    <div class="grid">
+      <div class="col-12 md:col-4">
+        <div class="flex flex-column gap-1">
+          <span class="text-500 text-sm">Nombre</span>
+          <span class="text-900 font-medium">{{ d.name }}</span>
+        </div>
+      </div>
+      <div class="col-12 md:col-4">
+        <div class="flex flex-column gap-1">
+          <span class="text-500 text-sm">Documento</span>
+          <span class="text-900 font-medium">{{ d.documentNumber }}</span>
+        </div>
+      </div>
+      <div class="col-12 md:col-4">
+        <div class="flex flex-column gap-1">
+          <span class="text-500 text-sm">Estado</span>
+          <p-tag [value]="d.isActive ? 'Activo' : 'Inactivo'" [severity]="d.isActive ? 'success' : 'danger'"></p-tag>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="col-12 md:col-4">
+        <div class="flex flex-column gap-1">
+          <span class="text-500 text-sm">Tipo de documento</span>
+          <span class="text-900 font-medium">{{ d.documentType.name }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid">
+      <div class="col-12 md:col-6">
+        <div class="flex flex-column gap-1">
+          <span class="text-500 text-sm">CC</span>
+          @if (d.documents.ccUrl) {
+            <svi-button
+              (onClick)="openDriverDocument('cc')"
+              type="button"
+              [fullWidth]="true"
+              [icon]="ICONS.DOCUMENT"
+              label="Ver documento"
+            ></svi-button>
+          } @else {
+            <svi-button
+              type="button"
+              [fullWidth]="true"
+              [icon]="ICONS.DOCUMENT"
+              label="Sin documento"
+              severity="secondary"
+              [disabled]="true"
+            ></svi-button>
+          }
+        </div>
+      </div>
+
+      <div class="col-12 md:col-6">
+        <div class="flex flex-column gap-1">
+          <span class="text-500 text-sm">ARL</span>
+          @if (d.documents.arlUrl) {
+            <svi-button
+              (onClick)="openDriverDocument('arl')"
+              type="button"
+              [fullWidth]="true"
+              [icon]="ICONS.DOCUMENT"
+              label="Ver documento"
+            ></svi-button>
+          } @else {
+            <svi-button
+              type="button"
+              [fullWidth]="true"
+              [icon]="ICONS.DOCUMENT"
+              label="Sin documento"
+              severity="secondary"
+              [disabled]="true"
+            ></svi-button>
+          }
+        </div>
+      </div>
+    </div>
+  } @else {
+    <p-message severity="info" text="Busca por documento para seleccionarlo, o crea un conductor nuevo."></p-message>
+  }
+</article>
+
+<svi-dialog
+  header="Documentos del conductor"
+  width="55rem"
+  position="top"
+  [visible]="documentModal()"
+  (visibleChange)="documentModal.set($event)"
+  (onHide)="closeDriverDocumentModal()"
+>
+  @if (driverSearchResult()) {
+    <svi-driver-detail
+      [driver]="driverSearchResult()!"
+      [document]="selectedDocument()"
+      (onClose)="closeDriverDocumentModal()"
+    ></svi-driver-detail>
+  }
+</svi-dialog>
+
+<div class="mt-4">
+  <svi-checkbox
+    inputId="requireObserver"
+    label="Requerir veedor?"
+    [formControl]="requireObserverControl"
+  ></svi-checkbox>
+</div>

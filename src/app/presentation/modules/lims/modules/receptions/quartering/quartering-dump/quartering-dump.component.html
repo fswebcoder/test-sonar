@@ -1,0 +1,54 @@
+<div class="card px-fadein">
+  <h3 class="card-title mb-4">Cuarteo de análisis</h3>
+  <form [formGroup]="form">
+    <div class="w-full">
+      <svi-smart-scan-input formControlName="sampleCode"></svi-smart-scan-input>
+    </div>
+    <div class="flex items-center gap-2 mt-2">
+      <i class="fa-duotone fa-solid fa-scale-unbalanced-flip"></i>
+      <span>Peso máximo permitido: {{ maxWeightAllowed() }} gr</span>
+    </div>
+    <div class="flex justify-content-end gap-2 mt-2">
+      <svi-button
+        label="Cuartear muestra"
+        [disabled]="!hasValidSample()"
+        (click)="openQuarteringModal()"
+        [appPermission]="{ path, action: receptionAction.CREAR_CUARTEO_ANALISIS }"
+      >
+        <i class="{{ ICONS.ADD_QUARTERING }}"></i>
+      </svi-button>
+    </div>
+  </form>
+</div>
+
+<div class="card px-fadein">
+  <div class="flex justify-content-between align-items-center mb-4 sm:flex-row flex-column">
+    <h3 class="card-title w-full">Cuarteos realizados</h3>
+    <div class="w-full flex justify-content-end">
+      <svi-button
+        label="Guardar cuarteos"
+        [disabled]="!hasQuarteringsToSave()"
+        (click)="saveQuarterings()"
+        [appPermission]="{ path, action: receptionAction.CREAR_CUARTEO_ANALISIS }"
+      >
+        <i class="{{ ICONS.SAVE }}"></i>
+      </svi-button>
+    </div>
+  </div>
+  <svi-quartering-list
+    [subSamples]="subSamplesSignal()"
+    [requiredAnalysis]="requiredAnalysis()"
+    (onDeleteQuartering)="onDeleteQuartering($event)"
+  ></svi-quartering-list>
+</div>
+
+<svi-dialog [visible]="showResultsModal()" [header]="'Cuarteo'" width="58rem" (visibleChange)="onCloseResultsModal()">
+  <svi-add-weight
+    [requiredAnalysis]="requiredAnalysis()"
+    [existingQuarterings]="subSamples()"
+    [sampleReceivedWeight]="receivedWeight()"
+    [existingSubSamplesWeight]="existingSubSamplesWeight()"
+    (onAddQuartering)="onAddQuartering($event)"
+    (onCloseModal)="showResultsModal.set(false)"
+  ></svi-add-weight>
+</svi-dialog>

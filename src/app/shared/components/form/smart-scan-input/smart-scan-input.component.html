@@ -1,0 +1,63 @@
+<div class="flex flex-col w-full gap-2 relative">
+  <!-- Visual representation area -->
+  <div
+    class="p-4 min-h-[100px] flex items-center justify-center rounded-md border-2 border-dashed"
+    [ngClass]="scanAreaClasses()"
+    (click)="!isDisabled() && !value() && focusInput()"
+  >
+    @if (!value()) {
+      <div
+        class="flex flex-col items-center gap-2"
+        [ngClass]="{ 'text-gray-500': !isScanning(), 'text-primary': isScanning(), 'text-gray-400': isDisabled() }"
+      >
+        <i class="fa-duotone fa-barcode-read text-4xl"></i>
+        <span class="text-sm font-medium text-center">
+          @if (isDisabled()) {
+            Escáner deshabilitado
+          } @else if (isScanning()) {
+            Listo para escanear.
+          } @else {
+            Haz clic para activar el escáner
+          }
+        </span>
+      </div>
+    } @else {
+      <div class="w-full flex flex-col gap-2">
+        <!-- Stylish captured data display -->
+        <div class="flex items-center gap-2">
+          <i class="pi pi-check-circle text-green-500 text-xl"></i>
+          <span class="text-lg font-medium text-green-700">Datos capturados</span>
+        </div>
+        <div class="flex md:flex-row flex-col gap-2 justify-center items-center">
+          <div class="p-2 bg-white rounded-lg shadow-sm border border-green-200 flex-1">
+            <p class="font-mono text-lg break-all">{{ value() }}</p>
+          </div>
+          <!-- Rescan button placed outside the dashed border -->
+          <p-button
+            icon="pi pi-refresh"
+            pTooltip="Volver a escanear"
+            severity="success"
+            variant="outlined"
+            size="small"
+            (click)="rescan(); $event.stopPropagation()"
+            [disabled]="isDisabled()"
+          >
+          </p-button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Hidden input that receives the scan -->
+  <input
+    #input
+    type="text"
+    style="z-index: -1; width: 0; height: 0; position: absolute"
+    [value]="value()"
+    [readonly]="!isScanning()"
+    (input)="updateValue($event)"
+    (blur)="onInputBlur()"
+    (focus)="onInputFocus()"
+    [disabled]="isDisabled()"
+  />
+</div>

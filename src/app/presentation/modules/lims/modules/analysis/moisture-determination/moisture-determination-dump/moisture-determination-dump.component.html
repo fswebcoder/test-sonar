@@ -1,0 +1,61 @@
+<div class="card px-fadein">
+  <h3 class="card-title mb-4">Determinación de humedad</h3>
+  <form [formGroup]="form" class="flex flex-col gap-4 animate__animated animate__fadeIn" (ngSubmit)="onSubmit()">
+    <svi-smart-scan-input formControlName="sampleCode"></svi-smart-scan-input>
+
+    @if (selectedSample() && selectedSample()!.data === null) {
+      <svi-float-input
+        formControlName="tareWeight"
+        label="Peso de la bandeja (gr)"
+        prefix="gr "
+        [isWeightInput]="true"
+        [errorMessages]="weightErrorMessages"
+      ></svi-float-input>
+      <svi-float-input
+        formControlName="wetWeight"
+        label="Peso bandeja + Húmedo (gr)"
+        prefix="gr "
+        [isWeightInput]="true"
+        [errorMessages]="weightErrorMessages"
+      ></svi-float-input>
+    } @else if (selectedSample() && selectedSample()!.data && selectedSample()!.data !== null) {
+      <svi-float-input
+        formControlName="tareWeightReadonly"
+        label="Peso de la bandeja (gr)"
+        prefix="gr "
+        [isWeightInput]="true"
+        [disabled]="true"
+      ></svi-float-input>
+      <svi-float-input
+        formControlName="wetWeightReadonly"
+        label="Peso bandeja + Húmedo (gr)"
+        prefix="gr "
+        [isWeightInput]="true"
+        [disabled]="true"
+      ></svi-float-input>
+      <svi-float-input
+        formControlName="dryWeight"
+        label="Peso bandeja + Seco (gr)"
+        prefix="gr "
+        [isWeightInput]="true"
+        [errorMessages]="dryWeightErrorMessages"
+      ></svi-float-input>
+    } @else {
+      <p class="w-full text-center">Datos no disponibles, escanea la muestra para proceder</p>
+    }
+
+    <div class="flex justify-content-end">
+      <svi-button
+        [appPermission]="{ path, action: 'CREAR_ANALISIS_DH' }"
+        label="Guardar"
+        type="submit"
+        [disabled]="form.invalid"
+        severity="primary"
+        type="submit"
+        loadingId="create-moisture-determination-btn"
+      >
+        <i class="fa-duotone fa-regular fa-floppy-disk"></i>
+      </svi-button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,22 @@
+<div class="scale-card card shadow-2" [ngClass]="cardClass()" [pTooltip]="title()" tooltipPosition="bottom">
+  <div class="scale-card__header">
+    <div class="scale-card__icon">
+      <i [ngClass]="icon()"></i>
+    </div>
+    <div class="scale-card__header-info">
+      <h3 class="scale-card__title">{{ title().length > 20 ? (title() | slice:0:20) + '...' : title() }}</h3>
+      @if (subtitle(); as subtitle) {
+        <span class="scale-card__subtitle">{{ subtitle }}</span>
+      }
+    </div>
+    @if (statusLabel(); as label) {
+      <span class="scale-card__status" [ngClass]="statusClass()">{{ label }}</span>
+    }
+  </div>
+
+  <ng-content select="[card-body]"></ng-content>
+
+  <div class="scale-card__actions" [ngClass]="actionsClass()">
+    <ng-content select="[card-actions]"></ng-content>
+  </div>
+</div>

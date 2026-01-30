@@ -1,0 +1,93 @@
+<p-confirmDialog
+  [header]="header"
+  [icon]="icon"
+  [style]="style"
+  [styleClass]="getDialogStyleClass()"
+  [maskStyleClass]="maskStyleClass"
+  [acceptIcon]="acceptIcon"
+  [acceptLabel]="acceptLabel"
+  [closeAriaLabel]="closeAriaLabel"
+  [acceptAriaLabel]="acceptAriaLabel"
+  [acceptVisible]="acceptVisible"
+  [rejectIcon]="rejectIcon"
+  [rejectLabel]="rejectLabel"
+  [rejectAriaLabel]="rejectAriaLabel"
+  [rejectVisible]="rejectVisible"
+  [acceptButtonStyleClass]="acceptButtonStyleClass"
+  [rejectButtonStyleClass]="rejectButtonStyleClass"
+  [closeOnEscape]="closeOnEscape"
+  [dismissableMask]="dismissableMask"
+  [blockScroll]="blockScroll"
+  [rtl]="rtl"
+  [closable]="closable"
+  [appendTo]="appendTo"
+  [key]="key"
+  [autoZIndex]="autoZIndex"
+  [baseZIndex]="baseZIndex"
+  [transitionOptions]="transitionOptions"
+  [focusTrap]="focusTrap"
+  [defaultFocus]="defaultFocus"
+  [breakpoints]="breakpoints"
+  [visible]="visible"
+  [position]="position"
+  [draggable]="draggable"
+  (onHide)="onHide.emit($event)"
+>
+  <!-- Plantilla personalizada para el header -->
+  <ng-template pTemplate="header" *ngIf="headerTemplate">
+    <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+  </ng-template>
+
+  <!-- Plantilla personalizada para el footer con botones corporativos -->
+  <ng-template pTemplate="footer">
+    <div class="flex justify-content-end gap-2">
+      <svi-button 
+        *ngIf="rejectVisible" 
+        severity="secondary" 
+        type="button" 
+        [label]="rejectLabel" 
+        (click)="reject()"
+      >
+        <i class="fa-duotone fa-circle-xmark"></i>
+      </svi-button>
+      <svi-button 
+        *ngIf="acceptVisible" 
+        severity="primary" 
+        type="button" 
+        [label]="acceptLabel" 
+        (click)="accept()"
+      >
+        <i class="fa-duotone fa-circle-check"></i>
+      </svi-button>
+    </div>
+  </ng-template>
+
+  <!-- Plantilla personalizada para el mensaje -->
+  <ng-template pTemplate="message" let-message *ngIf="messageTemplate">
+    <ng-container *ngTemplateOutlet="messageTemplate; context: { $implicit: message }"></ng-container>
+  </ng-template>
+
+  <!-- Plantilla por defecto para el mensaje -->
+  <ng-template pTemplate="message" let-message *ngIf="!messageTemplate">
+    <div class="flex flex-col items-center w-full gap-4">
+      <i class="fa-duotone fa-triangle-exclamation fa-5x"></i>
+      <p class="text-center mt-2">{{ message.message }}</p>
+    </div>
+  </ng-template>
+
+  <!-- Plantillas personalizables para iconos -->
+  <ng-template pTemplate="icon" *ngIf="iconTemplate">
+    <ng-container *ngTemplateOutlet="iconTemplate"></ng-container>
+  </ng-template>
+
+  <ng-template pTemplate="accepticon" *ngIf="acceptIconTemplate">
+    <ng-container *ngTemplateOutlet="acceptIconTemplate"></ng-container>
+  </ng-template>
+
+  <ng-template pTemplate="rejecticon" *ngIf="rejectIconTemplate">
+    <ng-container *ngTemplateOutlet="rejectIconTemplate"></ng-container>
+  </ng-template>
+</p-confirmDialog>
+
+<!-- Contenido adicional -->
+<ng-content></ng-content>

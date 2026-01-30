@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="header card">
+    <div class="header-content">
+      @if (allowBack()) {
+        <button
+          pButton
+          pRipple
+          icon="pi pi-arrow-left"
+          class="p-button-rounded p-button-secondary"
+          pTooltip="Volver"
+          tooltipPosition="bottom"
+          (click)="goBack()"
+        ></button>
+      }
+      @if (label()) {
+        <h2 class="title">{{ label() }}</h2>
+      }
+    </div>
+
+    <ng-content select="header-actions"></ng-content>
+  </div>
+  <ng-content></ng-content>
+</div>

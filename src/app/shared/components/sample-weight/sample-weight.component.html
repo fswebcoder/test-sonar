@@ -1,0 +1,75 @@
+<div class="sample-weight">
+	@if (showWeightSection()) {
+	<section class="sample-weight__block">
+		<header class="sample-weight__header">
+			<div>
+				<p class="sample-weight__label">Peso</p>
+				<span class="sample-weight__value">{{ displayWeight() ?? '0' }} g</span>
+			</div>
+
+			<svi-button
+				severity="secondary"
+				type="button"
+				label="Leer peso"
+				[disabled]="isReadWeightDisabled()"
+				(click)="handleReadWeight()"
+			>
+				<i class="{{ ICONS.SCALE_WEIGHT }}"></i>
+			</svi-button>
+		</header>
+
+		<div class="sample-weight__input">
+			@if (canShowManualInput()) {
+				<svi-float-input
+					[formControl]="weightFormControl()"
+					label="Peso manual"
+					suffix="g"
+					[isWeightInput]="true"
+					[weightDecimals]="3"
+				></svi-float-input>
+			} @else {
+				<small class="sample-weight__hint">
+					Debe leer el peso desde la báscula antes de editar manualmente.
+				</small>
+			}
+		</div>
+	</section>
+	}
+
+	@if (showTareSection()) {
+	<section class="sample-weight__block">
+		<header class="sample-weight__header">
+			<div>
+				<p class="sample-weight__label">Peso tara</p>
+				<span class="sample-weight__value">{{ tare() ?? '—' }} g</span>
+			</div>
+
+			<svi-button
+				severity="secondary"
+				type="button"
+				label="Leer tara"
+				[disabled]="disableTare()"
+				(click)="handleReadTare()"
+			>
+				<i class="{{ ICONS.SCALE_TARE }}"></i>
+			</svi-button>
+		</header>
+
+		<div class="sample-weight__input">
+			<svi-float-input
+				[formControl]="tareFormControl()"
+				label="Tara manual"
+				[isWeightInput]="true"
+				[weightDecimals]="3"
+			></svi-float-input>
+
+			@if (disableTare()) {
+				<small class="sample-weight__hint">
+					Se encuentra bloqueado para edición manual
+				</small>
+			}
+		</div>
+	</section>
+	}
+
+</div>

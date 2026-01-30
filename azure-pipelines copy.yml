@@ -1,0 +1,311 @@
+trigger:
+  - develop
+
+parameters:
+  - name: CLIENT
+    displayName: Cliente sobre el cual ejecutar el proceso CI
+    type: string
+    default: aurumsuite
+    values:
+      - aurumsuite
+  - name: ENV_DEPLOY
+    displayName: Ambiente de instalación
+    type: string
+    default: develop
+    values:
+      - develop
+  - name: ENV_CONFIGURATION
+    displayName: Entorno objetivo
+    type: string
+    default: development
+    values:
+      - development
+      - testing
+      - production
+  - name: PREFIX
+    type: string
+    default: DEV
+    displayName: Prefijo utilizado para marcar el tag de versión
+    values:
+      - DEV
+      - TEST
+      - PDN
+
+variables:
+  - name: APP_TYPE
+    value: 'webApp'
+  - name: APP_NAME
+    value: 'app-web-aurumsuite-sv-dev'
+  - name: RESOURCE_GROUP
+    value: 'rg-aurumsuite-eastus'
+  - name: ANGULAR_OUTPUT_PATH
+    value: '$(System.DefaultWorkingDirectory)/dist/aurum-suite/browser'
+  - name: TEAMS_WEBHOOK_URL
+    value: 'https://corporativocolombiagold.webhook.office.com/webhookb2/0564f041-bdd9-47e1-9622-9300d13d5288@d0aab441-fcab-4807-a7aa-82ba2b78023f/IncomingWebhook/2a059f7163954a56862c2709fe4074d0/78b8fe1f-35ca-4ccb-b707-b6098b1d1c1b/V2d-_01qUTVvxOcbCpUFfWClvC2ezcIyy1UUPBnWrktj81'
+  - name: BUILD_DATE
+    value: $[format('{0:yyyyMMdd}', pipeline.startTime)]
+  - name: BUILD_ID_NUM
+    value: $[counter(format('{0:yyyyMMdd}', pipeline.startTime), 1)]
+  - name: SERVICE_VERSION
+    value: '${{parameters.PREFIX}}_$(BUILD_DATE)_$(BUILD_ID_NUM)'
+  - name: CUSTOM_DOMAIN_URL
+    value: 'https://dev.aurumsuite.com.co:9443/'
+  - name: DEV_DOMAIN
+    value: 'dev.aurumsuite.com.co'
+  - name: DEV_API_URL
+    value: 'https://backend-aurum-production.up.railway.app/api/'
+  - name: TEST_DOMAIN
+    value: 'test.aurumsuite.com.co'
+  - name: TEST_API_URL
+    value: 'https://backend-aurum-production.up.railway.app/api/'
+  - name: PROD_DOMAIN
+    value: 'aurumsuite.com.co'
+  - name: PROD_API_URL
+    value: 'https://backend-aurum-production.up.railway.app/api/'
+  - name: npm_config_cache
+    value: $(Pipeline.Workspace)/.npm
+
+jobs:
+  - job: ProjectBuild
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+      - bash: echo "##vso[build.updatebuildnumber]$(SERVICE_VERSION)"
+        displayName: 'Definición de tag para gestión de compilación'
+
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '18.x'
+        displayName: 'Instalación de nodejs en nodo destino'
+
+      - task: Cache@2
+        inputs:
+          key: 'npm | "$(Agent.OS)" | package-lock.json'
+          path: '$(npm_config_cache)'
+          restoreKeys: |
+            npm | "$(Agent.OS)"
+        displayName: 'Cache de dependencias npm'
+
+      - script: |
+          echo "=== Diagnóstico inicial ==="
+          echo "Node version: $(node --version)"
+          echo "NPM version: $(npm --version)"
+          echo "Working directory: $(pwd)"
+          echo "Package.json exists: $(test -f package.json && echo 'YES' || echo 'NO')"
+          echo "Package-lock.json exists: $(test -f package-lock.json && echo 'YES' || echo 'NO')"
+          
+          if [ -f package.json ]; then
+            echo "=== Verificando Angular en package.json ==="
+            grep -i "@angular/cli" package.json || echo "Angular CLI no encontrado en package.json"
+          fi
+
+          echo "=== Instalando dependencias ==="
+          npm ci --prefer-offline
+          
+          echo "=== Verificando instalación ==="
+          echo "Node_modules exists: $(test -d node_modules && echo 'YES' || echo 'NO')"
+          
+          if [ -d node_modules ]; then
+            echo "Número de paquetes instalados: $(ls node_modules | wc -l)"
+            echo "@angular directory exists: $(test -d node_modules/@angular && echo 'YES' || echo 'NO')"
+            
+            if [ -d node_modules/@angular ]; then
+              echo "Angular packages installed:"
+              ls node_modules/@angular/
+              echo "CLI specifically: $(test -d node_modules/@angular/cli && echo 'YES' || echo 'NO')"
+            fi
+          fi
+
+          npm cache verify
+        displayName: 'Instalación y diagnóstico de dependencias'
+
+      - script: |
+          node_modules/@angular/cli/bin/ng.js test --no-watch --code-coverage --browsers ChromeHeadless
+        displayName: 'Ejecutar test unitarios y Análisis de la calidad del código'
+        condition: eq('${{ parameters.ENV_DEPLOY }}', 'testing')
+
+      - script: |
+          npm run sonar
+        displayName: 'Publicar resultados en SonarQube'
+        condition: eq('${{ parameters.ENV_DEPLOY }}', 'testing')
+
+      - script: |
+          # Configuración de entorno y build en un solo paso
+          ENV_SUFFIX=""
+          ANGULAR_CONFIG=""
+          if [ "${{parameters.ENV_CONFIGURATION}}" == "development" ]; then
+            DOMAIN="$(DEV_DOMAIN)"
+            API_URL="$(DEV_API_URL)"
+            PRODUCTION="false"
+            ENV_SUFFIX="dev"
+            ANGULAR_CONFIG="svi-dev"
+          elif [ "${{parameters.ENV_CONFIGURATION}}" == "testing" ]; then
+            DOMAIN="$(TEST_DOMAIN)"
+            API_URL="$(TEST_API_URL)"
+            PRODUCTION="false"
+            ENV_SUFFIX="test"
+            ANGULAR_CONFIG="svi-test"
+          elif [ "${{parameters.ENV_CONFIGURATION}}" == "production" ]; then
+            DOMAIN="$(PROD_DOMAIN)"
+            API_URL="$(PROD_API_URL)"
+            PRODUCTION="true"
+            ENV_SUFFIX="pdn"
+            ANGULAR_CONFIG="svi-pdn"
+          else
+            DOMAIN="localhost"
+            API_URL="http://localhost:8443/api/"
+            PRODUCTION="false"
+            ENV_SUFFIX="dev"
+            ANGULAR_CONFIG="svi-dev"
+          fi
+
+          echo "Configurando entorno: $ANGULAR_CONFIG para ${{parameters.ENV_CONFIGURATION}}"
+
+          # Crear archivos de entorno
+          ENV_DIR="$(System.DefaultWorkingDirectory)/src/enviromments"
+          mkdir -p "$ENV_DIR"
+
+          cat > "$ENV_DIR/environment.svi-$ENV_SUFFIX.ts" << EOL
+          import { Environment } from '@/shared/types/environment';
+
+          export const environment: Environment = {
+            production: $PRODUCTION,
+            cookie: {
+              domain: '$DOMAIN',
+              sameSite: 'Lax',
+              expires: 30
+            },
+            services: {
+              security: '$API_URL'
+            }
+          };
+          EOL
+
+          cp "$ENV_DIR/environment.svi-$ENV_SUFFIX.ts" "$ENV_DIR/environment.ts"
+
+          echo "Archivo de entorno creado para: $ENV_SUFFIX"
+          echo "Configuración Angular: $ANGULAR_CONFIG"
+
+          # Verificar instalación de Angular CLI
+          echo "=== Verificando Angular CLI ==="
+          if [ ! -d "node_modules/@angular/cli" ]; then
+            echo "Angular CLI no encontrado, intentando instalación manual..."
+            npm install @angular/cli --save-dev
+          fi
+
+          # Verificar que Angular CLI esté disponible
+          if command -v npx >/dev/null 2>&1; then
+            echo "npx disponible, verificando ng..."
+            npx ng version || echo "ng no responde via npx"
+          else
+            echo "npx no disponible"
+          fi
+
+          # Verificar rutas específicas
+          if [ -f "node_modules/@angular/cli/bin/ng.js" ]; then
+            echo "Angular CLI encontrado en: node_modules/@angular/cli/bin/ng.js"
+          elif [ -f "node_modules/.bin/ng" ]; then
+            echo "Angular CLI encontrado en: node_modules/.bin/ng"
+          else
+            echo "ERROR: Angular CLI no encontrado en ninguna ubicación conocida"
+            echo "Contenido de node_modules/@angular/:"
+            ls -la node_modules/@angular/ || echo "Directorio @angular no existe"
+            echo "Contenido de node_modules/.bin/:"
+            ls -la node_modules/.bin/ | grep ng || echo "ng no encontrado en .bin"
+            exit 1
+          fi
+
+          # Ejecutar build inmediatamente
+          echo "Iniciando build con configuración: $ANGULAR_CONFIG"
+          npx ng build --configuration=$ANGULAR_CONFIG --output-path=dist/aurum-suite/browser
+
+          # Verificar que el build fue exitoso
+          if [ ! -d "dist/aurum-suite/browser" ]; then
+            echo "ERROR: Directorio de build no encontrado en dist/aurum-suite/browser"
+            echo "Estructura del directorio dist/:"
+            find dist/ -type d 2>/dev/null || echo "No se encontró directorio dist"
+            echo "Archivos en dist/:"
+            find dist/ -type f 2>/dev/null | head -10 || echo "No hay archivos en dist"
+            exit 1
+          fi
+
+          # Comprimir archivos
+          echo "Comprimiendo archivos JS y CSS..."
+          find dist/aurum-suite/browser -type f -name "*.js" -exec gzip -k {} \;
+          find dist/aurum-suite/browser -type f -name "*.css" -exec gzip -k {} \;
+
+          echo "Build completado exitosamente. Contenido del directorio de salida:"
+          ls -la dist/aurum-suite/browser/
+        displayName: 'Configurar entorno y construir aplicación'
+
+      - task: AzureCLI@2
+        displayName: 'Despliegue de la aplicación'
+        inputs:
+          azureSubscription: 'deploy_frontend'
+          scriptType: 'bash'
+          scriptLocation: 'inlineScript'
+          inlineScript: |
+            # Verificar que el directorio de build existe antes del despliegue
+            if [ ! -d "$(ANGULAR_OUTPUT_PATH)" ]; then
+              echo "ERROR: Directorio de build no encontrado: $(ANGULAR_OUTPUT_PATH)"
+              echo "Contenido actual:"
+              find . -name "*.js" -type f | head -10
+              exit 1
+            fi
+
+            # Crear un directorio temporal para el paquete de despliegue
+            mkdir -p $(System.DefaultWorkingDirectory)/deployment-package
+            
+            # Copiar los archivos construidos de la carpeta browser
+            cp -r $(ANGULAR_OUTPUT_PATH)/* $(System.DefaultWorkingDirectory)/deployment-package/
+            
+            # Verificar que web.config existe antes de copiarlo
+            if [ -f "$(System.DefaultWorkingDirectory)/web.config" ]; then
+              cp $(System.DefaultWorkingDirectory)/web.config $(System.DefaultWorkingDirectory)/deployment-package/
+            else
+              echo "WARNING: web.config no encontrado, saltando..."
+            fi
+            
+            # Verificar que startup.sh existe antes de copiarlo
+            if [ -f "$(System.DefaultWorkingDirectory)/startup.sh" ]; then
+              cp $(System.DefaultWorkingDirectory)/startup.sh $(System.DefaultWorkingDirectory)/deployment-package/
+              chmod +x $(System.DefaultWorkingDirectory)/deployment-package/startup.sh
+            else
+              echo "WARNING: startup.sh no encontrado, saltando..."
+            fi
+            
+            # Comprimir el paquete de despliegue
+            cd $(System.DefaultWorkingDirectory)/deployment-package
+            zip -r ../deployment.zip ./
+            cd $(System.DefaultWorkingDirectory)
+
+            echo "Paquete de despliegue creado. Contenido:"
+            unzip -l deployment.zip | head -20
+
+            # Configurar la aplicación web para Linux con Node.js
+            az webapp config appsettings set \
+              --name $(APP_NAME) \
+              --resource-group $(RESOURCE_GROUP) \
+              --settings PORT=8080 WEBSITES_PORT=8080 NODE_ENV=production WEBSITE_NODE_DEFAULT_VERSION=~18
+
+            # Configurar el startup command para usar el script startup.sh (solo si existe)
+            if [ -f "$(System.DefaultWorkingDirectory)/deployment-package/startup.sh" ]; then
+              az webapp config set \
+                --name $(APP_NAME) \
+                --resource-group $(RESOURCE_GROUP) \
+                --startup-file "startup.sh"
+            fi
+
+            # Desplegar la aplicación
+            echo "Iniciando despliegue a Azure Web App..."
+            az webapp deployment source config-zip \
+              --resource-group $(RESOURCE_GROUP) \
+              --name $(APP_NAME) \
+              --src deployment.zip \
+              --timeout 180
+
+            # Reiniciar la aplicación
+            echo "Reiniciando aplicación..."
+            az webapp restart --name $(APP_NAME) --resource-group $(RESOURCE_GROUP)
+            
+            echo "Despliegue completado exitosamente"

@@ -1,0 +1,44 @@
+<section class="card">
+  
+  <article>
+    <div class="flex flex-col align-items-center gap-3 md:flex-row md:justify-content-between">
+      <h1 class="p-4">Tipos de muestra</h1>
+      <svi-button icon="{{ ICONS.ADD }}" (click)="openDialog('create', null)" [appPermission]="{path: path, action: ReceptionAction.CREAR_TIPO_DE_MUESTRA}" label="Crear Tipo de Muestra"></svi-button>
+    </div>
+    <svi-filter-section
+      (onDeletedChange)="paramsChange({ withDeleted: $event })"
+      (onSearchChange)="paramsChange({ search: $event })"
+    />
+
+    <div class="p-4">
+      <svi-table [columns]="columns()" [data]="data()" [actions]="actions()" [showPaginator]="false"></svi-table>
+      <svi-paginator [totalRecords]="getTotalRecords"></svi-paginator>
+    </div>
+  </article>
+</section>
+
+<svi-dialog
+  [header]="getDialogText"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  width="45rem"
+  [visible]="dialogOpen()"
+  (onHide)="closeAllDialogs()"
+>
+  <svi-sample-type-form
+    [data]="selectedSampleType()"
+    [mode]="mode()"
+    (onCancel)="closeAllDialogs()"
+    (onCreate)="createSampleType($event)"
+    (onEdit)="editSampleType($event)"
+  ></svi-sample-type-form>
+</svi-dialog>
+
+<svi-confirm-dialog
+  #confirmDialog
+  [header]="'Alerta'"
+  acceptLabel="Continuar"
+  rejectLabel="Cancelar"
+></svi-confirm-dialog>

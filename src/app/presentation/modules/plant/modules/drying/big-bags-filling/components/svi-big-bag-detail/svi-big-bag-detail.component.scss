@@ -1,0 +1,58 @@
+.detail-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.detail-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    color: var(--text-color, #111827);
+}
+
+.detail-subtitle {
+    margin: 0;
+    color: var(--text-color-secondary, #6b7280);
+}
+
+.metrics-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.seal-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.detail-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-color-secondary, #6b7280);
+}
+
+.seal-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.seal-tag {
+    font-size: 0.85rem;
+}
+
+.detail-empty {
+    padding: 1rem;
+    text-align: center;
+    color: var(--text-color-secondary, #6b7280);
+}

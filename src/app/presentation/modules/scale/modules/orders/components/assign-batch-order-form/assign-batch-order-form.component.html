@@ -1,0 +1,39 @@
+<form [formGroup]="form" class="flex flex-column gap-3">
+  <svi-float-select
+    formControlName="batchId"
+    label="Lote existente"
+    [options]="batches()"
+    optionLabel="name"
+    optionValue="id"
+    [showClear]="true"
+    [filter]="true"
+    filterBy="name"
+  />
+
+  <div class="flex align-items-center gap-3 py-2">
+    <span class="flex-1 border-top-1 surface-border"></span>
+    <span class="text-sm font-semibold text-color-secondary">O CREA UN LOTE NUEVO</span>
+    <span class="flex-1 border-top-1 surface-border"></span>
+  </div>
+
+  <svi-float-input formControlName="batchName" label="Nombre del nuevo lote" [uppercase]="true"/>
+
+  @if (form.errors?.['batchConflict'] && form.touched) {
+    <small class="text-red-500">Solo puedes seleccionar un lote existente o crear uno nuevo, no ambos.</small>
+  }
+  @if (form.errors?.['batchMissing'] && form.touched) {
+    <small class="text-red-500">Debes seleccionar un lote o ingresar un nombre para crear uno nuevo.</small>
+  }
+
+  <div class="flex justify-content-end gap-2 mt-2">
+    <svi-button label="Cancelar" severity="secondary" (onClick)="onCancel()" />
+    <svi-button
+      label="Guardar"
+      icon="{{ ICONS.SAVE }}"
+      [appPermission]="{ path: permissionsPath(), action: ScaleActions.ASIGNAR_LOTE_A_REGISTRO_DE_PESO }"
+      [disabled]="form.invalid"
+      loadingId="assign-batch-order-btn"
+      (onClick)="onSubmit()"
+    />
+  </div>
+</form>

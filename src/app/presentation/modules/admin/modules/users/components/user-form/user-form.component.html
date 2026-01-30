@@ -1,0 +1,94 @@
+<div class="user-form-container p-4">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="user-form">
+    <div class="formgrid grid">
+      <div class="field col">
+        <svi-float-input type="text" formControlName="name" label="Nombre" placeholder="Juan" />
+      </div>
+      <div class="field col">
+        <svi-float-input type="text" formControlName="lastName" label="Apellido" placeholder="Pérez" />
+      </div>
+    </div>
+
+    <div class="formgrid grid">
+      <div class="field col">
+        <svi-float-input type="text" formControlName="phone" label="Teléfono" placeholder="+57 300 123 4567" />
+      </div>
+      <div class="field col">
+        <svi-float-input formControlName="email" label="Email" placeholder="juan.perez@example.com" />
+      </div>
+    </div>
+
+    <div class="formgrid grid">
+      <div class="field col">
+        <svi-float-select
+          formControlName="documentTypeId"
+          [options]="documentTypes()"
+          optionLabel="name"
+          optionValue="id"
+          label="Tipo de documento"
+          placeholder="Selecciona un tipo de documento"
+        />
+      </div>
+      <div class="field col">
+        <svi-float-input
+          type="text"
+          formControlName="documentNumber"
+          label="Número de documento"
+          placeholder="12345678"
+        />
+      </div>
+    </div>
+
+    <div class="formgrid grid">
+      <div class="field col">
+        <svi-float-select
+          formControlName="roleId"
+          [options]="roles()"
+          optionLabel="name"
+          optionValue="id"
+          label="Rol"
+          placeholder="Selecciona un rol"
+        />
+      </div>
+      @if (action() === 'create') {
+        <div class="field col">
+          <svi-float-input
+            type="password"
+            formControlName="password"
+            label="Contraseña"
+            placeholder="Ingrese la contraseña"
+          />
+        </div>
+      }
+    </div>
+
+    <div class="flex justify-content-end gap-3 mt-4 pt-3 border-top-1 surface-border">
+      @if (action() === 'view') {
+        <svi-button
+          type="button"
+          severity="secondary"
+          label="Cerrar"
+          icon={{ICONS.CANCEL}}
+          (onClick)="onCancelForm()"
+        ></svi-button>
+      } @else {
+        <svi-button
+          type="button"
+          severity="secondary"
+          label="Cancelar"
+          icon={{ICONS.CANCEL}}
+          (onClick)="onCancelForm()"
+          [outlined]="true"
+        ></svi-button>
+
+        <svi-button
+          type="submit"
+          label="Guardar"
+          [disabled]="form.invalid"
+          loadingId="modal-user-button"
+          icon={{ICONS.SAVE}}
+        ></svi-button>
+      }
+    </div>
+  </form>
+</div>

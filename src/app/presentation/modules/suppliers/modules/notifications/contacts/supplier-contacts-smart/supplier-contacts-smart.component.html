@@ -1,0 +1,8 @@
+<svi-supplier-contacts-dump
+  #contactsDump
+  [data]="contacts()"
+  (contactCreated)="createContact($event)"
+  (contactEdited)="editContact($event)"
+  (contactActivated)="activateContact($event)"
+  (contactInactivated)="inactivateContact($event)"
+/>

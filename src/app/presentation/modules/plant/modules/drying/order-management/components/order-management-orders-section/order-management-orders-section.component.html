@@ -1,0 +1,21 @@
+<section class="card flex flex-column p-4 gap-4">
+  <header class="flex flex-column align-items-center sm:flex-row sm:justify-content-between mb-4 w-full ">
+    <h1>Gestión de órdenes de envío</h1>
+    <svi-button
+      label="Crear orden de envío"
+      [icon]="ICONS.ADD"
+      [appPermission]="{ path, action: Actions.GENERAR_ORDEN_DE_ENVIO }"
+      [disabled]="isModalOpen()"
+      (onClick)="openModal()"
+    />
+  </header>
+
+  <svi-order-management-filters (filtersChange)="onFiltersChange($event)"/>
+
+  @if (totalRecords() > 0) {
+    <svi-table [data]="data()" [columns]="columns" [showPaginator]="false"></svi-table>
+  } @else {
+    <svi-empty-state message="No hay datos para mostrar"></svi-empty-state>
+  }
+  <svi-paginator [totalRecords]="totalRecords()" (pageChange)="onPageChange()" />
+</section>

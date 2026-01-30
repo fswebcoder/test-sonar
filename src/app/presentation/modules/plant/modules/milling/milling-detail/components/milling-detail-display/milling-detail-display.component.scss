@@ -1,0 +1,74 @@
+:host {
+  display: block;
+}
+
+.variables-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--surface-ground);
+  border: 1px dashed var(--surface-border);
+  border-radius: 0.75rem;
+}
+
+.variable-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+}
+
+.variable-card__header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--surface-border);
+
+  span {
+    font-weight: 600;
+  }
+}
+
+.milling-detail {
+  padding: 1.5rem;
+  border-radius: 1rem;
+}
+
+.milling-header {
+  border-radius: 0.75rem;
+  background: var(--surface-card);
+  box-shadow: var(--card-shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
+}
+
+.header-hint {
+  max-width: 32rem;
+}
+
+:host ::ng-deep .header-meta .p-tag {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  line-height: 1.1;
+  border-radius: 999px;
+}
+
+.state-empty {
+  margin: 0;
+  color: var(--text-color-secondary);
+}
+
+.process-empty {
+  margin: 0;
+  color: var(--text-color-secondary);
+  padding: 1rem 0;
+  text-align: center;
+}
+
+.view-toolbar {
+  padding: 0 0 1rem;
+}

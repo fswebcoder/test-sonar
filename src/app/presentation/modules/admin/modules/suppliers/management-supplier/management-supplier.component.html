@@ -1,0 +1,27 @@
+<div class="mt-4">
+  @switch (viewMode()) {
+    @case ('create') {
+      <svi-create-supplier-smart
+        [initialDataInput]="initialDataInput()"
+        (closeDialog)="closeDialog()"
+        (outputGetSupplier)="handleGetSupplier()"
+       >
+      </svi-create-supplier-smart>
+    }
+    @case ('edit') {
+      <svi-edit-supplier-smart
+        [supplierToEdit]="supplierToEdit()"
+        (closeDialogOutput)="closeDialog()"
+      >
+      </svi-edit-supplier-smart>
+    }
+    @case ('view') {
+      <svi-view-supplier
+        [supplierToEdit]="supplierToEdit()"
+        (closeDialogOutput)="closeDialog()"
+        (editSupplierOutput)="editSupplier($event)"
+      >
+      </svi-view-supplier>
+    }
+  }
+</div>

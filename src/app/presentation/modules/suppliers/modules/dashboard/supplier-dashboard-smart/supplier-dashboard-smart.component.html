@@ -1,0 +1,11 @@
+<svi-supplier-dashboard-dump
+  [dashboard]="dashboard()"
+  [isLoadingRefresh]="isLoadingRefresh()"
+  [startDate]="startDate()"
+  [endDate]="endDate()"
+  [groupBy]="groupBy()"
+  (startDateChange)="onStartDateChange($event)"
+  (endDateChange)="onEndDateChange($event)"
+  (groupByChange)="onGroupByChange($event)"
+  (refresh)="onRefresh()"
+/>

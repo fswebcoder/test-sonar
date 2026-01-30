@@ -1,0 +1,60 @@
+<svi-scale-card
+  [icon]="ICONS.TRUCK"
+  [title]="vehicle().plate"
+  [subtitle]="vehicle().vehicleType.name"
+  [statusLabel]="statusLabel()"
+  [statusType]="statusType()"
+  [actionsClass]="'w-full'"
+>
+  <ng-container card-actions>
+    <div class="w-full flex justify-content-between align-items-center gap-2 flex-wrap md:flex-nowrap">
+      <div class="flex gap-2 flex-wrap">
+        <p-menu #docsMenu [model]="documentMenuItems()" [popup]="true" appendTo="body"></p-menu>
+
+        <svi-card-button
+          label="Ver documentos"
+          [icon]="ICONS.DOCUMENT"
+          [severity]="EActionSeverity.VIEW"
+          size="small"
+          [styleClass]="'w-auto'"
+          [disabled]="!hasAnyDocument()"
+          (clicked)="docsMenu.toggle($event)"
+          [permission]="{ path: path(), action: ScaleActions.VER_VEHICULOS, fallback: 'disable' }"
+        ></svi-card-button>
+      </div>
+
+      <div class="flex gap-2 flex-wrap">
+        @if (vehicle().isActive) {
+          <svi-card-button
+            label="Desactivar"
+            [icon]="ICONS.CANCEL"
+            size="small"
+            [severity]="EActionSeverity.DEACTIVATE"
+            (clicked)="handleDeactivate()"
+            [permission]="{ path: path(), action: ScaleActions.INACTIVAR_VEHICULO }"
+          ></svi-card-button>
+        } @else {
+          <svi-card-button
+            label="Activar"
+            [icon]="ICONS.CHECK"
+            size="small"
+            [severity]="EActionSeverity.ACTIVATE"
+            (clicked)="handleActivate()"
+            [permission]="{ path: path(), action: ScaleActions.ACTIVAR_VEHICULO }"
+          ></svi-card-button>
+        }
+
+        <svi-card-button
+          label="Editar"
+          [icon]="ICONS.PENCIL"
+          size="small"
+          [outlined]="true"
+          [severity]="EActionSeverity.EDIT"
+          (clicked)="handleEdit()"
+          [permission]="{ path: path(), action: ScaleActions.ACTUALIZAR_VEHICULO }"
+        ></svi-card-button>
+
+      </div>
+    </div>
+  </ng-container>
+</svi-scale-card>

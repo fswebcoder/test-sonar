@@ -1,0 +1,98 @@
+<section class="mb-4">
+  <div class="card">
+    <div class="flex justify-between items-center">
+      <h3>Envío de muestras</h3>
+    </div>
+    <form [formGroup]="form" (ngSubmit)="submit()" class="flex flex-column gap-4">
+      <svi-float-select
+        label="Proveedor"
+        [options]="suppliers()"
+        formControlName="supplierId"
+        optionLabel="name"
+        optionValue="id"
+        filterBy="name"
+        [filter]="true"
+      ></svi-float-select>
+      <div class="flex gap-4">
+        <svi-float-input class="flex-1" label="transportador" formControlName="carrier"></svi-float-input>
+        <svi-float-select
+          label="Prioridad"
+          [options]="priorities()"
+          optionLabel="name"
+          optionValue="id"
+          formControlName="priority"
+          class="flex-1"
+        ></svi-float-select>
+      </div>
+      <div class="flex gap-3 justify-content-end">
+        @if (isPrintMode()) {
+          <svi-button class="w-full sm:w-auto" [icon]="ICONS.CANCEL" severity="secondary" type="button" (click)="clearAllForms()" [label]="getCancelLabel"></svi-button>
+        } @else {
+          <svi-button styleClass="w-full sm:w-auto" [icon]="ICONS.CANCEL" severity="secondary" type="button" (click)="clearAllForms()" [label]="getCancelLabel"></svi-button>
+          <svi-button styleClass="w-full sm:w-auto" severity="info" [icon]="ICONS.ADD" [disabled]="!isAvailableToOpenModal" (click)="openAddSampleDialog()" label="Agregar muestra"></svi-button>
+          <svi-button styleClass="w-full sm:w-auto" [icon]="ICONS.SAVE" severity="primary" [disabled]="form.invalid || !data.length" type="submit" label="Guardar"></svi-button>
+        }
+      </div>
+    </form>
+  </div>
+</section>
+
+<section class="card">
+    <div class="flex justify-content-between">
+        <h3 class="card-title mb-4">Muestras</h3>
+    </div>
+  <div class="card-body">
+    @if(data.length === 0) {
+      <svi-empty-state
+        title="No hay muestras agregadas al envío"
+        description="Intenta agregar muestras al lote"
+      ></svi-empty-state>
+    } @else {
+      <svi-table [columns]="columns" [data]="data" [actions]="actions" [showPaginator]="false"></svi-table>
+    }
+  </div>
+</section>
+
+<svi-dialog
+  [header]="'Agregar muestras al envío'"
+  [visible]="isAddSampleOpen()"
+  (onHide)="closeAllDialogs(); clearAddSampleComponent()"
+  width="70rem"
+>
+  <svi-add-samples
+      #addSampleComponent
+    [sampleTypes]="sampleTypes()"
+    (onAddSample)="addSample($event)"
+    [supplierShortName]="selectedSupplier()?.shortName ?? ''"
+    [mills]="mills()"
+    [shifts]="shifts()"
+    [analysisTypes]="analysisTypes()"
+    (onCancel)="cancelAddSample()"
+  ></svi-add-samples>
+</svi-dialog>
+
+<svi-confirm-dialog
+  #confirmDialog
+  header="Confirmación"
+  [style]="{ width: '30rem' }"
+  rejectLabel="No"
+  acceptLabel="Sí"
+></svi-confirm-dialog>
+
+<svi-dialog
+  [header]="'Imprimir muestras'"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  width="45rem"
+  [visible]="printerModal()"
+  (visibleChange)="onPrintVisibleChange($event)"
+>
+  <svi-print
+    [printers]="printers()"
+    (emitPrint)="onPrintSample($event)"
+    [sample]="sampleToPrint()"
+    (emitCancel)="onPrintCancel()"
+  ></svi-print>
+</svi-dialog>

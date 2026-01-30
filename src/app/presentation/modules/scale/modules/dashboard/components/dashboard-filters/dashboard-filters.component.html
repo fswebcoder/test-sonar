@@ -1,0 +1,47 @@
+<div class="filters-container">
+  <div class="filter-item filter-item--supplier">
+    <svi-float-select
+      [formControl]="supplierControl()"
+      label="Proveedor"
+      [options]="suppliersOptions()"
+      optionLabel="name"
+      optionValue="id"
+      [showClear]="true"
+      [filter]="true"
+      filterBy="name"
+      (ngModelChange)="supplierChange.emit($event)"
+    />
+  </div>
+  <div class="filter-item filter-item--mine">
+    <svi-float-select
+      [formControl]="mineControl()"
+      label="Mina"
+      [options]="minesOptions()"
+      optionLabel="name"
+      optionValue="id"
+      [showClear]="true"
+      [filter]="true"
+      filterBy="name"
+      [disabledInput]="!supplierControl().value"
+    />
+  </div>
+  <div class="filter-item filter-item--date">
+    <svi-date-piker
+      id="startDate"
+      [formControl]="startDateControl()"
+      label="Desde"
+      [showTime]="false"
+      [maxDate]="today"
+    />
+  </div>
+  <div class="filter-item filter-item--date">
+    <svi-date-piker
+      id="endDate"
+      [formControl]="endDateControl()"
+      label="Hasta"
+      [showTime]="false"
+      [minDate]="startDateControl().value"
+      [maxDate]="today"
+    />
+  </div>
+</div>

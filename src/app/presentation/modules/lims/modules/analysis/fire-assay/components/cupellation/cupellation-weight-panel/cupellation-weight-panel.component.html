@@ -1,0 +1,26 @@
+<div class="panel-root">
+  <div class="legend-wrapper" aria-label="Leyenda estados de celdas">
+    <div class="legend-item" title="Celda con código">
+      <span class="legend-swatch code"></span><span>Código</span>
+    </div>
+    <div class="legend-item" title="Dore pendiente">
+      <span class="legend-swatch missing"></span><span>Dore pendiente</span>
+    </div>
+    <div class="legend-item" title="Dore asignado">
+      <span class="legend-swatch weight"></span><span>Dore asignado</span>
+    </div>
+  </div>
+  <div class="status-row">
+    <div class="progress" [attr.aria-label]="'Dore asignado ' + assigned + ' de ' + total">
+      <div class="numbers"><strong>{{ assigned }}</strong><span>/{{ total }}</span></div>
+      <div class="bar">
+        <div class="fill" [style.width]="total ? (assigned/total*100)+'%' : '0%'"></div>
+      </div>
+    </div>
+    <div class="actions">
+      <ng-template #doneTpl>
+        <span class="finished-label">Finalizada</span>
+      </ng-template>
+    </div>
+  </div>
+</div>

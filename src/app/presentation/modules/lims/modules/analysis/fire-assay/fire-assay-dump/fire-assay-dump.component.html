@@ -1,0 +1,9 @@
+<section>
+  <div class="card">
+    <h2>Ensayo al fuego</h2>
+  <svi-smelting-section [furnaces]="smeltingFurnaces()" [furnaceActivity]="furnaceActivity()" [clearKey]="smeltingClearKey()" (onFurnaceChange)="smeltingFurnaceChange($event)" (onStartSmelting)="startSmelting($event)" (onFinishSmelting)="finishSmelting($event)"></svi-smelting-section>
+  </div>
+  <div class="card">
+  <svi-cupellation-section [furnaces]="cupellationFurnaces()" (onFurnaceChange)="cupellationFurnaceChange($event)" [finishedSmeltings]="finishedSmeltings()" [activeCupellation]="activeCupellation()" [clearKey]="cupellationClearKey()" (onStartCupellation)="startCupellation($event)" (onFinishCupellation)="finishCupellation($event)"></svi-cupellation-section>
+  </div>
+</section>

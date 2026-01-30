@@ -1,0 +1,60 @@
+<app-loading section="general" [options]="{ fullscreen: true }"></app-loading>
+
+@defer {
+  <div class="login-container">
+    <video class="background-video" autoplay muted loop playsinline>
+      <source src="login-bg.mp4" type="video/mp4" />
+      <source src="login-bg.webm" type="video/webm" />
+      <!-- <img src="login-bg.jpg" alt="Login background" class="fallback-image" /> -->
+    </video>
+
+    <div class="video-overlay"></div>
+
+    <div class="form-container">
+      <div class="form-card">
+        <div class="mb-8 flex justify-center">
+          <img src="Logo horizontalSV.png" alt="Aurum Logo" width="250px" />
+        </div>
+
+        <form [formGroup]="loginForm" class="flex flex-col gap-4" (ngSubmit)="validateForm()">
+          <div class="w-full flex flex-col gap-4">
+            <svi-float-input type="text" label="Documento de identidad o correo" formControlName="username"></svi-float-input>
+          </div>
+          <div class="w-full flex flex-col gap-4">
+            <svi-float-input
+              type="password"
+              label="Contraseña"
+              formControlName="password"
+              class="w-full"
+            ></svi-float-input>
+          </div>
+          <div class="w-full flex flex-col gap-4">
+            @if (companyIsVisible()) {
+              <svi-float-select
+                label="Compañía"
+                formControlName="company"
+                [options]="inputCompanies()!"
+                [optionLabel]="'name'"
+                [emptyFilterMessage]="'No se encontraron resultados'"
+                [emptyMessage]="'No hay opciones disponibles'"
+                [showClear]="true"
+              ></svi-float-select>
+            }
+          </div>
+          <svi-button
+            type="submit"
+            [loadingId]="'login-button'"
+            label="Iniciar sesión"
+            [severity]="'primary'"
+            [fullWidth]="true"
+            [disabled]="loginForm.invalid"
+          >
+            <i class="fa-duotone fa-regular fa-right-to-bracket"></i>
+          </svi-button>
+        </form>
+      </div>
+    </div>
+  </div>
+} @placeholder {
+  <app-loading section="general" [options]="{ fullscreen: true }"></app-loading>
+}

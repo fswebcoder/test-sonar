@@ -1,0 +1,45 @@
+<form [formGroup]="form" class="flex flex-column gap-4" (ngSubmit)="onSubmit()">
+  <div class="form-section card shadow-2">
+    <h3 class="section-title">
+      <i class="{{ ICONS.USER_SHIELD }}" style="color: var(--primary-color)"></i>
+      Información del Rol
+    </h3>
+
+    <div class="flex gap-6 flex-column sm:flex-row">
+      <svi-float-input
+        [formControlName]="'name'"
+        [label]="'Nombre del rol'"
+        sviFormatRol
+        class="flex-1"
+        [errorMessages]="errorMessages"
+      />
+
+      <svi-float-input
+        [formControlName]="'description'"
+        [label]="'Descripción detallada del rol (opcional)'"
+        class="flex-1"
+      />
+    </div>
+    <div class="flex justify-content-end gap-2 mt-4">
+      <svi-button [outlined]="true" (click)="cancel()">
+        <i class="{{ ICONS.CANCEL }}"></i>
+        Cancelar
+      </svi-button>
+      <svi-button
+        type="submit"
+        [disabled]="form.invalid"
+        loadingId="create-role-button"
+        label="Guardar"
+        [icon]="ICONS.SAVE"
+      >
+      </svi-button>
+    </div>
+  </div>
+
+  <svi-action-resource-panel
+    [actions]="actionsPermissions()"
+    [selectedActionIds]="form.get('actions')?.value || []"
+    (actionsChange)="onActionsChange($event)"
+    [protectedActions]="protectedActions()"
+  />
+</form>

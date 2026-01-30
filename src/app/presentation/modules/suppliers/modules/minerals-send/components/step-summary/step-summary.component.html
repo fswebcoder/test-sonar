@@ -1,0 +1,146 @@
+<section class="p-4">
+  <div class="flex align-items-center justify-content-between mb-3">
+    <div class="flex flex-column">
+      <span class="text-900 font-medium text-lg">Resumen</span>
+      <span class="text-500 text-sm">Verifica la información antes de finalizar el envío.</span>
+    </div>
+  </div>
+
+  @if (!canFinish()) {
+    <p-message
+      severity="warn"
+      text="Faltan datos por completar/seleccionar antes de finalizar."
+    ></p-message>
+  }
+
+  <p-divider></p-divider>
+
+  <div class="card shadow-2 p-4">
+    <div class="flex align-items-center justify-content-between mb-3">
+      <span class="text-900 font-medium">Información general</span>
+    </div>
+    <div class="grid">
+      <div class="col-12 md:col-6">
+        <div class="flex flex-column gap-1">
+          <span class="text-500 text-sm">Mina</span>
+          <span class="text-900 font-medium">{{ mineName() }}</span>
+        </div>
+      </div>
+
+      <div class="col-12 md:col-6">
+        <div class="flex flex-column gap-1">
+          <span class="text-500 text-sm">Tipo de material</span>
+          <span class="text-900 font-medium">{{ materialTypeName() }}</span>
+        </div>
+      </div>
+
+      <div class="col-12 md:col-6">
+        <div class="flex flex-column gap-1">
+          <span class="text-500 text-sm">Nombre del lote</span>
+          <span class="text-900 font-medium">{{ generalInfo().supplierBatchName || '—' }}</span>
+        </div>
+      </div>
+
+      <div class="col-12 md:col-6">
+        <div class="flex flex-column gap-1">
+          <span class="text-500 text-sm">Peso enviado</span>
+          <span class="text-900 font-medium">{{ generalInfo().sendedWeight ?? '—' }} {{ EWeightUnits.KILOGRAMS }}</span>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="flex flex-column gap-1">
+          <span class="text-500 text-sm">Correo de notificación</span>
+          <span class="text-900 font-medium">{{ generalInfo().notificationMail || '—' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-3 grid">
+    <div class="col-12 md:col-4">
+      <div class="card shadow-2 p-4">
+        <div class="flex align-items-center justify-content-between mb-3">
+          <span class="text-900 font-medium">Vehículo</span>
+        </div>
+        @if (vehicle(); as v) {
+          <div class="flex flex-column gap-2">
+            <div class="flex align-items-center justify-content-between">
+              <span class="text-500 text-sm">Placa</span>
+              <span class="text-900 font-medium">{{ v.plate }}</span>
+            </div>
+            <div class="flex align-items-center justify-content-between">
+              <span class="text-500 text-sm">Tipo</span>
+              <span class="text-900 font-medium">{{ v.vehicleType.name || '—' }}</span>
+            </div>
+            <div class="flex align-items-center justify-content-between">
+              <span class="text-500 text-sm">Estado</span>
+              <p-tag
+                [value]="v.isActive ? 'Activo' : 'Inactivo'"
+                [severity]="v.isActive ? 'success' : 'danger'"
+              ></p-tag>
+            </div>
+          </div>
+        } @else {
+          <p-message severity="info" text="Sin vehículo seleccionado."></p-message>
+        }
+      </div>
+    </div>
+
+    <div class="col-12 md:col-4">
+      <div class="card shadow-2 p-4">
+        <div class="flex align-items-center justify-content-between mb-3">
+          <span class="text-900 font-medium">Conductor</span>
+        </div>
+        @if (driver(); as d) {
+          <div class="flex flex-column gap-2">
+            <div class="flex align-items-center justify-content-between">
+              <span class="text-500 text-sm">Nombre</span>
+              <span class="text-900 font-medium">{{ d.name }}</span>
+            </div>
+            <div class="flex align-items-center justify-content-between">
+              <span class="text-500 text-sm">Documento</span>
+              <span class="text-900 font-medium">{{ d.documentNumber }}</span>
+            </div>
+            <div class="flex align-items-center justify-content-between">
+              <span class="text-500 text-sm">Tipo</span>
+              <span class="text-900 font-medium">{{ d.documentType.name || '—' }}</span>
+            </div>
+          </div>
+        } @else {
+          <p-message severity="info" text="Sin conductor seleccionado."></p-message>
+        }
+      </div>
+    </div>
+
+    <div class="col-12 md:col-4">
+      <div class="card shadow-2 p-4">
+        <div class="flex align-items-center justify-content-between mb-3">
+          <span class="text-900 font-medium">Veedor</span>
+        </div>
+        @if (!requireObserver()) {
+          <p-message severity="info" text="No requerido."></p-message>
+        } @else {
+          @if (observer(); as o) {
+            <div class="flex flex-column gap-2">
+              <div class="flex align-items-center justify-content-between">
+                <span class="text-500 text-sm">Nombre</span>
+                <span class="text-900 font-medium">{{ o.name }}</span>
+              </div>
+              <div class="flex align-items-center justify-content-between">
+                <span class="text-500 text-sm">Documento</span>
+                <span class="text-900 font-medium">{{ o.documentNumber }}</span>
+              </div>
+              <div class="flex align-items-center justify-content-between">
+                <span class="text-500 text-sm">Tipo</span>
+                <span class="text-900 font-medium">{{ o.documentType.name || '—' }}</span>
+              </div>
+            </div>
+          } @else {
+            <p-message severity="warn" text="Requerido pero no seleccionado."></p-message>
+          }
+        }
+      </div>
+    </div>
+  </div>
+</section>

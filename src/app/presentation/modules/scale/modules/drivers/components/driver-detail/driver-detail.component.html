@@ -1,0 +1,26 @@
+  <div class="flex flex-column">
+    @let safeUrl = (url | safeResourceUrl);
+
+    @if (safeUrl) {
+      <iframe
+        [src]="safeUrl"
+        [title]="title"
+        class="w-full border-none"
+        style="height: 70vh"
+      ></iframe>
+    } @else {
+      <div class="flex align-items-center justify-content-center" style="height: 30vh">
+        <p class="text-sm text-gray-500">No adjuntado.</p>
+      </div>
+    }
+
+    <div class="pt-3 flex justify-content-end">
+      <svi-button
+        type="button"
+        severity="secondary"
+        label="Cerrar"
+        icon="{{ ICONS.CANCEL }}"
+        (onClick)="close()"
+      ></svi-button>
+    </div>
+  </div>

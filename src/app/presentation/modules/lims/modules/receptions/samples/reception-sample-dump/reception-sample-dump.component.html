@@ -1,0 +1,189 @@
+<section class="card">
+  <h3 class="card-title mb-4">Recepcion muestras de mineral</h3>
+  <div class="card-body">
+    <form [formGroup]="form">
+      <div class="grid">
+        <div class="col-12">
+          <svi-float-select
+            label="Proveedor"
+            formControlName="supplier"
+            [options]="inputSuppliersList()"
+            optionLabel="name"
+            optionValue="id"
+            [loading]="loadingSupplier()"
+            [filter]="true"
+            [filterBy]="'name'"
+          ></svi-float-select>
+        </div>
+
+        <div class="col-12">
+          <svi-text-area
+            label="Observacion"
+            formControlName="observation"
+            [maxLength]="100"
+            [showCharCount]="true"
+          ></svi-text-area>
+        </div>
+      </div>
+
+      <div class="flex flex-column gap-3 md:flex-row md:justify-content-end">
+        <svi-button
+          severity="secondary"
+          type="button"
+          label="{{ getCancelLabel }}"
+          (click)="clearAll()"
+          class="w-full md:w-auto"
+        >
+          <i class="{{ ICONS.CANCEL }}"></i>
+        </svi-button>
+
+        @if (isPrintMode()) {
+          <svi-button
+            severity="info"
+            type="button"
+            label="Impresión masiva"
+            (click)="onPrintBulk()"
+            [disabled]="!data.length"
+            class="w-full md:w-auto"
+          >
+            <i class="{{ ICONS.PRINT }}"></i>
+          </svi-button>
+        }
+
+        @if (!isPrintMode()) {
+          <svi-button
+            [appPermission]="{ path, action: receptionAction.CREAR_RECEPCION_MUESTRAS }"
+            severity="info"
+            type="button"
+            label="Agregar muestra"
+            (click)="onOpenModal()"
+            [disabled]="form.invalid"
+            class="w-full md:w-auto"
+          >
+            <i class="{{ ICONS.ADD }}"></i>
+          </svi-button>
+
+          <svi-button
+            [appPermission]="{ path, action: receptionAction.CREAR_RECEPCION_MUESTRAS }"
+            type="button"
+            label="Recepción masiva"
+            (click)="onOpenMassiveModal()"
+            [disabled]="form.invalid"
+            class="w-full md:w-auto"
+          >
+            <i class="{{ ICONS.LAYER_GROUP }}"></i>
+          </svi-button>
+
+          <svi-button
+            [appPermission]="{ path, action: receptionAction.CREAR_RECEPCION_MUESTRAS }"
+            severity="primary"
+            type="button"
+            label="Guardar"
+            [disabled]="form.invalid || !data.length"
+            (click)="validateForm()"
+            class="w-full md:w-auto"
+          >
+            <i class="{{ ICONS.SAVE }}"></i>
+          </svi-button>
+        }
+      </div>
+    </form>
+  </div>
+</section>
+<div class="card">
+  <div class="flex justify-content-between">
+    <h3 class="card-title mb-4">Muestras</h3>
+  </div>
+  <div class="card-body">
+    <svi-table [columns]="columns" [data]="data" [actions]="actions" [showPaginator]="false"></svi-table>
+  </div>
+</div>
+
+<svi-dialog
+  [visible]="visible()"
+  [header]="'Agregar muestras'"
+  [width]="'70vw'"
+  [modal]="true"
+  [closeOnEscape]="false"
+  [dismissableMask]="false"
+  (onHide)="onHideDialog()"
+  [position]="'top'"
+>
+  <svi-add-samples
+    [samplesTypes]="samplesTypes()"
+    [resetForm]="resetForm()"
+    (emitSamples)="onAddSamples($event)"
+    (cancel)="onCancel()"
+    [selectedProviderShortName]="selectedProviderShortName()"
+    [weight]="weight()"
+    [allowManualWeight]="allowManualWeight()"
+    [isReadingWeight]="isReadingWeight()"
+    (readWeight)="handleReadWeightRequest()"
+  ></svi-add-samples>
+</svi-dialog>
+
+<svi-dialog
+  [visible]="massiveVisible()"
+  [header]="'Recepción masiva de muestras'"
+  [width]="'50vw'"
+  [modal]="true"
+  [closeOnEscape]="false"
+  [dismissableMask]="false"
+  (onHide)="onHideDialog()"
+  [position]="'top'"
+>
+  <svi-add-massive-samples
+    [samplesTypes]="massiveSampleTypes()"
+    [resetForm]="resetMassiveForm()"
+    (emitMassiveSamples)="onAddMassiveSamples($event)"
+    (cancel)="onCancel()"
+  ></svi-add-massive-samples>
+</svi-dialog>
+
+<svi-dialog
+  [visible]="addWeightDialogVisible()"
+  header="Agregar peso a muestra: {{ sampleToAddWeight()?.code || '' }}"
+  [width]="'40vw'"
+  [modal]="true"
+  (onHide)="cancelAddWeight()"
+  [position]="'top'"
+>
+  <svi-add-weight-to-sample
+    [sample]="sampleToAddWeight()"
+    [weight]="weight()"
+    [manualWeight]="manualWeight()"
+    [shouldEnableManualInput]="shouldEnableManualInput()"
+    [isReadingWeight]="isReadingWeight()"
+    (onReadWeight)="handleReadWeightRequest()"
+    (onManualWeightChange)="onManualWeightChange($event)"
+    (onSave)="saveWeightToSample()"
+    (onCancel)="cancelAddWeight()"
+  ></svi-add-weight-to-sample>
+</svi-dialog>
+
+<svi-confirm-dialog
+  #confirmDialog
+  header="Alerta de seguridad"
+  [style]="{ width: '30rem' }"
+  rejectLabel="Cancelar"
+  acceptLabel="Continuar"
+></svi-confirm-dialog>
+
+<svi-dialog
+  [header]="'Imprimir muestras'"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  width="45rem"
+  [visible]="printerModal()"
+  (visibleChange)="onPrintVisibleChange($event)"
+>
+  <svi-print
+    [printers]="printers()"
+    (emitPrint)="onPrintSample($event)"
+    [sample]="sampleToPrint()"
+    (emitCancel)="onPrintCancel()"
+  >
+  </svi-print>
+</svi-dialog>

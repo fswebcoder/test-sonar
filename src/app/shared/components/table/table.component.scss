@@ -1,0 +1,263 @@
+:host ::ng-deep {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+
+  .p-datatable {
+    .p-datatable-tbody > tr {
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: var(--surface-hover) !important;
+        transform: translateY(-2px);
+
+        > td {
+          background-color: inherit !important;
+        }
+
+        .actions-column {
+          background-color: inherit !important;
+        }
+      }
+
+      > td {
+        padding: 1rem;
+        white-space: nowrap;
+        transition: background-color 0.2s ease;
+      }
+    }
+
+    .p-datatable-thead > tr > th {
+      background: var(--surface-card);
+      color: var(--text-color);
+      font-weight: 600;
+      padding: 0.5rem;
+      white-space: nowrap;
+    }
+
+    .actions-column {
+      width: 120px;
+      text-align: center;
+      position: sticky;
+      right: 0;
+      background: var(--surface-card);
+      transition: background-color 0.2s ease;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    .p-row-expansion {
+      background: var(--surface-ground);
+      border-top: 1px solid var(--surface-border);
+      animation: expandRow 0.3s ease-out;
+      overflow: hidden;
+      
+      td {
+        padding: 1rem;
+        background: var(--surface-ground) !important;
+      }
+    }
+
+    @keyframes expandRow {
+      from {
+        max-height: 0;
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        max-height: 500px;
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .p-datatable-tbody > tr.p-highlight {
+      background-color: var(--surface-hover) !important;
+      
+      > td {
+        background-color: inherit !important;
+      }
+    }
+
+    .p-datatable-tbody > tr > td[colspan] {
+      padding: 0 !important;
+      
+      > div {
+        padding: 1rem;
+        background: var(--surface-ground);
+        border-top: 1px solid var(--surface-border);
+      }
+    }
+
+    .p-button-text.p-button-rounded {
+      width: 2rem;
+      height: 2rem;
+      transition: all 0.2s ease;
+      
+      &.p-highlight {
+        background-color: var(--primary-color);
+        color: var(--primary-color-text);
+      }
+      
+      &:hover {
+        background-color: var(--primary-color);
+        color: var(--primary-color-text);
+      }
+    }
+  }
+}
+
+.mobile-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  .card {
+    background: var(--surface-card);
+    border: 1px solid var(--surface-border);
+    border-radius: 6px;
+    padding: 1rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      background-color: var(--surface-hover);
+    }
+
+    .card-expansion-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid var(--surface-border);
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: var(--surface-hover);
+        border-radius: 4px;
+        padding: 0.5rem;
+        margin: -0.5rem -0.5rem 0.5rem -0.5rem;
+      }
+
+      .expansion-button {
+        width: 2rem;
+        height: 2rem;
+        transition: all 0.2s ease;
+        
+        &.p-highlight {
+          background-color: var(--primary-color);
+          color: var(--primary-color-text);
+        }
+        
+        &:hover {
+          background-color: var(--primary-color);
+          color: var(--primary-color-text);
+        }
+      }
+
+      .expansion-label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--text-color-secondary);
+      }
+    }
+
+    .card-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--surface-border);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .label {
+        font-weight: 600;
+        color: var(--text-color-secondary);
+      }
+
+      .value {
+        text-align: right;
+      }
+    }
+
+    .card-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--surface-border);
+    }
+
+    .card-expansion {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--surface-border);
+      background: var(--surface-ground);
+      border-radius: 4px;
+      padding: 1rem;
+      animation: expandCard 0.3s ease-out;
+      overflow: hidden;
+    }
+
+    @keyframes expandCard {
+      from {
+        max-height: 0;
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        max-height: 1000px;
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  }
+}
+
+.p-paginator {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  padding: 0.5rem;
+  border-radius: 6px;
+}
+
+.left-align {
+  text-align: left;
+}
+
+.center-align {
+  text-align: center;
+}
+
+.right-align {
+  text-align: right;
+}
+
+@media screen and (max-width: 768px) {
+  .p-datatable {
+    display: none;
+  }
+
+  .mobile-cards {
+    display: block;
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .mobile-cards {
+    display: none;
+  }
+}
+

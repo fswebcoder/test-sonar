@@ -1,0 +1,16 @@
+:host {
+  display: inline-block;
+}
+
+::ng-deep {
+  .p-button {
+    &.custom-button {
+      // Estilos personalizados adicionales si son necesarios
+      transition: all 0.2s ease-in-out;
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+}

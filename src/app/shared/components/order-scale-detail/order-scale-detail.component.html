@@ -1,0 +1,179 @@
+<div class="order-detail">
+  @if (selectedDocument(); as doc) {
+    <div class="document-view">
+      <div class="document-view__content flex justify-content-center align-items-center" style="min-height: 300px;">
+        @if (doc.type === 'image') {
+          @if (imageLoading()) {
+            <p-progressSpinner strokeWidth="4" ariaLabel="Cargando imagen"></p-progressSpinner>
+          }
+          <img
+            [src]="doc.safeUrl"
+            [alt]="doc.title"
+            class="max-w-full border-round"
+            style="max-height: 70vh;"
+            [class.hidden]="imageLoading()"
+            (load)="onImageLoad()"
+          />
+        } @else {
+          <iframe [src]="doc.safeUrl" [title]="doc.title" class="w-full border-round" style="height: 70vh; border: none;"></iframe>
+        }
+      </div>
+      <div class="document-view__actions flex justify-content-end gap-2 mt-3">
+        <svi-button severity="secondary" label="Volver" (onClick)="closeDocumentView()"></svi-button>
+      </div>
+    </div>
+  } @else {
+    <section class="order-summary surface-card border-round-xl shadow-1 p-4">
+    <div class="order-summary__details grid">
+      <div class="col-6 md:col-4 lg:col-2">
+        <div class="order-summary__detail-item">
+          <span class="order-summary__detail-label"><i [ngClass]="ICONS.BRIEFCASE"></i> Proveedor</span>
+          <span class="order-summary__detail-value">{{ supplierName() }}</span>
+        </div>
+      </div>
+      <div class="col-6 md:col-4 lg:col-2">
+        <div class="order-summary__detail-item">
+          <span class="order-summary__detail-label"><i class="pi pi-map-marker"></i> Mina</span>
+          <span class="order-summary__detail-value">{{ mineName() }}</span>
+        </div>
+      </div>
+      <div class="col-6 md:col-4 lg:col-2">
+        <div class="order-summary__detail-item">
+          <span class="order-summary__detail-label"><i [ngClass]="ICONS.MATERIAL"></i> Material</span>
+          <span class="order-summary__detail-value">{{ materialType() }}</span>
+        </div>
+      </div>
+      <div class="col-6 md:col-4 lg:col-2">
+        <div class="order-summary__detail-item">
+          <span class="order-summary__detail-label"><i [ngClass]="ICONS.BATCH"></i> Lote</span>
+          <span class="order-summary__detail-value">{{ batchName() }}</span>
+        </div>
+      </div>
+      <div class="col-6 md:col-4 lg:col-2">
+        <div class="order-summary__detail-item">
+          <span class="order-summary__detail-label"><i class="pi pi-sign-out"></i> Zona destino</span>
+          <span class="order-summary__detail-value">{{ destinationZone() }}</span>
+        </div>
+      </div>
+      @if (originZone()) {
+        <div class="col-6 md:col-4 lg:col-2">
+          <div class="order-summary__detail-item">
+            <span class="order-summary__detail-label"><i class="pi pi-sign-in"></i> Zona origen</span>
+            <span class="order-summary__detail-value">{{ originZone() }}</span>
+          </div>
+        </div>
+      }
+    </div>
+  </section>
+
+  <div class="order-cards grid">
+    <div class="col-12 md:col-6 lg:col-4">
+      <section class="order-card surface-ground border-round-lg p-3 h-full">
+        <i [ngClass]="ICONS.DRIVER"></i>
+        <div class="order-card__text">
+          <span class="order-card__label">Conductor</span>
+          <span class="order-card__value">{{ driverName() }}</span>
+          <span class="order-card__meta">{{ driverDocumentType() }} {{ driverDocumentNumber() }}</span>
+        </div>
+        <div class="order-card__actions">
+          <p-menu #driverDocsMenu [model]="driverDocumentMenuItems()" [popup]="true" appendTo="body"></p-menu>
+          <button type="button" class="p-button p-button-sm p-button-text" [disabled]="!hasDriverDocuments()" (click)="driverDocsMenu.toggle($event)">
+            <i class="pi pi-file"></i>
+            <span class="ml-1">Ver documentos</span>
+          </button>
+        </div>
+      </section>
+    </div>
+    <div class="col-12 md:col-6 lg:col-4">
+      <section class="order-card surface-ground border-round-lg p-3 h-full">
+        <i [ngClass]="ICONS.TRUCK"></i>
+        <div class="order-card__text">
+          <span class="order-card__label">Vehículo</span>
+          <span class="order-card__value">{{ vehiclePlate() }}</span>
+          <span class="order-card__meta">{{ vehicleType() }}</span>
+        </div>
+        <div class="order-card__actions">
+          <p-menu #vehicleDocsMenu [model]="vehicleDocumentMenuItems()" [popup]="true" appendTo="body"></p-menu>
+          <button type="button" class="p-button p-button-sm p-button-text" [disabled]="!hasVehicleDocuments()" (click)="vehicleDocsMenu.toggle($event)">
+            <i class="pi pi-file"></i>
+            <span class="ml-1">Ver documentos</span>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    @if (hasVeedor()) {
+      <div class="col-12 md:col-6 lg:col-4">
+        <section class="order-card surface-ground border-round-lg p-3 h-full">
+          <i class="pi pi-eye"></i>
+          <div class="order-card__text">
+            <span class="order-card__label">Veedor</span>
+            <span class="order-card__value">{{ veedorName() }}</span>
+            <span class="order-card__meta">{{ veedorDocumentType() }} {{ veedorDocumentNumber() }}</span>
+          </div>
+          <div class="order-card__actions">
+            <p-menu #veedorDocsMenu [model]="veedorDocumentMenuItems()" [popup]="true" appendTo="body"></p-menu>
+            <button type="button" class="p-button p-button-sm p-button-text" [disabled]="!hasVeedorDocuments()" (click)="veedorDocsMenu.toggle($event)">
+              <i class="pi pi-file"></i>
+              <span class="ml-1">Ver documentos</span>
+            </button>
+          </div>
+        </section>
+      </div>
+    }
+  </div>
+
+  <section class="order-weights surface-card border-round-xl shadow-1 p-4 mt-3">
+    <div class="order-weights__header">
+      <i [ngClass]="ICONS.CHART_BAR"></i>
+      <span>Pesajes</span>
+    </div>
+
+    <div class="order-weights__grid">
+      <div class="order-weight">
+        <div class="order-weight__header">
+          <span>Primer pesaje</span>
+          <i [ngClass]="ICONS.ARROW_DOWN"></i>
+        </div>
+        <span class="order-weight__value">{{ formatWeight(orderValue.firstWeight) }}</span>
+        <span class="order-weight__meta">{{ formatDate(orderValue.dateFirstWeight) }}</span>
+        @if (firstWeightImageUrl()) {
+          <div class="mt-2">
+            <button type="button" class="p-button p-button-sm p-button-text" (click)="openDocument('Registro fotográfico - Primer pesaje', firstWeightImageUrl()!, 'image')">
+              <i [ngClass]="ICONS.IMAGE" class="mr-1"></i> Ver registro fotográfico
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="order-weight">
+        <div class="order-weight__header">
+          <span>Segundo pesaje</span>
+          <i [ngClass]="ICONS.ARROW_UP"></i>
+        </div>
+        <span class="order-weight__value">{{ formatWeight(orderValue.secondWeight) }}</span>
+        <span class="order-weight__meta">{{ formatDate(orderValue.dateSecondWeight) }}</span>
+        @if (secondWeightImageUrl()) {
+          <div class="mt-2">
+            <button type="button" class="p-button p-button-sm p-button-text" (click)="openDocument('Registro fotográfico - Segundo pesaje', secondWeightImageUrl()!, 'image')">
+              <i [ngClass]="ICONS.IMAGE" class="mr-1"></i> Ver registro fotográfico
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="order-weight">
+        <div class="order-weight__header">
+          <span>Peso neto</span>
+          <i [ngClass]="ICONS.CHECK"></i>
+        </div>
+        <span class="order-weight__total">{{ formatWeight(orderValue.netWeight) }}</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="order-detail__actions flex justify-content-end">
+    <svi-button severity="secondary" [icon]="ICONS.CANCEL" label="Cerrar" (onClick)="handleClose()"></svi-button>
+  </div>
+  }
+</div>

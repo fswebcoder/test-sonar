@@ -1,0 +1,46 @@
+<article
+  class="general-info-card shadow-2 card animate__animated animate__fadeIn h-full flex flex-column gap-3"
+>
+  <div class="general-info-card__header">
+    <div class="general-info-card__summary">
+      <div class="bg-primary border-circle flex align-items-center justify-content-center w-4rem h-4rem">
+        <i class="fa-duotone fa-sack fa-xl text-white"></i>
+      </div>
+
+      <div>
+        <h2 class="text-2xl font-bold text-900 m-0">
+          {{ sampleDetail()?.code }}
+        </h2>
+        <span class="text-lg text-700">{{ sampleDetail()?.supplierName }}</span>
+        <div class="flex align-items-center gap-2">
+          <p-tag
+            [value]="sampleDetail()?.statusName"
+            severity="success"
+            [rounded]="true"
+            class="text-sm">
+          </p-tag>
+          <span class="text-sm text-500">• {{ sampleDetail()?.sampleTypeName }}</span>
+        </div>
+      </div>
+    </div>
+
+    <svi-button class="general-info-card__action" (onClick)="duplicateSample.emit()" label="Duplicar muestra"></svi-button>
+  </div>
+
+  <div class="general-info-card__meta">
+    <div class="general-info-card__meta-item">
+      <p class="text-sm text-500">Fecha de recepción:</p>
+      <p class="text-md font-semibold text-800">
+        {{ sampleDetail()?.receptionDate | date: 'dd/MM/yyyy HH:mm' }}
+      </p>
+    </div>
+
+    <div class="general-info-card__meta-item">
+      <p-tag
+        [value]="'Peso: ' + getWeightReceived + ' ' + EWeightUnits.GRAMS"
+        severity="info"
+        size="large">
+      </p-tag>
+    </div>
+  </div>
+</article>

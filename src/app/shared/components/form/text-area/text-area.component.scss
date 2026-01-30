@@ -1,0 +1,84 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.p-floatlabel {
+  display: block;
+  position: relative;
+  width: 100%;
+
+  textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 6px;
+    border: 1px solid var(--surface-border);
+    background: var(--surface-card);
+    color: var(--text-color);
+    transition: all 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.2rem rgba(var(--primary-rgb), 0.2);
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  label {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    color: var(--text-color-secondary);
+    transition: all 0.2s;
+    pointer-events: none;
+    background: var(--surface-card);
+    padding: 0 0.25rem;
+    margin-left: -0.25rem;
+    border-radius: 3px;
+  }
+
+  .p-label-active {
+    top: -0.75rem;
+    left: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--primary-color);
+  }
+
+  textarea:focus + label,
+  textarea:not(:placeholder-shown) + label {
+    top: -0.75rem;
+    left: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--primary-color);
+  }
+}
+
+.validation-error-msg {
+  margin-top: 0.25rem;
+  color: var(--red-500);
+  font-size: 0.875rem;
+}
+
+.char-counter {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  padding-right: 0.5rem;
+}
+
+.text-danger {
+  text-align: left;
+  color: var(--red-500);
+}
+
+.text-warning {
+  color: var(--yellow-500);
+}
+
+.text-muted {
+  color: var(--text-color-secondary);
+}

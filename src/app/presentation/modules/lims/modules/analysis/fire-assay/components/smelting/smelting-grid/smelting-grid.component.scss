@@ -1,0 +1,222 @@
+:root {
+  --gold-gradient: linear-gradient(135deg, #fff7d6, #f5e1a4 60%, #e9c86f);
+  --text-color: #222;
+  --border-color: rgba(0, 0, 0, 0.12);
+
+  /* Tamaño base de la celda (lado). Cambia con breakpoints abajo */
+  --cell-size: 130px;
+}
+
+/* Contenedor principal */
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+/* Cada fila */
+.row {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.colmn {
+  flex: 0 0 130px;
+  max-width: 130px;
+  width: 130px;
+  
+}
+
+/* CELDA */
+.cell {
+  width: 100%;
+  min-height: 68px;
+  background: var(--gold-gradient);
+  color: var(--text-color);
+  text-align: center;
+  line-height: 1.2;
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow:
+    inset 0 0 4px rgba(212, 175, 55, 0.12),
+    0 2px 4px -2px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.25s;
+  cursor: pointer;
+  padding: 8px 10px 6px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: stretch;
+  gap: 6px;
+  position: relative;
+  overflow: hidden; /* <- evita que el contenido fuerce el ancho */
+  box-sizing: border-box;
+}
+
+.cell:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 8px 18px -6px rgba(0, 0, 0, 0.25),
+    0 0 0 2px rgba(255, 255, 255, 0.3) inset;
+}
+
+/* Estados */
+.cell.selectable {
+  background: linear-gradient(135deg, #f4fff4, #d9f6db);
+  border-color: #5cbf66;
+  box-shadow: 0 0 0 2px rgba(92, 191, 102, 0.25) inset;
+}
+.cell.selectable:hover {
+  background: linear-gradient(135deg, #edffe9, #c9efcf);
+}
+
+.cell.disabled {
+  background: #f5f5f5;
+  color: #ccc;
+  border-color: #ddd;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.cell.disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.cell.completed {
+  background: linear-gradient(145deg, #ffffff, #f5f5f5);
+  color: #2d3748;
+  border-color: #d8dde3;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.04) inset;
+  cursor: default;
+}
+.cell.completed:hover {
+  transform: none;
+  box-shadow: 0 4px 10px -4px rgba(0, 0, 0, 0.15);
+}
+.cell.finished { cursor: default; opacity: .9; }
+.cell.finished:hover { transform: none; box-shadow: 0 2px 6px -3px rgba(0,0,0,0.15); }
+
+/* Weight mode states */
+.cell.weight-mode.completed { cursor: pointer; }
+.cell.weight-missing { outline:2px dashed #d97706; outline-offset:-4px; }
+.cell.weight-set { outline:2px solid #16a34a; outline-offset:-4px; }
+.cell.weight-set:hover { outline-color:#15803d; }
+.cell.weight-missing:hover { outline-color:#f59e0b; }
+
+/* Contenido interno */
+.cell .cell-content {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: stretch;
+}
+
+.cell-header { display:flex; justify-content:center; }
+.cell-body { flex:1; display:flex; align-items:center; justify-content:center; }
+
+/* Texto de código y label vacía: truncado en 1 línea */
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cell .code {
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.05);
+  padding: 4px 6px;
+  border-radius: 6px;
+  line-height: 1.1;
+}
+.cell.weight-set .code { background: rgba(22,163,74,0.15); }
+.cell.weight-missing .code { background: rgba(217,119,6,0.18); }
+
+/* Weight display */
+.weight-display { display:flex; align-items:flex-end; gap:4px; font-family: ui-monospace, monospace; }
+.weight-display .value { font-size:1.15rem; font-weight:600; line-height:1; }
+.weight-display .placeholder { font-size:1.05rem; opacity:.5; }
+.weight-display .unit { font-size:.6rem; font-weight:500; margin-bottom:2px; opacity:.75; }
+.weight-display.missing { color:#92400e; }
+.weight-display.set { color:#065f46; }
+
+.cell .label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.cell .actions {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.cell .icon-btn {
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  color: #333;
+  transition:
+    background 0.15s,
+    transform 0.15s;
+}
+.cell .icon-btn:hover {
+  background: #fff;
+  transform: translateY(-2px);
+}
+.cell .icon-btn.edit {
+  color: #1d4ed8;
+}
+.cell .icon-btn.delete {
+  color: #b91c1c;
+}
+.cell .icon-btn.delete:hover {
+  background: #ffe5e5;
+}
+
+.weight-hint { font-size:.6rem; opacity:.7; margin-top:auto; }
+
+/* Responsive: escalado proporcional del tamaño de la celda */
+@media (max-width: 1024px) {
+  :root {
+    --cell-size: 118px;
+  }
+}
+@media (max-width: 860px) {
+  :root {
+    --cell-size: 108px;
+  }
+}
+@media (max-width: 720px) {
+  :root {
+    --cell-size: 96px;
+  }
+}
+@media (max-width: 600px) {
+  :root {
+    --cell-size: 86px;
+  }
+}
+@media (max-width: 500px) {
+  :root {
+    --cell-size: 78px;
+  }
+}
+@media (max-width: 420px) {
+  :root {
+    --cell-size: 70px;
+  }
+}

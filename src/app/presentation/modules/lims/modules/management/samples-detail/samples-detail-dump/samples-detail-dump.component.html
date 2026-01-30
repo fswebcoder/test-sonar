@@ -1,0 +1,77 @@
+<svi-dialog
+  [visible]="showResultsModal()"
+  [header]="'Resultados de ' + (selectedAnalysis()?.analysisType?.name || 'Análisis')"
+  (visibleChange)="onCloseResultsModal($event)"
+  position="top"
+  width="90vw"
+  height="85vh"
+  [resizable]="true"
+  [draggable]="true"
+>
+  <svi-analysis-results-content [analysisData]="selectedAnalysis()"></svi-analysis-results-content>
+</svi-dialog>
+
+<div class="card">
+  <div class="flex align-items-center gap-2 mb-3">
+    <svi-back-button href="/lims/gestion-muestras"></svi-back-button>
+    <h3 class="m-0">Recepcion muestras de mineral</h3>
+  </div>
+  <div class="flex flex-col md:flex-row gap-4 px-4">
+    <svi-sample-details-general-information
+      [sampleDetail]="sampleDetail()"
+      class="flex-1"
+      (duplicateSample)="openDuplicateDialog()"
+    ></svi-sample-details-general-information>
+
+    <svi-sample-details-metrics [sampleDetail]="sampleDetail()" class="flex-1"></svi-sample-details-metrics>
+  </div>
+  <div class="px-4 mt-4">
+    <svi-sample-details-main-content
+      [sampleDetail]="sampleDetail()"
+      (onSelectResult)="onSelectResult($event)"
+      (onPrintQuartering)="showPrintDialog($event)"
+      (onPrintBulkQuartering)="showPrintBulkDialog()"
+    ></svi-sample-details-main-content>
+  </div>
+</div>
+
+<svi-dialog
+  [visible]="duplicateDialogVisible()"
+  [header]="'Duplicar muestra'"
+  [modal]="true"
+  width="32rem"
+  (visibleChange)="handleDuplicateDialogVisibleChange($event)"
+>
+  <svi-duplicate-sample-form
+    [visible]="duplicateDialogVisible()"
+    [loading]="duplicateLoading()"
+    [sampleCode]="sampleDetail().code || null"
+    [defaultWeight]="defaultReceivedWeight"
+    (visibleChange)="handleDuplicateDialogVisibleChange($event)"
+    (save)="handleDuplicateSave($event)"
+  ></svi-duplicate-sample-form>
+</svi-dialog>
+
+<svi-confirm-dialog #printConfirmDialog></svi-confirm-dialog>
+
+<svi-dialog
+  [appPermission]="{ path: path, action: ReceptionAction.IMPRIMIR_ETIQUETAS_GESTION }"
+  [header]="'Imprimir muestras'"
+  [modal]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  width="45rem"
+  [visible]="printerModal()"
+  (visibleChange)="onPrintVisibleChange($event)"
+  #printDialog
+>
+  <svi-print
+    #printComponent
+    [printers]="printers()"
+    (emitPrint)="print($event)"
+    [sample]="sampleToPrint()"
+    (emitCancel)="cancelPrint()"
+  >
+  </svi-print>
+</svi-dialog>

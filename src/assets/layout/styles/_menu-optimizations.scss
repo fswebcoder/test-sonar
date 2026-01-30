@@ -1,0 +1,46 @@
+/* OPTIMIZACIONES BÁSICAS PARA MENÚS - Respuesta más inmediata */
+
+/* Optimizar el renderizado de los menús */
+.layout-menu {
+    /* Mejorar la respuesta del scroll */
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Optimizar las transiciones de hover */
+.layout-menuitem-root-text:hover,
+.layout-menuitem-text:hover {
+    /* Transición más rápida para hover */
+    transition: all 0.15s ease-out;
+}
+
+/* Optimizar las transiciones de estado activo */
+.active-menuitem {
+    /* Transición más rápida para estado activo */
+    transition: background-color 0.15s ease-out;
+}
+
+/* Optimizar las transiciones de los separadores */
+.menu-separator {
+    /* Transición más rápida para separadores */
+    transition: opacity 0.15s ease-out;
+}
+
+/* Optimizar el renderizado en dispositivos móviles */
+@media (max-width: 768px) {
+    .layout-menuitem-root-text {
+        /* Mejorar la respuesta táctil */
+        -webkit-tap-highlight-color: transparent;
+    }
+}
+
+/* Optimizar las transiciones de los ángulos de los submenús */
+.layout-submenu-toggler {
+    /* Transición más rápida para los togglers */
+    transition: transform 0.15s ease-out;
+}
+
+/* Optimizar el estado de hover en modo slim */
+.layout-slim .layout-menuitem-root-text:hover {
+    /* Respuesta más inmediata en modo slim */
+    transition: all 0.15s ease-out;
+} 

@@ -1,0 +1,210 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" class="p-4">
+  <div class="grid">
+    <div class="col-12 md:col-6">
+      <svi-float-select
+        formControlName="driverId"
+        label="Conductor"
+        placeholder="Selecciona un conductor"
+        [options]="drivers()"
+        optionLabel="name"
+        optionValue="id"
+        [filter]="true"
+        filterBy="name"
+      />
+    </div>
+
+    <div class="col-12 md:col-6">
+      <svi-auto-complete
+        formControlName="vehicleId"
+        label="Placa del vehículo"
+        [suggestions]="filteredVehicles()"
+        labelField="plate"
+        valueField="id"
+        [forceSelection]="true"
+        [minLength]="0"
+        (completeMethod)="onVehicleComplete($event)"
+        (onClear)="onVehicleClear()"
+      />
+    </div>
+
+    <div class="col-12 md:col-6">
+      <svi-float-select
+        formControlName="materialTypeId"
+        label="Tipo de material"
+        placeholder="Selecciona un tipo"
+        [options]="materialTypes()"
+        optionLabel="name"
+        [filter]="true"
+        filterBy="name"
+        optionValue="id"
+      />
+    </div>
+
+    <div class="col-12 md:col-6">
+      <svi-float-select
+        formControlName="operationTypeWeightRegister"
+        label="Tipo de operación"
+        placeholder="Selecciona un tipo"
+        [options]="operationOptions"
+        optionLabel="label"
+        optionValue="value"
+      />
+    </div>
+
+    @if (form.get('operationTypeWeightRegister')?.value === EOrderScaleType.MOVEMENT) {
+      <div class="col-12 md:col-6">
+        <svi-float-select
+          formControlName="originStorageZoneId"
+          label="Zona origen"
+          placeholder="Selecciona una zona"
+          [options]="storageZones()"
+          optionLabel="name"
+          optionValue="id"
+          [filter]="true"
+          filterBy="name"
+        />
+      </div>
+    }
+
+    <div class="col-12 md:col-6">
+      <svi-float-select
+        formControlName="destinationStorageZoneId"
+        label="Zona destino"
+        placeholder="Selecciona una zona"
+        [options]="storageZones()"
+        optionLabel="name"
+        optionValue="id"
+        [filter]="true"
+        filterBy="name"
+      />
+    </div>
+
+    <div class="col-12 md:col-6">
+      <svi-date-piker
+        formControlName="estimatedShippingDateTime"
+        label="Fecha y hora estimada de envío"
+        [showTime]="true"
+        [showIcon]="true"
+        [showClear]="true"
+      />
+    </div>
+
+    @if (requiresRemissionDocument()) {
+      <div class="col-12">
+        <label class="block font-medium mb-2">Documento de remisión <span class="text-red-500">*</span></label>
+        <svi-file-input
+          formControlName="internalRemissionDocument"
+          [multiple]="false"
+          accept=".pdf,.jpg,.jpeg,.png"
+        />
+      </div>
+    }
+
+    <div class="col-12">
+      <div class="surface-ground border-round-lg p-3 mb-3">
+        <div class="font-semibold">Selección de lote</div>
+        <div class="text-color-secondary text-sm">Selecciona proveedor y mina para habilitar y filtrar los lotes disponibles.</div>
+      </div>
+
+      <svi-float-select
+        formControlName="supplierId"
+        label="Proveedor"
+        [options]="suppliers()"
+        optionLabel="shortName"
+        optionValue="id"
+        [showClear]="true"
+        [filter]="true"
+        filterBy="shortName"
+      />
+    </div>
+
+    <div class="col-12">
+      <svi-float-select
+        formControlName="mineId"
+        label="Mina"
+        [options]="mines()"
+        optionLabel="name"
+        optionValue="id"
+        [showClear]="true"
+        [filter]="true"
+        filterBy="name"
+        [disabledInput]="!form.get('supplierId')?.value"
+      />
+    </div>
+
+    @if (batchEnabled()) {
+      <div class="col-12">
+        <svi-float-select
+          formControlName="batchId"
+          label="Lote"
+          [options]="batches()"
+          optionLabel="name"
+          optionValue="id"
+          [showClear]="true"
+          [filter]="true"
+          filterBy="name"
+          [disabledInput]="!form.get('mineId')?.value"
+        />
+      </div>
+
+      @if (form.get('operationTypeWeightRegister')?.value !== EOrderScaleType.MOVEMENT) {
+        <div class="col-12">
+          <div class="flex align-items-center gap-3 py-2">
+            <span class="flex-1 border-top-1 surface-border"></span>
+            <span class="text-sm font-semibold text-color-secondary">O CREA UN LOTE INDICANDO SU NOMBRE</span>
+            <span class="flex-1 border-top-1 surface-border"></span>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <svi-float-input formControlName="batchName" label="Nombre de lote (alternativo)" [uppercase]="true" />
+        </div>
+      }
+
+      @if (form.errors?.['batchNameNotAllowed'] && form.touched) {
+        <div class="col-12">
+          <small class="text-red-500">En movimiento no se puede crear un lote; selecciona uno existente.</small>
+        </div>
+      }
+      @if (form.errors?.['batchConflict'] && form.touched) {
+        <div class="col-12">
+          <small class="text-red-500">Solo puedes enviar lote por selección o por nombre, no ambos.</small>
+        </div>
+      }
+      @if (form.errors?.['batchMissing'] && form.touched) {
+        <div class="col-12">
+          <small class="text-red-500">
+            @if (form.get('operationTypeWeightRegister')?.value === EOrderScaleType.MOVEMENT) {
+              Debes seleccionar un lote.
+            } @else {
+              Debes seleccionar un lote o ingresar un nombre.
+            }
+          </small>
+        </div>
+      }
+      @if (form.errors?.['batchMissingData'] && form.touched) {
+        <div class="col-12">
+          <small class="text-red-500">Para seleccionar un lote debes elegir proveedor y mina.</small>
+        </div>
+      }
+    }
+  </div>
+
+  <div class="flex justify-content-end gap-3 mt-4 pt-3 border-top-1 surface-border">
+    <svi-button
+      type="button"
+      severity="secondary"
+      label="Cancelar"
+      icon="{{ ICONS.CANCEL }}"
+      (onClick)="onCancelForm()"
+    ></svi-button>
+
+    <svi-button
+      type="submit"
+      label="Guardar"
+      icon="{{ ICONS.SAVE }}"
+      [disabled]="form.invalid"
+      loadingId="modal-order-button"
+    ></svi-button>
+  </div>
+</form>

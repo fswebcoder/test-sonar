@@ -1,0 +1,100 @@
+<form [formGroup]="form" (ngSubmit)="submitForm()" class="order-form">
+  <div class="grid">
+    <!-- Información del vehículo y conductor (solo lectura) -->
+    <div class="col-12">
+      <h5 class="m-0 mb-3 text-gray-600">Información del transporte</h5>
+    </div>
+    
+    <div class="col-12 md:col-6">
+      <div class="field">
+        <label class="text-sm text-gray-500 block mb-1">Vehículo</label>
+        <p class="m-0 font-medium surface-100 border-round p-2">{{ order().vehicle.plate }}</p>
+      </div>
+    </div>
+
+    <div class="col-12 md:col-6">
+      <div class="field">
+        <label class="text-sm text-gray-500 block mb-1">Conductor</label>
+        <p class="m-0 font-medium surface-100 border-round p-2">{{ order().driver.name }}</p>
+      </div>
+    </div>
+
+    <!-- Campos editables -->
+    <div class="col-12">
+      <h5 class="m-0 mb-3 mt-2 text-gray-600">Información del envío</h5>
+    </div>
+
+    <div class="col-12 md:col-6">
+      <svi-float-select
+        formControlName="mineId"
+        label="Mina"
+        [options]="mines()"
+        optionLabel="name"
+        optionValue="id"
+        [showClear]="true"
+      />
+    </div>
+
+    <div class="col-12 md:col-6">
+      <svi-float-select
+        formControlName="materialTypeId"
+        label="Tipo de Material"
+        [options]="materialTypes()"
+        optionLabel="name"
+        optionValue="id"
+      />
+    </div>
+
+    <div class="col-12 md:col-6">
+      <svi-float-input
+        formControlName="sendedWeight"
+        label="Peso Enviado (kg)"
+        [isWeightInput]="true"
+        [suffix]="EWeightUnits.KILOGRAMS"
+      />
+    </div>
+
+    <div class="col-12 md:col-6">
+      <svi-float-input
+        formControlName="supplierBatchName"
+        label="Nombre del Lote"
+      />
+    </div>
+
+    <div class="col-12 md:col-6">
+      <svi-date-piker
+        formControlName="estimatedShippingDateTime"
+        label="Fecha Estimada de Envío"
+        [showTime]="true"
+        [minDate]="minDate"
+      />
+    </div>
+
+    <div class="col-12">
+      <span class="block mb-2 font-medium">Documento de remisión interna</span>
+      <svi-file-input
+        formControlName="internalRemissionDocument"
+        label="Documento de Remisión"
+        accept=".pdf,.jpg,.jpeg,.png"
+      />
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="flex justify-content-end gap-2 pt-4 border-top-1 surface-border mt-4">
+    <svi-button
+      type="button"
+      severity="secondary"
+      label="Cancelar"
+      [icon]="ICONS.CANCEL"
+      (onClick)="cancel()"
+    />
+    <svi-button
+      type="submit"
+      label="Guardar Cambios"
+      [icon]="ICONS.CHECK"
+      [disabled]="form.invalid"
+      [loadingId]="LOADING.buttons.confirmSend"
+    />
+  </div>
+</form>

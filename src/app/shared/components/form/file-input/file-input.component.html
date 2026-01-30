@@ -1,0 +1,124 @@
+<div
+  class="w-full border border-gray-300 rounded-md"
+  [ngClass]="{
+    'border-2 border-primary bg-primary/5 border-dashed pulse-animation !cursor-initial': isDragOver()
+  }"
+>
+  <div
+    (click)="fileInput.click()"
+    [class.opacity-50]="isDisabled()"
+    [class.pointer-events-none]="isDisabled()"
+    class="dropzone"
+    (dragover)="onDragOver($event)"
+    (dragleave)="onDragLeave($event)"
+    (drop)="onFileDrop($event)"
+    pRipple
+  >
+    <input
+      #fileInput
+      type="file"
+      [multiple]="multiple()"
+      [accept]="accept()"
+      [class.border-primary]="isDragOver()"
+      class="hidden"
+      (change)="onFilesChange($event)"
+    />
+    <div class="dropzone-content">
+      <div class="upload-icon">
+        <i class="pi pi-upload"></i>
+      </div>
+
+      <h3 class="text-xl font-semibold">
+        {{ multiple() ? 'Arrastra tus archivos aquí' : 'Arrastra tu archivo aquí' }}
+      </h3>
+
+      <p class="text-sm">
+        {{ multiple() ? 'o haz clic para seleccionar archivos' : 'o haz clic para seleccionar un archivo' }}
+      </p>
+      <div class="file-types">
+        <span>Tamaño máximo: {{ maxSize() / (1024 * 1024) }} MB</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="errors.length > 0" class="errors">
+    <div *ngFor="let error of errors" class="error-message text-red-600 flex items-center my-2 justify-content-center">
+      <i class="pi pi-exclamation-triangle"></i> {{ error }}
+    </div>
+  </div>
+
+  <p-divider *ngIf="files().length > 0"></p-divider>
+
+  <div *ngIf="files().length > 0" class="file-list">
+    <div *ngFor="let file of files(); trackBy: trackByFileName">
+      <div
+        class="file-item"
+        [ngClass]="{
+          'bg-red-50 border-l-4 border-l-red-500': file.size > maxSize(),
+          'bg-white border border-gray-100': file.size <= maxSize()
+        }"
+      >
+        <div class="flex items-center gap-3 w-full">
+          <div
+            class="file-icon-wrapper"
+            [ngClass]="{ 'bg-red-100': file.size > maxSize(), 'bg-primary-50': file.size <= maxSize() }"
+          >
+            <i
+              class="fa-duotone text-3xl"
+              [ngClass]="{
+                'text-red-600': file.size > maxSize(),
+                'text-primary': file.size <= maxSize(),
+                'fa-file-pdf': file.type === 'application/pdf',
+                'fa-file-excel': file.type.includes('spreadsheet') || file.type.includes('excel'),
+                'fa-file-word': file.type.includes('document') || file.type.includes('word'),
+                'fa-file-image': file.type.startsWith('image/'),
+                'fa-file':
+                  !file.type.startsWith('image/') && !file.type.includes('pdf') && !file.type.includes('spreadsheet')
+              }"
+            ></i>
+          </div>
+          <div class="flex flex-col">
+            <p
+              class="text-sm font-medium truncate max-w-[200px]"
+              [ngClass]="{
+                'text-red-700': file.size > maxSize(),
+                'text-gray-800': file.size <= maxSize()
+              }"
+            >
+              {{ file.name  }}
+            </p>
+            <div class="flex items-center gap-2">
+              <span
+                class="text-xs px-2 py-0.5 rounded-full"
+                [ngClass]="{
+                  'bg-red-100 text-red-600': file.size > maxSize(),
+                  'bg-primary-100 text-primary-700': file.size <= maxSize()
+                }"
+              >
+                {{ formatFileSize(file.size) }}
+              </span>
+              <span *ngIf="file.size > maxSize()" class="text-xs text-red-600 font-medium flex items-center gap-1">
+                <i class="pi pi-exclamation-circle"></i>
+                Excede el tamaño máximo de {{ formatFileSize(maxSize()) }}
+              </span>
+            </div>
+          </div>
+        </div>
+        <button
+          type="button"
+          class="file-delete-btn flex items-center justify-center"
+          [ngClass]="{ 'hover:bg-red-50': file.size <= maxSize(), 'hover:bg-red-200': file.size > maxSize() }"
+          pRipple
+          (click)="removeFile(file); $event.stopPropagation()"
+          [disabled]="isDisabled()"
+          pTooltip="Eliminar archivo"
+        >
+          <i
+            class="pi pi-trash"
+            [ngClass]="{ 'text-red-400': file.size <= maxSize(), 'text-red-500': file.size > maxSize() }"
+          ></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

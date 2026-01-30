@@ -1,0 +1,69 @@
+  <form [formGroup]="formGroup()!" class="dynamic-form">
+    <div class="grid">
+      @for (field of formFieldsInput(); track field.name) {
+        @switch (field.type) {
+          @case ('text') {
+            @if (field.name === 'documentNumber') {
+              <div class="col-12 md:col-4">
+                <svi-float-input
+                  [label]="field.label"
+                  [formControlName]="field.name"
+                  mask="separator.2"
+                  thousandSeparator="."
+                  placeholder="Ej: 901.323.320"
+                  type="number"
+                />
+              </div>
+            } @else {
+              <div class="col-12 md:col-4">
+                @if (field.name === 'name') {
+                  <svi-float-input [uppercase]="true" [label]="field.label" [formControlName]="field.name" [uppercase]="true" />
+                } @else {
+                  <svi-float-input [label]="field.label" [formControlName]="field.name" />
+                }
+              </div>
+            }
+          }
+          @case ('select') {
+            <div class="col-12 md:col-4">
+              <svi-float-select
+                [label]="field.label"
+                [formControlName]="field.name"
+                [options]="field.options || []"
+                optionLabel="code"
+                optionValue="id"
+              />
+            </div>
+          }
+          @case ('number') {
+            <div class="col-12 md:col-3">
+              <svi-float-input [label]="field.label" [formControlName]="field.name" [type]="'number'" />
+            </div>
+          }
+        }
+      }
+    </div>
+    <div class="flex justify-content-end gap-2">
+      <svi-button severity="secondary" type="button" label="Cancelar" (click)="closeDialog()">
+        <i class="fa-duotone fa-regular fa-ban"></i>
+      </svi-button>
+      @if (!isDisabled()) {
+        <svi-button
+          severity="primary"
+          type="submit"
+          label="Guardar proveedor"
+          (click)="validateForm()"
+          [disabled]="!isFormValid()"
+        >
+          <i class="fa-duotone fa-regular fa-floppy-disk-circle-arrow-right"></i>
+        </svi-button>
+      }
+    </div>
+    <svi-confirm-dialog
+      #confirmDialog
+      header="Alerta de seguridad"
+      [style]="{ width: '30rem' }"
+      rejectLabel="Cancelar"
+      acceptLabel="Si, guardar"
+    ></svi-confirm-dialog>
+  </form>

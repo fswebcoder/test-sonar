@@ -1,0 +1,239 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+:host ::ng-deep {
+  .p-accordion {
+    border: 1px solid var(--surface-200);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+    .p-accordion-header {
+      background: var(--surface-100);
+      border: none;
+      border-radius: 0;
+
+      &:hover {
+        background: var(--surface-200);
+      }
+
+      &:first-child {
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+      }
+
+      &:last-child:not(.p-accordion-header-active) {
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+      }
+    }
+
+    .p-accordion-header-link {
+      padding: 1rem;
+      border: none;
+      background: transparent;
+      transition: background-color 0.2s ease;
+
+      &:focus {
+        box-shadow: none;
+      }
+
+      .resource-header-content {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        min-height: 2rem;
+
+        .resource-info {
+          flex: 1;
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          min-width: 0;
+          i {
+            color: var(--primary-color);
+            font-size: 1rem;
+            flex-shrink: 0;
+          }
+          .resource-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-color);
+          }
+
+          .resource-description {
+            font-size: 0.875rem;
+            color: var(--text-color-secondary);
+            margin-left: 0.5rem;
+          }
+        }
+
+        .header-actions {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1rem;
+          flex-shrink: 0;
+
+          .selection-counter {
+            font-size: 0.875rem;
+            color: var(--text-color-secondary);
+            font-weight: 500;
+            background: var(--surface-200);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            white-space: nowrap;
+          }
+
+          .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+
+            .fixed-label {
+              cursor: pointer;
+              font-size: 0.875rem;
+              color: var(--text-color);
+              user-select: none;
+              white-space: nowrap;
+            }
+
+            .p-checkbox {
+              .p-checkbox-box {
+                transition: all 0.2s ease;
+
+                &:hover {
+                  border-color: var(--primary-color);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .p-accordion-content {
+      padding: 0;
+      border: none;
+      background: var(--surface-0);
+      border-top: 1px solid var(--surface-200);
+    }
+  }
+}
+
+.panel-content {
+  padding: 1rem;
+  background: var(--surface-0);
+}
+
+.action-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--surface-200);
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  margin-bottom: 0.5rem;
+
+  &:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+  }
+
+  &:hover {
+    background-color: var(--surface-100);
+    transform: translateX(2px);
+  }
+
+  &.selected {
+    background-color: var(--surface-100);
+    border-left: 3px solid var(--primary-color);
+  }
+
+  .action-checkbox {
+    margin-right: 0.75rem;
+
+    i {
+      font-size: 1rem;
+      transition: color 0.2s ease;
+    }
+  }
+
+  .action-content {
+    flex: 1;
+
+    .action-name {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-color);
+      margin-bottom: 0.25rem;
+    }
+
+    .action-description {
+      font-size: 0.75rem;
+      color: var(--text-color-secondary);
+      line-height: 1.4;
+    }
+  }
+
+  .action-status {
+    margin-left: 0.5rem;
+
+    i {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+.fixed-label {
+  display: inline-block;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+  font-size: 0.875rem;
+  color: var(--text-color);
+  user-select: none;
+}
+
+.primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: var(--surface-0) !important;
+}
+
+.secondary {
+  background-color: var(--text-color-secondary) !important;
+  border-color: var(--text-color-secondary) !important;
+  color: var(--surface-0) !important;
+}
+
+@media (max-width: 768px) {
+  :host ::ng-deep {
+    .p-accordion-header-link {
+      .resource-header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.75rem;
+
+        .header-actions {
+          width: 100%;
+          justify-content: space-between;
+          gap: 0.75rem;
+
+          .selection-counter {
+            font-size: 0.8rem;
+          }
+
+          .checkbox-container {
+            .fixed-label {
+              font-size: 0.8rem;
+            }
+          }
+        }
+      }
+    }
+  }
+}

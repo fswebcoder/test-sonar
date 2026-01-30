@@ -1,0 +1,96 @@
+@if (isSelfParent()) {
+  <div class="panel-content">
+    @for (action of group().actions; track action.id) {
+      <div class="action-item" [class.selected]="isActionSelected(action.id)">
+        <div class="action-checkbox">
+          <svi-checkbox
+            [binary]="true"
+            [ngModel]="isActionSelected(action.id)"
+            (onChange)="toggleAction(action.id)"
+            [style]="{ margin: '0' }"
+            [inputId]="'action-checkbox-' + action.id"
+            [disabled]="isReadOnly() || isProtectedAction(action.id)"
+          ></svi-checkbox>
+        </div>
+
+        <div class="action-content">
+          <div class="action-name">{{ action.name }}</div>
+          @if (action.description) {
+            <div class="action-description">{{ action.description }}</div>
+          }
+        </div>
+
+        <div class="action-status">
+          @if (isActionSelected(action.id)) {
+            <i class="{{ ICONS.CHECK }} text-primary"></i>
+          }
+        </div>
+      </div>
+    }
+  </div>
+} @else {
+  <svi-collapsible-panel styleClass="resource-panel">
+    <div slot="header" class="resource-header-content flex gap-4">
+      <div class="resource-info flex gap-2 align-items-center">
+        <i class="{{ ICONS.FOLDER }} text-primary"></i>
+        <span class="resource-name">{{ group().resourceName }}</span>
+        @if (group().resourceDescription) {
+          <span class="resource-description">{{ group().resourceDescription }}</span>
+        }
+      </div>
+
+      <div class="header-actions flex gap-4 my-auto" (click)="$event.stopPropagation()">
+        <div class="selection-counter">{{ group().selectedCount }}/{{ group().totalCount }}</div>
+        @if (!isReadOnly()) {
+          <div class="checkbox-container flex gap-2">
+            <svi-checkbox
+              [binary]="true"
+              [ngModel]="areAllActionsSelectedForResource()"
+              (onChange)="selectAllActionsForResource()"
+              [style]="{ margin: '0' }"
+              [inputId]="'select-all-actions-' + group().resourceId"
+              (click)="$event.stopPropagation()"
+            />
+            <label
+              [for]="'select-all-actions-' + group().resourceId"
+              class="select-all-label fixed-label"
+              (click)="$event.stopPropagation()"
+            >
+              {{ areAllActionsSelectedForResource() ? 'Deseleccionar' : 'Seleccionar' }}
+            </label>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="panel-content">
+      @for (action of group().actions; track action.id) {
+        <div class="action-item" [class.selected]="isActionSelected(action.id)">
+          <div class="action-checkbox">
+            <svi-checkbox
+              [binary]="true"
+              [ngModel]="isActionSelected(action.id)"
+              (onChange)="toggleAction(action.id)"
+              [style]="{ margin: '0' }"
+              [inputId]="'action-checkbox-' + action.id"
+              [disabled]="isReadOnly() || isProtectedAction(action.id)"
+            ></svi-checkbox>
+          </div>
+
+          <div class="action-content">
+            <div class="action-name">{{ action.name }}</div>
+            @if (action.description) {
+              <div class="action-description">{{ action.description }}</div>
+            }
+          </div>
+
+          <div class="action-status">
+            @if (isActionSelected(action.id)) {
+              <i class="{{ ICONS.CHECK }} text-success"></i>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  </svi-collapsible-panel>
+}

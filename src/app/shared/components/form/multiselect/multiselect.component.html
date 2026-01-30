@@ -1,0 +1,30 @@
+<p-floatlabel variant="on">
+  <p-multiSelect
+    [id]="id"
+    [options]="options"
+    [(ngModel)]="value"
+    [optionLabel]="optionLabel"
+    [optionValue]="optionValue"
+    [disabled]="disabled"
+    [placeholder]="placeholder"
+    [filter]="filter"
+    [filterBy]="filterBy"
+    [showClear]="showClear"
+    [maxSelectedLabels]="maxSelectedLabels"
+    [selectedItemsLabel]="selectedItemsLabel"
+    [resetFilterOnHide]="resetFilterOnHide"
+    (onChange)="onSelectionChange($event)"
+    (onBlur)="onBlur()"
+    [ngClass]="{ 'ng-invalid ng-dirty': hasErrors }"
+    class="w-full"
+    display="chip"
+    [appendTo]="'body'"
+    (onClear)="onClear()"
+  >
+  </p-multiSelect>
+  <label [for]="id">{{ label }}</label>
+</p-floatlabel>
+
+@if (hasErrors) {
+  <div sviFormError [errorMessage]="errorMessage" [show]="hasErrors"></div>
+}

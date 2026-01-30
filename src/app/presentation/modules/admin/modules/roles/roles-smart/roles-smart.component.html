@@ -1,0 +1,15 @@
+<svi-roles-dump
+  [roles]="rolesItems()"
+  [actionsPermissions]="actionsQueryData()"
+  [roleDetailForEdit]="roleDetailForEdit()"
+  [roleDetailForView]="roleDetailForView()"
+  (onParamsChange)="paramsChange($event)"
+  (onCreateRole)="createRole($event)"
+  (onOpenEditRole)="loadRoleDetail($event)"
+  (onCloseEditRole)="clearRoleDetail()"
+  (onOpenViewRole)="loadRoleDetailForView($event)"
+  (onCloseViewRole)="clearRoleDetailForView()"
+  (onUpdateRole)="updateRole($event)"
+  (onDeleteRole)="deleteRole($event)"
+  (onActivateRole)="activateRole($event)"
+/>

@@ -1,0 +1,15 @@
+<svi-fire-assay-dump
+  [cupellationFurnaces]="furnacesQueryData().copelacion"
+  [smeltingFurnaces]="furnacesQueryData().fundicion"
+  [furnaceActivity]="furnaceActivity()"
+  [activeCupellation]="activeCupellation()"
+  [smeltingClearKey]="smeltingClearKey()"
+  [cupellationClearKey]="cupellationClearKey()"
+  (onSmeltingFurnaceChange)="smeltingFurnaceChange($event)"
+  (onCupellationFurnaceChange)="cupellationFurnaceChange($event)"
+  (onStartSmelting)="startSmelting($event)"
+  (onFinishSmelting)="finishSmelting($event)"
+  (onStartCupellation)="startCupellation($event)"
+  (onFinishCupellation)="finishCupellation($event)"
+  [finishedSmeltings]="finishedSmeltings()"
+/>

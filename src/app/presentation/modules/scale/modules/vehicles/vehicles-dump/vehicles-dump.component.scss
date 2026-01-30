@@ -1,0 +1,23 @@
+section {
+	display: block;
+}
+
+.vehicles-header {
+	gap: 1rem;
+
+	h3 {
+		margin: 0;
+		font-size: 1.5rem;
+		font-weight: 700;
+		color: #0f172a;
+	}
+}
+
+.vehicles-content {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+
+

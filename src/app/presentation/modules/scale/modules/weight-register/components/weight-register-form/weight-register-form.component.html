@@ -1,0 +1,128 @@
+<div class="flex flex-column gap-4 p-3">
+	@if (requiresDestinationZone()) {
+		<form [formGroup]="form" class="mb-4">
+			<svi-float-select
+				formControlName="destinationStorageZoneId"
+				label="Zona destino"
+				placeholder="Selecciona una zona"
+				[options]="storageZones()"
+				optionLabel="name"
+				optionValue="id"
+				[filter]="true"
+				filterBy="name"
+			/>
+		</form>
+	}
+
+	<div class="weight-card relative">
+		<app-loading
+			[section]="LOADING.sections.captureImage"
+			[options]="{ overlay: true, fullscreen: false, size: 'small' }"
+		></app-loading>
+
+		@if (manualMode()) {
+			<div class="fade-in w-full flex flex-column gap-3">
+				<div class="flex align-items-center gap-2">
+					<i [class]="ICONS.WARNING" aria-hidden="true"></i>
+					<span class="font-semibold">Modo manual</span>
+				</div>
+				@if (manualModeReason(); as reason) {
+					<div class="text-600 text-sm">{{ reason }}</div>
+				}
+				<svi-float-input
+					[formControl]="manualWeightControl"
+					[isWeightInput]="true"
+					label="Peso manual"
+					[suffix]="EWeightUnits.KILOGRAMS"
+				></svi-float-input>
+
+				<div class="flex flex-column gap-2">
+					@if (capturedTmpUrl(); as url) {
+						<div class="captured-block fade-in">
+							<img
+								class="captured-image"
+								[class.captured-image--loaded]="capturedImageLoaded()"
+								[src]="url"
+								(load)="onCapturedImageLoad()"
+								(error)="onCapturedImageError()"
+								alt="Captura de báscula"
+							/>
+						</div>
+					} @else if (showCameraUnavailable()) {
+						<div class="text-600 text-sm">
+							No fue posible obtener la imagen.
+						</div>
+					}
+				</div>
+			</div>
+		} @else if (showCameraUnavailable()) {
+			<div class="captured-block fade-in flex flex-column align-items-center justify-content-center gap-2">
+				<i [class]="ICONS.WARNING" aria-hidden="true" style="font-size: 2.25rem; color: var(--primary-color-text);"></i>
+				<div class="text-center" style="color: var(--primary-color-text);">
+					<div class="font-semibold">Cámara fuera de servicio</div>
+					<div class="text-sm" style="opacity: 0.9;">No fue posible obtener la imagen.</div>
+				</div>
+			</div>
+		} @else if (!showCapturedImage()) {
+			<div class="weight-icon">
+				<i [class]="ICONS.INDUSTRY" aria-hidden="true"></i>
+			</div>
+
+			<div class="weight-value fade-in">
+				<span [countUp]="currentWeight()" [options]="countUpOptions"></span>
+				<small>{{EWeightUnits.KILOGRAMS}}</small>
+			</div>
+
+			<div class="weight-status" [class.active]="isReading()">
+				<i [class]="isReading() ? ICONS.PLAY : ICONS.STOP" aria-hidden="true"></i>
+				<span>{{ isReading() ? 'Lectura en curso' : 'Lectura detenida' }}</span>
+			</div>
+
+			@if (isReading()) {
+				<div class="text-xs text-500 text-center mt-2">
+					Si la báscula no responde en 7 segundos, se habilitará el registro manual.
+				</div>
+			}
+		} @else {
+			<div class="captured-block fade-in">
+				@if (capturedTmpUrl(); as url) {
+					<img
+						class="captured-image"
+						[class.captured-image--loaded]="capturedImageLoaded()"
+						[src]="url"
+						(load)="onCapturedImageLoad()"
+						(error)="onCapturedImageError()"
+						alt="Captura de báscula"
+					/>
+				}
+			</div>
+		}
+	</div>
+
+	@if (!isReading() && (capturedWeight() !== null || manualMode())) {
+		<div class="captured-weight-outside fade-in flex justify-content-center align-items-end gap-2">
+			<span>{{ manualMode() ? effectiveWeight() : (capturedWeight() ?? 0) }}</span>
+			<small>{{EWeightUnits.KILOGRAMS}}</small>
+		</div>
+	}
+
+	<div class="flex justify-content-center gap-4">
+		<svi-button (onClick)="startReadingWeight()" icon="{{ICONS.PLAY}}" label="Iniciar lectura" [disabled]="isReading()">
+		</svi-button>
+
+		<svi-button severity="secondary" (onClick)="stopReadingWeight()" icon="{{ICONS.STOP}}" label="Detener lectura" [disabled]="!isReading()">
+		</svi-button>
+
+		@if (manualMode()) {
+			<svi-button
+				severity="secondary"
+				(onClick)="captureImageManually()"
+				label="Capturar imagen"
+				[icon]="ICONS.SCALE_IMAGE"
+				[disabled]="loadingService.isLoadingSync(LOADING.sections.captureImage)"
+			></svi-button>
+		}
+
+		<svi-button (onClick)="submitWeight()" icon="{{ICONS.SAVE}}" label="Registrar peso" [disabled]="!canRegisterWeight()"></svi-button>
+	</div>
+</div>

@@ -1,0 +1,44 @@
+<section>
+  <div class="card">
+    <div class="flex justify-between items-center">
+      <h3>Usuarios</h3>
+      <svi-button [appPermission]="{ path: '/admin/usuarios', action: 'CREAR_USUARIO' }" label="Crear usuario" icon="fa fa-plus" (onClick)="openUserModal('create')"></svi-button>
+    </div>
+    <div class="flex justify-content-between align-items-center my-4">
+       <div class="flex align-items-center gap-2">
+        <svi-checkbox [ngModel]="withDeleted()" [binary]="true" (ngModelChange)="withDeletedChange($event)"></svi-checkbox>
+        <label for="withDeleted">Incluir usuarios eliminados</label>
+       </div>
+    </div>
+    <div>
+      <svi-table [data]="userFiltered()" [columns]="columns" [actions]="actions" [showPaginator]="false"></svi-table>
+      <svi-paginator [totalRecords]="totalRecords!" [rowsPerPageOptions]="[9, 10, 20]"></svi-paginator>
+    </div>
+  </div>
+</section>
+
+
+<svi-dialog [header]="getModalTitle()" width="70rem" position="top" [visible]="userModal()" (onHide)="closeUserModal()">
+<svi-user-form 
+[user]="user()" 
+[action]="userAction()" 
+[documentTypes]="documentTypes()" 
+[roles]="roles()"
+(onCancel)="closeUserModal()" 
+(onCreate)="createUser($event)"
+(onUpdate)="updateUser($event)"
+></svi-user-form>
+</svi-dialog>
+
+<svi-confirm-dialog 
+  #confirmDialog
+  [draggable]="false"
+  [style]="{ width: '40rem' }"
+  [acceptLabel]="'Eliminar'"
+  [rejectLabel]="'Cancelar'"
+  [acceptButtonStyleClass]="'p-button-danger'"
+  [rejectButtonStyleClass]="'p-button-outlined'"
+  [acceptVisible]="true"
+  [rejectVisible]="true"
+>
+</svi-confirm-dialog>

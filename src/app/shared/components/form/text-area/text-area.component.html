@@ -1,0 +1,27 @@
+<p-floatlabel variant="on">
+  <textarea
+    pTextarea
+    [id]="id"
+    placeholder=" "
+    (blur)="onBlur()"
+    [rows]="rows"
+    [cols]="cols"
+    class="w-full p-inputtext"
+    [value]="value"
+    (input)="onInputChange($event)"
+    [disabled]="disabled"
+    [ngClass]="{ 'ng-invalid ng-dirty': hasErrors || +charCountText === maxLength }"
+    [maxLength]="maxLength"
+  ></textarea>
+  <label [for]="id">{{ label }}</label>
+</p-floatlabel>
+
+<div sviFormError [errorMessage]="errorMessage" [show]="hasErrors"></div>
+
+@if (showCharCount) {
+  <div class="w-full text-right char-counter">
+    <small [class]="charCountClass + (+charCountText === maxLength ? 'text-danger' : '')">
+      {{ charCountText }}
+    </small>
+  </div>
+}

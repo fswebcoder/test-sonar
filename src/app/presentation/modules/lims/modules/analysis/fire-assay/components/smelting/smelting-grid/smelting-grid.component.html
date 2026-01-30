@@ -1,0 +1,82 @@
+<div class="grid w-full">
+  @for (_ of rowsArray(); track $index; let rowIndex = $index) {
+    <div class="row">
+      @for (__ of columnsArray(); track $index; let colIndex = $index) {
+        <div class="colmn">
+          <div
+            class="cell"
+            [class.completed]="samples[rowIndex * columns + colIndex]"
+            [class.selectable]="!samples[rowIndex * columns + colIndex] && !weightMode"
+            [class.weight-mode]="weightMode"
+            [class.weight-missing]="
+              weightMode && samples[rowIndex * columns + colIndex] && !hasWeight(rowIndex, colIndex)
+            "
+            [class.weight-set]="weightMode && hasWeight(rowIndex, colIndex)"
+            [class.finished]="finished"
+            (click)="onCellClick(rowIndex, colIndex)"
+            [title]="
+              weightMode
+                ? samples[rowIndex * columns + colIndex]
+                  ? hasWeight(rowIndex, colIndex)
+                    ? 'Editar peso'
+                    : 'Asignar peso'
+                  : ''
+                : samples[rowIndex * columns + colIndex] || getCellPosition(rowIndex, colIndex)
+            "
+          >
+            <ng-container *ngIf="!samples[rowIndex * columns + colIndex]; else filled">
+              <span class="label truncate">{{ getCellPosition(rowIndex, colIndex) }}</span>
+            </ng-container>
+
+            <ng-template #filled>
+              <div class="cell-content">
+                <div class="cell-header">
+                  <span
+                    class="code truncate"
+                    [class.pointer]="weightMode"
+                    [title]="samples[rowIndex * columns + colIndex]"
+                    >{{ samples[rowIndex * columns + colIndex] }}</span
+                  >
+                </div>
+                <div class="cell-body" *ngIf="weightMode">
+                  <div
+                    class="weight-display"
+                    [class.missing]="!hasWeight(rowIndex, colIndex)"
+                    [class.set]="hasWeight(rowIndex, colIndex)"
+                  >
+                    <span class="value" *ngIf="hasWeight(rowIndex, colIndex); else missingW">{{
+                      displayWeight(rowIndex, colIndex)
+                    }}</span>
+                    <ng-template #missingW><span class="placeholder">--.--</span></ng-template>
+                    <span class="unit">{{ units }}</span>
+                  </div>
+                </div>
+                <div class="actions" *ngIf="!weightMode && !readOnly">
+                  <svi-button
+                    type="button"
+                    [icon]="ICONS.PENCIL"
+                    severity="info"
+                    styleClass="icon-btn edit"
+                    (onClick)="onCellClick(rowIndex, colIndex); $event.stopPropagation()"
+                    title="Editar"
+                  ></svi-button>
+                  <svi-button
+                    type="button"
+                    [icon]="ICONS.TRASH"
+                    severity="danger"
+                    styleClass="icon-btn delete"
+                    (onClick)="onDelete(rowIndex, colIndex, $event); $event.stopPropagation()"
+                    title="Eliminar"
+                  ></svi-button>
+                </div>
+                <div class="weight-hint" *ngIf="weightMode && !hasWeight(rowIndex, colIndex)">
+                  Click para asignar peso
+                </div>
+              </div>
+            </ng-template>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,128 @@
+<div class="dashboard-container">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h1>Dashboard de Proveedor</h1>
+  </div>
+
+  <!-- Filters Card -->
+  <div class="card mb-4">
+    <div class="flex align-items-end gap-3 flex-wrap">
+      <svi-date-piker
+        label="Fecha inicio"
+        [ngModel]="startDate()"
+        (ngModelChange)="startDateChange.emit($event)"
+        [showIcon]="true"
+        dateFormat="dd/mm/yy"
+      />
+      <svi-date-piker
+        label="Fecha fin"
+        [ngModel]="endDate()"
+        (ngModelChange)="endDateChange.emit($event)"
+        [showIcon]="true"
+        dateFormat="dd/mm/yy"
+      />
+      <svi-button
+        label="Actualizar"
+        icon="pi pi-refresh"
+        [loading]="isLoadingRefresh()"
+        (onClick)="refresh.emit()"
+      />
+    </div>
+  </div>
+
+  @if (dashboard()) {
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+      <svi-stat-card
+        [value]="dashboard()!.summary.totalOrders"
+        label="Total de Órdenes"
+        icon="pi pi-file"
+        variant="primary"
+      />
+      <svi-stat-card
+        [value]="dashboard()!.summary.pendingOrders"
+        label="Pendientes"
+        icon="pi pi-clock"
+        variant="warning"
+      />
+      <svi-stat-card
+        [value]="dashboard()!.summary.completedOrders"
+        label="Completadas"
+        icon="pi pi-check-circle"
+        variant="success"
+      />
+      <svi-stat-card
+        [value]="dashboard()!.summary.cancelledOrders"
+        label="Canceladas"
+        icon="pi pi-times-circle"
+        variant="danger"
+      />
+    </div>
+
+    <!-- Weight & Activity Metrics -->
+    <div class="metrics-grid">
+      <svi-metric-card
+        title="Total Entregado"
+        [value]="formatWeight(dashboard()!.weight.totalDelivered)"
+        icon="pi pi-box text-blue-500 text-2xl"
+      />
+      <svi-metric-card
+        title="Total Enviado"
+        [value]="formatWeight(dashboard()!.weight.totalSent)"
+        icon="pi pi-send text-purple-500 text-2xl"
+      />
+      <svi-metric-card
+        title="Promedio por Entrega"
+        [value]="formatWeight(dashboard()!.weight.averagePerDelivery)"
+        icon="pi pi-chart-line text-green-500 text-2xl"
+      />
+      <svi-metric-card
+        title="Órdenes este mes"
+        [value]="dashboard()!.activity.ordersThisMonth.toString()"
+        icon="pi pi-calendar text-orange-500 text-2xl"
+      />
+      <svi-metric-card
+        title="Completadas este mes"
+        [value]="dashboard()!.activity.completedThisMonth.toString()"
+        icon="pi pi-check text-teal-500 text-2xl"
+      />
+      <svi-metric-card
+        title="Última entrega"
+        [value]="formatDate(dashboard()!.activity.lastDeliveryDate)"
+        icon="pi pi-clock text-cyan-500 text-2xl"
+      />
+    </div>
+
+    <!-- Chart Section -->
+    <div class="card h-min">
+      <div class="chart-section__header">
+        <h3 class="chart-section__title">
+          <i class="pi pi-chart-line"></i>
+          Entregas en el Tiempo
+        </h3>
+        <div class="chart-section__controls">
+          <p-selectButton
+            [options]="groupByOptions"
+            [ngModel]="groupBy()"
+            (ngModelChange)="groupByChange.emit($event)"
+            optionLabel="label"
+            optionValue="value"
+          />
+        </div>
+      </div>
+      @if (chartData()) {
+        <svi-line-chart
+          [data]="chartData()!"
+          [options]="chartOptions"
+          height="250px"
+        />
+      }
+    </div>
+  } @else {
+    <svi-empty-state
+      icon="pi pi-chart-bar"
+      title="Sin datos disponibles"
+      description="No se encontraron datos para el dashboard. Intenta ajustar los filtros de fecha."
+    />
+  }
+</div>

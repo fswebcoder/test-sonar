@@ -1,0 +1,16 @@
+<div class="w-full">
+  <p-panel
+    [toggleable]="toggleable()"
+    [collapsed]="collapsed()"
+    [styleClass]="styleClass() + ' w-auto'"
+    (onAfterToggle)="onToggle($event)"
+    expandIcon="{{ ICONS.CHEVRON_UP }}"
+    collapseIcon="{{ ICONS.CHEVRON_DOWN }}"
+    toggler="header"
+  >
+    <ng-template #header>
+      <ng-content select="[slot=header]"></ng-content>
+    </ng-template>
+    <ng-content></ng-content>
+  </p-panel>
+</div>

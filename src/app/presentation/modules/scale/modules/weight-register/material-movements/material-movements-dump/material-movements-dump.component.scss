@@ -1,0 +1,13 @@
+:host {
+	display: block;
+}
+
+.material-tabs__panels {
+	border: none !important;
+	background: transparent !important;
+	padding: 0 !important;
+}
+
+.material-tabs__panels .p-tabview-panel {
+	padding: 0 !important;
+}

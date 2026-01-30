@@ -1,0 +1,74 @@
+<section>
+  <div class="card">
+    <div class="flex justify-content-between align-items-center m-0">
+      <h3 class="m-0">Gestión de roles</h3>
+      <div class="flex align-items-center">
+        <svi-button
+          [label]="'Crear nuevo rol'"
+          [icon]="'pi pi-plus'"
+          [severity]="'primary'"
+          [size]="'small'"
+          (onClick)="openDialog()"
+        ></svi-button>
+      </div>
+    </div>
+    <div class="flex justify-content-between align-items-center my-4">
+      <div class="flex align-items-center gap-2">
+        <svi-checkbox
+          [ngModel]="paginationService.withDeleted()"
+          [binary]="true"
+          (ngModelChange)="withDeletedChange($event)"
+        ></svi-checkbox>
+        <label for="withDeleted">Incluir roles eliminados</label>
+      </div>
+    </div>
+    <div>
+      <svi-table [data]="roles()" [columns]="columns" [actions]="actions" [showPaginator]="false"> </svi-table>
+      <svi-paginator [totalRecords]="totalRecords!" (pageChange)="onPageChange($event)"></svi-paginator>
+    </div>
+  </div>
+</section>
+
+<svi-dialog header="Crear nuevo rol" [width]="'70rem'" [visible]="isDialogVisible()" (onHide)="closeDialog()">
+  <svi-create-rol-form [actionsPermissions]="actionsPermissions()" (onCreateRole)="createRole($event)" />
+</svi-dialog>
+
+<svi-dialog header="Editar rol" [width]="'60rem'" [visible]="isEditDialogVisible()" (onHide)="closeEditDialog()">
+  @if (selectedRoleData() && roleDetailForEdit()) {
+    <svi-edit-rol-form
+      [roleData]="selectedRoleData()!"
+      [roleDetail]="roleDetailForEdit()!"
+      [actionsPermissions]="actionsPermissions()"
+      (onUpdateRole)="onUpdateRole.emit($event)"
+      (onCancel)="closeEditDialog()"
+    />
+  }
+</svi-dialog>
+
+<svi-dialog
+  header="Ver detalles del rol"
+  [width]="'70rem'"
+  [visible]="isViewDialogVisible()"
+  (onHide)="closeViewDialog()"
+>
+  @if (selectedRoleData() && roleDetailForView()) {
+    <svi-view-rol
+      [roleData]="selectedRoleData()!"
+      [roleDetail]="roleDetailForView()!"
+      [actionsPermissions]="actionsPermissions()"
+    />
+  }
+</svi-dialog>
+
+<svi-confirm-dialog
+  #confirmDialog
+  [header]="confirmHeader()"
+  [draggable]="false"
+  [style]="{ width: '60rem' }"
+  [acceptLabel]="confirmAcceptLabel()"
+  [rejectLabel]="'Cancelar'"
+  [acceptButtonStyleClass]="confirmAcceptStyle()"
+  [rejectButtonStyleClass]="'p-button-outlined'"
+  [acceptVisible]="true"
+  [rejectVisible]="true"
+></svi-confirm-dialog>

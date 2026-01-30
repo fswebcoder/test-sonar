@@ -1,0 +1,11 @@
+<form [formGroup]="form" class="flex flex-col gap-4 mb-4" (ngSubmit)="onSubmit()">
+  <svi-float-select label="Horno" formControlName="furnaceId" [options]="furnaces" optionValue="id" optionLabel="name"></svi-float-select>
+  <div class="flex gap-4">
+    <svi-input-number class="flex-1" label="Filas" formControlName="rows" [errorMessages]="rowsError"></svi-input-number>
+    <svi-input-number class="flex-1" label="Columnas" formControlName="columns" [errorMessages]="columnsError"></svi-input-number>
+  </div>
+  <div class="flex gap-3">
+    <svi-button type="submit" [disabled]="!canGenerate()" title="Generar cuadrícula (deshabilitado si hay actividad en curso)" label="Generar cuadrícula"></svi-button>
+    <svi-button type="button" (onClick)="clear.emit()" [disabled]="!canClear()" [icon]="ICONS.CANCEL" severity="secondary" title="Limpia la cuadrícula generada manualmente" label="Limpiar"></svi-button>
+  </div>
+</form>

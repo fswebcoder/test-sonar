@@ -1,0 +1,17 @@
+<p-dialog
+  [(visible)]="visible"
+  [header]="header"
+  [style]="{ width: width, height: height }"
+  [modal]="modal"
+  [closeOnEscape]="closeOnEscape"
+  [dismissableMask]="dismissableMask"
+  [showHeader]="showHeader"
+  [closeIcon]="closeIcon"
+  (onHide)="closeDialog()"
+  [draggable]="draggable"
+  [resizable]="resizable"
+  [position]="position"
+  (onHide)="onHide.emit()"
+>
+  <ng-content></ng-content>
+</p-dialog>

@@ -1,0 +1,82 @@
+<div class="p-4 mx-auto">
+  @for (analysis of (analysisData()?.analyses ?? []); track $index) {
+    @let tableData = getTableDataAt($index);
+    @let tableCols = getTableColumnsAt($index);
+
+    <div class="card shadow-2 mb-4">
+      <div class="flex align-items-center justify-content-between flex-wrap gap-3 p-3">
+        <div class="flex align-items-center gap-3">
+          <div class="flex align-items-center justify-content-center w-3rem h-3rem bg-primary-100 border-round-md">
+            <i class="{{ ICONS.FLASK_VIAL }} text-primary-600 text-xl"></i>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-primary-900 m-0 mb-1">
+              {{ analysis.analysisName || analysis.analysisShortName }}
+            </h3>
+            <p class="text-sm text-primary-700 m-0">
+              <i class="{{ ICONS.CHECK_CIRCLE }} text-green-600 mr-1"></i>
+              Datos del análisis
+            </p>
+          </div>
+        </div>
+      </div>
+
+      @if (tableData.length > 0) {
+        <div class="w-full p-4">
+          <svi-table
+            [data]="tableData"
+            [columns]="tableCols"
+            [showPaginator]="false"
+            [globalFilter]="false"
+            [responsive]="true"
+            [loading]="false"
+          ></svi-table>
+        </div>
+      } @else {
+        <div class="p-4 text-center text-500">Sin datos de resultado</div>
+      }
+    </div>
+  }
+
+  @if (shouldShowGroupedView()) {
+    <div class="mt-4 card shadow-2">
+      <div class="p-4">
+        <svi-filter-section
+          [isXrfAnalysis]="!!isXrfAnalysis()"
+          [filterControl]="filterControl"
+          [filterText]="filterText()"
+          (clearFilter)="clearFilter()"
+          class="mb-3"
+        />
+
+        @if (filterText()) {
+          <div class="mb-3 text-center">
+            <p-tag
+              [value]="
+                isXrfAnalysis()
+                  ? 'Mostrando ' + filteredPeriodicElements().length + ' de ' + (allPeriodicTableElements()[0] || []).length + ' elementos'
+                  : 'Mostrando ' + filteredElements().length + ' de ' + (allGroupedElements()[0] || []).length + ' elementos'
+              "
+              severity="info"
+              [rounded]="true"
+            ></p-tag>
+          </div>
+        }
+
+        @if (isXrfAnalysis()) {
+          <svi-xrf-periodic-table
+            [elements]="allPeriodicTableElements()[0] || []"
+            [filteredElements]="filteredPeriodicElements()"
+            [filterText]="filterText()"
+          />
+        } @else {
+          <svi-grouped-view
+            [elements]="processedGroupedElements()"
+            [filteredElements]="processedFilteredElements()"
+            [filterText]="filterText()"
+          />
+        }
+      </div>
+    </div>
+  }
+</div>

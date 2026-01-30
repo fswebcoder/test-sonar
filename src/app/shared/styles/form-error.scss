@@ -1,0 +1,12 @@
+.validation-error-msg {
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  text-align: left;
+  i {
+    color: var(--red-500);
+  }
+
+  .text-danger {
+    color: var(--red-500);
+  }
+}

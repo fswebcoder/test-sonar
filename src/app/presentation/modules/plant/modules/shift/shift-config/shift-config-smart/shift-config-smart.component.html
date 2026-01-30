@@ -1,0 +1,10 @@
+<svi-shift-config-dump
+#shiftConfigDump
+  [shifts]="shifts()"
+  (onShiftChange)="shiftChanges($event)"
+  [currentShift]="shiftConfig()"
+  [personnel]="personnel()"
+  [personnelPositions]="personnelPositions()"
+  (onAddPersonnel)="addPersonnel($event)"
+  (onDeletePersonnel)="deletePersonnel($event)"
+/>

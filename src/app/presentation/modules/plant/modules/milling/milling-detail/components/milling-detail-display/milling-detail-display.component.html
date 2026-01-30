@@ -1,0 +1,129 @@
+<div class="milling-detail flex flex-column gap-4">
+  <header class="milling-header card shadow-2 flex flex-column gap-3 p-4 m-0">
+    <div class="flex flex-column gap-1">
+      <h3 class="m-0 text-lg md:text-xl font-medium">Detalle de Molienda</h3>
+      <span class="header-hint text-sm text-color-secondary">Conoce el estado y los registros más recientes del proceso.</span>
+    </div>
+
+    <div class="header-meta flex flex-wrap align-items-center gap-2">
+      <p-tag severity="primary" [icon]="ICONS.MILL" [value]="'Molino: ' + (detail().mill?.name ?? 'Sin nombre')" />
+      <p-tag severity="info" [icon]="ICONS.BATCH" [value]="'Lote: ' + (detail().batch.name || 'Sin lote')" />
+      <p-tag severity="success" [icon]="ICONS.CALENDAR" [value]="formatDateWithoutYear(detail().date)" />
+    </div>
+  </header>
+  
+  <svi-collapsible-panel styleClass="border-round-xl border-none shadow-2" class="p-1">
+    <div slot="header">
+      <span>Ver novedades en la molienda</span>
+    </div>
+    
+    <div>
+      @if (detail().stateRecord.length) {
+        <p-timeline [value]="detail().stateRecord" layout="horizontal" class="p-4">
+          <ng-template #opposite let-record>
+            <small>{{ record.stateRecord }}</small>
+          </ng-template>
+          <ng-template #content let-record>
+            <small class="white-space-nowrap">{{ formatDateWithoutYear(record.dateRecord) }}</small>
+          </ng-template>
+        </p-timeline>
+      } @else {
+        <p class="state-empty">No hay novedades registradas para esta molienda.</p>
+      }
+    </div>
+  </svi-collapsible-panel>
+
+  <svi-collapsible-panel styleClass="border-round-xl border-none shadow-2" class="p-1">
+    <div slot="header">
+      <span>Gráficas y variables del proceso</span>
+    </div>
+
+    <div class="p-4">
+      @if (equipmentList().length) {
+        <ng-template #equipmentHeader let-equipment>
+          {{ equipment.name || 'Equipo' }}
+        </ng-template>
+
+        <ng-template #equipmentPanel let-equipment>
+          <div class="view-toolbar flex justify-content-end">
+            <svi-view-switcher
+              [value]="viewMode()"
+              [options]="viewOptions"
+              [size]="'small'"
+              [showLabels]="false"
+              [showIcons]="true"
+              (valueChange)="onViewModeChange($event)"
+            ></svi-view-switcher>
+          </div>
+          <svi-milling-detail-equipment-display [equipment]="equipment" [viewMode]="viewMode()" />
+        </ng-template>
+
+        <svi-tabs
+          [tabs]="equipmentList()"
+          [value]="activeTab() ?? firstEquipmentTab()"
+          (valueChange)="onTabChange($event)"
+          [scrollable]="true"
+          [containerClass]="'card shadow-2'"
+          [headerTemplate]="equipmentHeader"
+          [panelTemplate]="equipmentPanel"
+          [tabValueFn]="equipmentTabValueAccessor"
+        ></svi-tabs>
+      } @else {
+        <p class="process-empty">No se encontró información del proceso para esta molienda.</p>
+      }
+    </div>
+  </svi-collapsible-panel>
+
+  <svi-collapsible-panel styleClass="border-round-xl border-none shadow-2" class="p-1" [collapsed]="false">
+    <div slot="header">
+      <span>Variables de control</span>
+    </div>
+
+    <div class="p-4">
+      <div class="variables-grid">
+        <div class="variable-card variable-card--detail">
+          <header class="variable-card__header">
+            <span>Resumen</span>
+          </header>
+
+          <svi-key-value-table
+            [rows]="controlSummaryRows()"
+            [variant]="'labelValue'"
+            [leftHeader]="'Variable'"
+            [rightHeader]="'Valor'"
+          ></svi-key-value-table>
+        </div>
+
+        <div class="variable-card variable-card--detail">
+          <header class="variable-card__header">
+            <span>Densidades promedio</span>
+          </header>
+
+          <svi-key-value-table
+            [data]="densityAveragesRecord()"
+            [keyOrder]="densityKeyOrder"
+            [labelMapper]="densityLabelMapper"
+            [variant]="'labelValue'"
+            [leftHeader]="'Punto'"
+            [rightHeader]="'Densidad'"
+          ></svi-key-value-table>
+        </div>
+
+        <div class="variable-card variable-card--detail">
+          <header class="variable-card__header">
+            <span>Reactivos promedio</span>
+          </header>
+
+          <svi-key-value-table
+            [data]="reagentAveragesRecord()"
+            [keyOrder]="reagentKeyOrder"
+            [labelMapper]="reagentLabelMapper"
+            [variant]="'labelValue'"
+            [leftHeader]="'Reactivo'"
+            [rightHeader]="'Promedio'"
+          ></svi-key-value-table>
+        </div>
+      </div>
+    </div>
+  </svi-collapsible-panel>
+</div>

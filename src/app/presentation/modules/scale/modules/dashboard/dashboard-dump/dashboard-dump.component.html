@@ -1,0 +1,51 @@
+<section class="card">
+  <div class="flex flex-column md:flex-row md:align-items-center md:justify-content-between gap-3 mb-4">
+    <h3 class="card-title m-0">Dashboard de Báscula</h3>
+    <svi-dashboard-filters
+      [startDateControl]="startDateControl()"
+      [endDateControl]="endDateControl()"
+      [supplierControl]="supplierControl()"
+      [mineControl]="mineControl()"
+      [suppliersOptions]="suppliersOptions()"
+      [minesOptions]="minesOptions()"
+      (supplierChange)="supplierChange.emit($event)"
+    />
+  </div>
+
+  <p-tabs [value]="tabIndex()" (valueChange)="onTabChange($any($event))">
+    <p-tablist>
+      <p-tab [value]="0">
+        <i class="{{ ICONS.TRUCK_RAMP }} mr-2"></i> Recepciones
+      </p-tab>
+      <p-tab [value]="1">
+        <i class="{{ ICONS.ROUTE }} mr-2"></i> Movimientos
+      </p-tab>
+      <p-tab [value]="2">
+        <i class="{{ ICONS.LAYER_GROUP }} mr-2"></i> Stock
+      </p-tab>
+    </p-tablist>
+
+    <p-tabpanels>
+      <p-tabpanel [value]="0">
+        <svi-receptions-dashboard 
+          [dashboard]="receptionsData()" 
+          [hasSupplierFilter]="hasSupplierFilter()" 
+          [hasMineFilter]="hasMineFilter()" 
+        />
+      </p-tabpanel>
+      <p-tabpanel [value]="1">
+        <svi-movements-dashboard 
+          [dashboard]="movementsData()" 
+          [hasSupplierFilter]="hasSupplierFilter()" 
+          [hasMineFilter]="hasMineFilter()" 
+        />
+      </p-tabpanel>
+      <p-tabpanel [value]="2">
+        <svi-stock-dashboard 
+          [dashboard]="stockData()" 
+          [hasSupplierFilter]="hasSupplierFilter()" 
+        />
+      </p-tabpanel>
+    </p-tabpanels>
+  </p-tabs>
+</section>

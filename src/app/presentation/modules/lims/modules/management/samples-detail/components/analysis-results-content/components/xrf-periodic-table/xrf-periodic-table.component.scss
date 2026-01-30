@@ -1,0 +1,145 @@
+.xrf-periodic-table {
+  display: grid;
+  grid-template-columns: repeat(14, 1fr);
+  gap: 5px;
+  padding: 1rem;
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  border-radius: 12px;
+  border: 2px solid #cbd5e1;
+  max-width: 100%;
+  overflow-x: auto;
+
+  .xrf-element {
+    aspect-ratio: 1;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 6px;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    background: #ffffff;
+    min-width: 80px;
+    min-height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      z-index: 10;
+    }
+
+    &.has-value {
+      background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+      border-color: #10b981;
+      box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+
+      .element-atomic-number {
+        color: #047857;
+      }
+
+      .element-symbol {
+        color: #065f46;
+      }
+
+      .element-value {
+        color: #047857;
+        font-weight: 600;
+      }
+    }
+
+    &.no-value {
+      background: #f1f5f9;
+      border-color: #cbd5e1;
+      opacity: 0.6;
+
+      .element-atomic-number,
+      .element-symbol,
+      .element-name {
+        color: #64748b;
+      }
+
+      .no-data {
+        color: #94a3b8;
+        font-style: italic;
+      }
+    }
+
+    .element-atomic-number {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #64748b;
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      line-height: 1;
+    }
+
+    .element-symbol {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #1e293b;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    .element-name {
+      font-size: 0.85rem;
+      color: #64748b;
+      line-height: 1;
+      margin-bottom: 3px;
+      max-width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .element-value {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: #1e293b;
+      line-height: 1;
+      max-width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  }
+}
+
+@media (max-width: 1200px) {
+  .xrf-periodic-table {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .xrf-periodic-table {
+    grid-template-columns: repeat(8, 1fr);
+    gap: 3px;
+    padding: 0.5rem;
+
+    .xrf-element {
+      min-width: 70px;
+      min-height: 70px;
+      padding: 3px;
+
+      .element-atomic-number {
+        font-size: 0.9rem;
+      }
+
+      .element-symbol {
+        font-size: 1.2rem;
+      }
+
+      .element-name {
+        font-size: 0.9rem;
+      }
+
+      .element-value {
+        font-size: 0.9rem;
+      }
+    }
+  }
+} 

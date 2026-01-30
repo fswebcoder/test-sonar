@@ -1,0 +1,101 @@
+<section>
+	<div class="card p-4">
+		<div class="flex flex-wrap gap-3 justify-between items-center">
+			<h3>{{ title() }}</h3>
+			<div class="flex align-items-center gap-2 flex-wrap justify-end"></div>
+		</div>
+
+		<div class="flex flex-column gap-3 my-4">
+			<div class="flex justify-content-start align-items-center gap-3 flex-wrap">
+				<svi-float-input [formControl]="searchControl" label="Buscar" class="flex-1" />
+			</div>
+
+			<svi-tabs
+				[tabs]="tabs"
+				[value]="activeTab()"
+				(valueChange)="onTabChange($event)"
+				[panelTemplate]="materialMovementContent"
+				tabValueKey="key"
+				tabLabelKey="label"
+				[panelsClass]="'material-tabs__panels'"
+			></svi-tabs>
+		</div>
+
+		<ng-template #materialMovementContent let-tab>
+			<div class="w-full flex justify-content-end my-4">
+				<svi-view-switcher
+					[value]="viewMode()"
+					[options]="viewOptions()"
+					size="small"
+					[showLabels]="false"
+					[showIcons]="true"
+					(valueChange)="onViewModeChange($event)"
+				></svi-view-switcher>
+			</div>
+
+			<div>
+				@if (materialMovementList().length === 0) {
+					<svi-empty-state
+						[title]="emptyStateMessage()"
+						description="Intenta ajustar los filtros o verifica más tarde."
+						icon="{{ ICONS.TRUCK }}"
+					></svi-empty-state>
+				} @else {
+					@if (viewMode() === 'table') {
+						<svi-table
+							[data]="materialMovementList()"
+							[columns]="columns"
+							[actions]="tableActions"
+							[showPaginator]="false"
+						></svi-table>
+					} @else {
+						<div class="grid justify-content-center my-4">
+							@for (movement of materialMovementList(); track movement.id) {
+								<svi-order-scale-card
+									[order]="movement"
+									class="sm:col-6 md:col-4 xl:col-3 col-12"
+									(addWeight)="onAddWeight($event)"
+									(viewDetails)="onViewDetails($event)"
+									[permissionPath]="path()"
+									[viewAction]="ScaleActions.VER_MOVIMIENTOS_DE_MATERIAL"
+									[weightAction]="canRegisterWeight() ? ScaleActions.REGISTRAR_PESO_MOVIMIENTO_DE_MATERIAL : null"
+									[requiresWeightCapture]="true"
+									[titlePrefix]="'Movimiento'"
+								></svi-order-scale-card>
+							}
+						</div>
+					}
+				}
+				<svi-paginator [totalRecords]="totalRecords"></svi-paginator>
+			</div>
+		</ng-template>
+	</div>
+</section>
+
+<svi-dialog
+	[header]="detailDialogHeader()"
+	width="60rem"
+	position="top"
+	[visible]="detailModal()"
+	(onHide)="closeDetailModal()"
+>
+	@if (selectedOrder(); as order) {
+		<svi-order-scale-detail [order]="order" (closeRequested)="closeDetailModal()"></svi-order-scale-detail>
+	}
+</svi-dialog>
+
+<svi-dialog
+	[header]="dialogHeader()"
+	width="52rem"
+	position="top"
+	[visible]="materialMovementModal()"
+	(onHide)="closeMaterialMovementModal()"
+>
+	<svi-weight-register-form
+		[requiresDestinationZone]="activeTab() === 'pending'"
+		[storageZones]="storageZones()"
+		(registerWeight)="askForRegisterWeight($event)"
+	></svi-weight-register-form>
+</svi-dialog>
+
+<svi-confirm-dialog #confirmDialog> </svi-confirm-dialog>

@@ -1,0 +1,14 @@
+<svi-dashboard-dump
+  [receptionsData]="receptionsData()"
+  [movementsData]="movementsData()"
+  [stockData]="stockData()"
+  [startDateControl]="startDateControl"
+  [endDateControl]="endDateControl"
+  [supplierControl]="supplierControl"
+  [mineControl]="mineControl"
+  [suppliersOptions]="suppliersOptions()"
+  [minesOptions]="minesOptions()"
+  [activeTab]="activeTab()"
+  (supplierChange)="onSupplierChange($event)"
+  (tabChange)="onTabChange($event)"
+/>

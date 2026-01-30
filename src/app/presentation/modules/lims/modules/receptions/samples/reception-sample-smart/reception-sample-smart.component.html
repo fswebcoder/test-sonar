@@ -1,0 +1,27 @@
+<svi-reception-sample-dump
+  class="px-fadein"
+  [loadingSupplier]="isLoadingSuppliers"
+  [inputSuppliersList]="suppliers()"
+  [departments]="departments()"
+  [cities]="citiesByDepartment()"
+  [samplesTypes]="samplesTypes()"
+  [printers]="printers()"
+  (getCitiesByDepartmentEmit)="getCitiesByDepartment($event)"
+  (outputSaveSamples)="saveSamples($event)"
+  (emitPrint)="onPrintSamples($event)"
+  (emitPrintBulk)="onPrintBulkSamples($event)"
+  [weight]="weight()"
+  [allowManualWeight]="allowManualWeight()"
+  [isReadingWeight]="isReadingWeight()"
+  (requestReadWeight)="onRequestReadWeight()"
+  (modalOpened)="onAddSampleModalOpened()"
+  (modalClosed)="onAddSampleModalClosed()"
+/>
+
+<svi-confirm-dialog
+  #confirmAfterSaveDialog
+  header="Imprimir muestras"
+  [style]="{ width: '30rem' }"
+  rejectLabel="No"
+  acceptLabel="Sí"
+></svi-confirm-dialog>

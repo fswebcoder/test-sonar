@@ -1,0 +1,63 @@
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.form-section {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  color: #1f2937;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  
+  i {
+    color: #3b82f6;
+    margin-right: 0.5rem;
+  }
+}
+
+.help-info {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1.5rem;
+  
+  .help-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    
+    i {
+      color: #3b82f6;
+      margin-top: 0.125rem;
+      font-size: 0.875rem;
+    }
+    
+    .help-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      
+      .help-title {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #1f2937;
+      }
+      
+      .help-description {
+        font-size: 0.75rem;
+        color: #6b7280;
+        line-height: 1.4;
+      }
+    }
+  }
+}
+

@@ -1,0 +1,33 @@
+@if (bigBag(); as bag) {
+    <section class="detail-wrapper">
+        <header class="detail-header">
+            <div>
+                <p class="detail-title">Big Bag #{{ bag.consecutive }}</p>
+                <p class="detail-subtitle">{{ bag.bigBagType.name }} · {{ bag.mine.name }}</p>
+            </div>
+            <p-tag [value]="statusLabel()" />
+        </header>
+
+        <div class="metrics-grid">
+            @for (metric of metrics(); track metric.label) {
+                <svi-metric-item [label]="metric.label" [value]="metric.value" />
+            }
+        </div>
+
+        @if (sealRecords().length > 0) {
+            <div class="seal-section">
+                <span class="detail-label">Sellos registrados</span>
+                <div class="seal-list">
+                    @for (seal of sealRecords(); track seal.id) {
+                        <p-tag [value]="seal.sealedCode" severity="primary" class="seal-tag" />
+                    }
+                </div>
+            </div>
+        }
+        <footer class="flex w-full justify-content-end">
+            <svi-button severity="secondary" label="Cerrar" [icon]="ICONS.CANCEL" (onClick)="close()" />
+        </footer>
+    </section>
+} @else {
+    <div class="detail-empty">No se encontró información del Big Bag.</div>
+}

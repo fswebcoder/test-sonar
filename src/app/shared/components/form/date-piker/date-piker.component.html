@@ -1,0 +1,43 @@
+<p-iconfield class="w-full" >
+  <p-floatlabel class="w-full" variant="on">
+    <p-datepicker
+      [id]="id"
+      [ngModel]="value"
+      (ngModelChange)="onDateChange($event)"
+      (onBlur)="onInputBlur($event)"
+      (onFocus)="onInputFocus($event)"
+      (onClear)="onClearClick()"
+      (onMonthChange)="onMonthChangeEvent($event)"
+      (onYearChange)="onYearChangeEvent($event)"
+      (onViewDateChange)="onViewDateChangeEvent($event)"
+      [disabled]="disabled"
+      [showTime]="showTime"
+      [minDate]="minDate"
+      [maxDate]="maxDate"
+      [dateFormat]="dateFormat"
+      [placeholder]="placeholder"
+      [showIcon]="showIcon"
+      [showButtonBar]="showButtonBar"
+      [showClear]="showClear"
+      [readonlyInput]="readonlyInput"
+      [monthNavigator]="monthNavigator"
+      [yearNavigator]="yearNavigator"
+      [showOtherMonths]="showOtherMonths"
+      [selectOtherMonths]="selectOtherMonths"
+      [appendTo]="appendTo"
+      [touchUI]="touchUI"
+      [showOnFocus]="showOnFocus"
+      [showWeek]="showWeek"
+      [required]="isRequired"
+      [class.ng-invalid]="hasErrors"
+      [class.ng-dirty]="hasErrors"
+      [numberOfMonths]="numberOfMonths"
+      class="w-full"
+      styleClass="w-full"
+    ></p-datepicker>
+    <label [for]="id">{{ label }}</label>
+  </p-floatlabel>
+</p-iconfield>
+
+  <div sviFormError [errorMessage]="errorMessage" [show]="hasErrors"></div>
+

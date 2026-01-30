@@ -1,0 +1,77 @@
+<article class="card shadow-2 p-4">
+  <div class="grid align-items-end">
+    <div class="col-12" [ngClass]="'md:col-' + leftColMd()">
+      <div class="flex flex-column gap-2">
+        <div class="flex align-items-center gap-2">
+          <i class="pi pi-search text-600"></i>
+          <span class="text-800 text-sm font-medium">{{ searchTitle() }}</span>
+        </div>
+
+        <div class="flex gap-1 align-items-end">
+          @if (useVehiclePlateDirective()) {
+            <svi-float-input
+              class="flex-1"
+              [id]="inputId()"
+              [formControl]="control()"
+              [label]="inputLabel()"
+              [type]="inputType()"
+              [uppercase]="inputUppercase()"
+              [disabled]="disabled()"
+              sviVehiclePlate
+              (keydown.enter)="triggerSearch()"
+            ></svi-float-input>
+          } @else {
+            <svi-float-input
+              class="flex-1"
+              [id]="inputId()"
+              [formControl]="control()"
+              [label]="inputLabel()"
+              [type]="inputType()"
+              [uppercase]="inputUppercase()"
+              [disabled]="disabled()"
+              (keydown.enter)="triggerSearch()"
+            ></svi-float-input>
+          }
+
+          <svi-button
+            [label]="searchLabel()"
+            [icon]="searchIcon()"
+            [disabled]="disabled() || (control().value.length < minLength())"
+            (onClick)="triggerSearch()"
+          ></svi-button>
+        </div>
+
+        @if (hintText()) {
+          <div class="text-500 text-sm flex align-items-center gap-2">
+            <i class="pi pi-info-circle"></i>
+            <span>{{ hintText() }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="col-12 md:col-1 hidden md:block">
+      <div class="h-full flex align-items-center justify-content-center">
+        <div class="border-left-1 border-200" style="height: 64px;"></div>
+      </div>
+    </div>
+
+    <div class="col-12" [ngClass]="'md:col-' + rightColMd()">
+      <div class="flex flex-column gap-2">
+        <div class="text-800 text-sm font-medium">{{ createTitle() }}</div>
+
+        <svi-button
+          [label]="createLabel()"
+          [icon]="createIcon()"
+          [size]="'small'"
+          [fullWidth]="true"
+          [disabled]="createDisabled()"
+          [loadingId]="createLoadingId() ?? undefined"
+          (onClick)="createClick.emit()"
+        ></svi-button>
+
+        <ng-content select="[slot=createHint]"></ng-content>
+      </div>
+    </div>
+  </div>
+</article>

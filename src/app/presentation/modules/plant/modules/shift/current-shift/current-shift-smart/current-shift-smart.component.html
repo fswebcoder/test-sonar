@@ -1,0 +1,10 @@
+<svi-current-shift-dump
+#currentShiftDumpComponent
+  [currentShift]="currentShift()"
+  [personnel]="personnel()"
+  [personnelPositions]="personnelPositions()"
+  (onOpenShift)="openShift()"
+  (onAddPersonnel)="addPersonnel($event)"
+  (onCloseShift)="closeShift()"
+  (onDeletePersonnel)="deletePersonnel($event)"
+/>

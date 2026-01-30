@@ -1,0 +1,44 @@
+<div class="svi-dropdown-button" [class]="styleClass" (click)="toggleDropdown()" (document:click)="onDocumentClick($event)">
+  <button 
+    type="button"
+    class="dropdown-button-main"
+    [disabled]="disabled"
+    [class.disabled]="disabled"
+  >
+    @if(icon) {
+      <i [class]="icon" class="dropdown-icon"></i>
+    }
+    
+    <span class="dropdown-label">{{ label }}</span>
+    
+    <i class="dropdown-arrow pi pi-chevron-down" [class.rotated]="isOpen()"></i>
+  </button>
+  
+  <div 
+    class="dropdown-menu" 
+    [class.show]="isOpen()"
+    [@dropdownAnimation]
+  >
+    <ul class="dropdown-list">
+      @for(item of items; track trackByLabel($index, item)) {
+        <li 
+          class="dropdown-item"
+          [class.disabled]="item.disabled"
+          [class.separator]="item.separator"
+          (click)="onItemClick(item)"
+        >
+          @if(item.separator) {
+            <div class="dropdown-separator"></div>
+          } @else {
+            <div class="dropdown-item-content">
+              @if(item.icon) {
+                <i [class]="item.icon" class="item-icon"></i>
+              }
+              <span class="item-label">{{ item.label }}</span>
+            </div>
+          }
+        </li>
+      }
+    </ul>
+  </div>
+</div> 

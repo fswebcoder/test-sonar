@@ -1,0 +1,66 @@
+<form [formGroup]="form">
+  <div class="grid mt-2">
+    <div class="col-12 md:col-4">
+      <svi-float-select
+        label="Tipo de muestra"
+        formControlName="sampleType"
+        optionLabel="name"
+        optionValue="id"
+        [options]="samplesTypes()"
+      >
+      </svi-float-select>
+    </div>
+
+    <div class="col-12 md:col-4">
+      <svi-float-input label="Código de la muestra" formControlName="code">
+      </svi-float-input>
+    </div>
+    @if (autogenerateCode()) {
+      <div class="col-12 md:col-4">
+        <svi-float-select
+          label="Turno"
+          formControlName="shift"
+          optionLabel="name"
+          optionValue="id"
+          [options]="shifts()"
+        >
+        </svi-float-select>
+      </div>
+
+      <div class="col-12 md:col-4">
+        <svi-float-select label="Molino" formControlName="mill" optionLabel="name" optionValue="id" [options]="mills()">
+        </svi-float-select>
+      </div>
+    }
+
+    <div class="col-12">
+      <svi-sample-weight
+        [weight]="weight()"
+        [weightControl]="weightControl"
+        [disableWeight]="!allowManualWeight()"
+        [readWeightDisabled]="isReadingWeight()"
+        [disableTare]="true"
+        (onReadWeight)="handleReadWeight()"
+      ></svi-sample-weight>
+
+      <svi-max-weight-info [maxWeightGrams]="MAX_WEIGHT_GRAMS"></svi-max-weight-info>
+    </div>
+    <div class="flex gap-4 my-2 px-3">
+        <svi-checkbox
+        [label]="'¿Determinación de humedad?'"
+        id="moistureDetermination"
+        formControlName="moistureDetermination"
+        >
+        </svi-checkbox>
+    </div>
+  </div>
+
+  <div class="flex justify-content-end gap-2 mt-4">
+    <svi-button severity="secondary" type="button" (click)="onCancel()" label="Cancelar">
+      <i class="fa-duotone fa-regular fa-ban"></i>
+    </svi-button>
+    <svi-button severity="primary" type="submit" label="Añadir" [disabled]="!isFormValid" (click)="validateForm()">
+      <i class="fa-duotone fa-regular fa-floppy-disk-circle-arrow-right"></i>
+    </svi-button>
+  </div>
+</form>

@@ -1,0 +1,14 @@
+<svi-milling-management-dump
+  [millings]="millingsQueryData()"
+  [pumps]="pumps()"
+  [suppliers]="suppliers()"
+  (onSupplierIdChanges)="changeSupplierId($event)"
+  (onMineIdChanges)="changeMineId($event)"
+  [batches]="batches()"
+  (onSaveBatch)="saveBatch($event)"
+  (onSaveEditVariable)="saveEditVariable($event)"
+  (onFinish)="finishMilling($event)"
+  (onStopMilling)="stopMilling($event)"
+  (onStartMilling)="startMilling($event)"
+  [mines]="mines()"
+/>

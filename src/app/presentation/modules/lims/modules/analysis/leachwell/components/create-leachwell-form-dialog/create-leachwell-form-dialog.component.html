@@ -1,0 +1,19 @@
+<form [formGroup]="form" class="animate__animated animate__fadeIn flex flex-col gap-4" (ngSubmit)="onSubmit()">
+  <svi-smart-scan-input formControlName="sampleCode"></svi-smart-scan-input>
+  <svi-float-select
+    label="Tiempo de lixiviación"
+    [options]="options"
+    optionLabel="label"
+    optionValue="value"
+    formControlName="duration"
+    class="w-full"
+  ></svi-float-select>
+  <div class="flex justify-content-end gap-2">
+    <svi-button type="button" severity="secondary" label="Cancelar" class="p-button-secondary" (click)="cancel()">
+      <i class="{{ ICONS.CANCEL }}"></i>
+    </svi-button>
+    <svi-button type="submit" label="Guardar" [disabled]="form.invalid" loadingId="create-leachwell-dialog-button">
+      <i class="{{ ICONS.SAVE }}"></i>
+    </svi-button>
+  </div>
+</form>

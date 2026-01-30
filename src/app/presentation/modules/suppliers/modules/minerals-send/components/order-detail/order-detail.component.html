@@ -1,0 +1,98 @@
+<div class="order-detail">
+  <div class="grid">
+    <!-- Información General -->
+    <div class="col-12">
+      <div class="flex justify-content-between align-items-center mb-4">
+        <span class="px-3 py-1 border-round-lg text-sm font-medium {{ statusClass }}">
+          {{ statusLabel }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Consecutivo -->
+    <div class="col-12 md:col-6">
+      <div class="field">
+        <label class="text-sm text-gray-500 block mb-1">Consecutivo</label>
+        <p class="m-0 font-medium">{{ order().consecutive }}</p>
+      </div>
+    </div>
+
+    <!-- Fecha Estimada -->
+    <div class="col-12 md:col-6">
+      <div class="field">
+        <label class="text-sm text-gray-500 block mb-1">Fecha Estimada de Envío</label>
+        <p class="m-0 font-medium">{{ formatDate(order().estimatedShippingDateTime) }}</p>
+      </div>
+    </div>
+
+    <!-- Vehículo -->
+    <div class="col-12 md:col-6">
+      <div class="field">
+        <label class="text-sm text-gray-500 block mb-1">Vehículo</label>
+        <p class="m-0 font-medium">{{ order().vehicle.plate }}</p>
+      </div>
+    </div>
+
+    <!-- Conductor -->
+    <div class="col-12 md:col-6">
+      <div class="field">
+        <label class="text-sm text-gray-500 block mb-1">Conductor</label>
+        <p class="m-0 font-medium">{{ order().driver.name }}</p>
+        <p class="m-0 text-sm text-gray-500">Doc: {{ order().driver.documentNumber }}</p>
+      </div>
+    </div>
+
+    <!-- Tipo de Material -->
+    <div class="col-12 md:col-6">
+      <div class="field">
+        <label class="text-sm text-gray-500 block mb-1">Tipo de Material</label>
+        <p class="m-0 font-medium">{{ order().materialType.name }}</p>
+      </div>
+    </div>
+
+    <!-- Mina -->
+    <div class="col-12 md:col-6">
+      <div class="field">
+        <label class="text-sm text-gray-500 block mb-1">Mina</label>
+        <p class="m-0 font-medium">{{ order().mine?.name ?? '-' }}</p>
+      </div>
+    </div>
+
+    <!-- Peso Enviado -->
+    <div class="col-12 md:col-6">
+      <div class="field">
+        <label class="text-sm text-gray-500 block mb-1">Peso Enviado</label>
+        <p class="m-0 font-medium">{{ order().sendedWeight ? order().sendedWeight + ' kg' : '-' }}</p>
+      </div>
+    </div>
+
+    <!-- Lote del Proveedor -->
+    <div class="col-12 md:col-6">
+      <div class="field">
+        <label class="text-sm text-gray-500 block mb-1">Lote del Proveedor</label>
+        <p class="m-0 font-medium">{{ order().supplierBatchName ?? '-' }}</p>
+      </div>
+    </div>
+
+    <!-- Veedor -->
+    @if (order().veedor) {
+      <div class="col-12 md:col-6">
+        <div class="field">
+          <label class="text-sm text-gray-500 block mb-1">Veedor</label>
+          <p class="m-0 font-medium">{{ order().veedor?.name }}</p>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Actions -->
+  <div class="flex justify-content-end pt-4 border-top-1 surface-border mt-4">
+    <svi-button
+      type="button"
+      severity="secondary"
+      label="Cerrar"
+      [icon]="ICONS.CANCEL"
+      (onClick)="close()"
+    />
+  </div>
+</div>
