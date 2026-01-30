@@ -2,8 +2,8 @@ node_modules
 node_modules
 
 .github
-/.github
-/.github/*
+# /.github
+# /.github/*
 
 build
 dist
